@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import MarkdownSection from "../components/MarkdownSection";
 import PythonSection from "../components/PythonSection";
@@ -12,6 +12,11 @@ import {
 import { downloadTextFile } from "../utils/download";
 import { isLocalhost } from "../utils/hostname";
 import { slugify } from "../utils/slug";
+
+type LoadedEditorPageState = {
+  slug: string | null;
+  page: HandbookPageContent | null;
+};
 
 type EditorDraft = {
   title: string;
@@ -233,9 +238,35 @@ function EditorForm({ initialPage }: EditorFormProps) {
 function LocalEditorPage() {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get("slug");
-  const existingPage = slug ? getPageBySlug(slug) : null;
+  const localhost = isLocalhost();
+  const [loadedPage, setLoadedPage] = useState<LoadedEditorPageState>({
+    slug: null,
+    page: null,
+  });
+  const isLoading = Boolean(localhost && slug && loadedPage.slug !== slug);
+  const existingPage = loadedPage.slug === slug ? loadedPage.page : null;
 
-  if (!isLocalhost()) {
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (!localhost || !slug) {
+      return;
+    }
+
+    void getPageBySlug(slug).then((loadedPage) => {
+      if (isCancelled) {
+        return;
+      }
+
+      setLoadedPage({ slug, page: loadedPage });
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [localhost, slug]);
+
+  if (!localhost) {
     return (
       <>
         <SiteHeader />
@@ -257,6 +288,24 @@ function LocalEditorPage() {
             >
               Back Home
             </Link>
+          </section>
+        </main>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="mx-auto w-full max-w-5xl px-6 py-10 sm:px-8 lg:px-12">
+          <section className="rounded-[28px] border border-border/80 bg-surface/90 p-8">
+            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
+              Loading Draft
+            </p>
+            <h1 className="mt-4 font-display text-3xl font-bold tracking-tight">
+              Fetching page content for the editor...
+            </h1>
           </section>
         </main>
       </>
