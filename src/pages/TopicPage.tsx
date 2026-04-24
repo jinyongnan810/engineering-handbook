@@ -96,8 +96,43 @@ function TopicSidebar({ currentSlug }: { currentSlug?: string }) {
 }
 
 function PageTableOfContents({ markdown }: { markdown: string }) {
-  const headings = useMemo(() => getMarkdownHeadings(markdown), [markdown]);
-  const navigationHeadings = headings.filter((heading) => heading.level <= 3);
+  const navigationHeadings = useMemo(
+    () => getMarkdownHeadings(markdown).filter((heading) => heading.level <= 3),
+    [markdown],
+  );
+  const [activeHeadingId, setActiveHeadingId] = useState(
+    navigationHeadings[0]?.id ?? "",
+  );
+
+  useEffect(() => {
+    const headingElements = navigationHeadings
+      .map((heading) => document.getElementById(heading.id))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    if (headingElements.length === 0) {
+      return;
+    }
+
+    const updateActiveHeading = () => {
+      const currentHeading =
+        [...headingElements]
+          .reverse()
+          .find((element) => element.getBoundingClientRect().top <= 120) ??
+        headingElements[0];
+
+      setActiveHeadingId(currentHeading.id);
+    };
+
+    const animationFrame = window.requestAnimationFrame(updateActiveHeading);
+    window.addEventListener("scroll", updateActiveHeading, { passive: true });
+    window.addEventListener("resize", updateActiveHeading);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", updateActiveHeading);
+      window.removeEventListener("resize", updateActiveHeading);
+    };
+  }, [navigationHeadings]);
 
   if (navigationHeadings.length === 0) {
     return null;
@@ -113,8 +148,10 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
               <li key={heading.id}>
                 <a
                   href={`#${heading.id}`}
-                  className={`block text-sm leading-5 text-neutral-500 transition hover:text-neutral-950 ${
-                    heading.level === 1 ? "font-semibold text-neutral-950" : ""
+                  className={`block text-sm leading-5 transition hover:text-neutral-950 ${
+                    activeHeadingId === heading.id
+                      ? "font-semibold text-neutral-950"
+                      : "font-normal text-neutral-500"
                   } ${heading.level === 3 ? "pl-3" : ""}`}
                 >
                   {heading.text}
