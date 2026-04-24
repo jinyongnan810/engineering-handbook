@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import LocalOnly from "./LocalOnly";
 
 type SiteHeaderProps = {
   titleHref?: string;
@@ -26,16 +25,7 @@ function SiteHeader({
           </p>
         </Link>
 
-        <nav className="flex items-center gap-3 text-sm font-medium text-text-secondary">
-          <LocalOnly>
-            <Link
-              to="/local/edit"
-              className="rounded-full border border-[#13392f] bg-[#174d3d] px-4 py-2 text-white shadow-[0_10px_24px_rgba(23,77,61,0.28)] transition hover:bg-[#123d31]"
-            >
-              Local Editor
-            </Link>
-          </LocalOnly>
-        </nav>
+        <div aria-hidden="true" />
       </div>
     </header>
   );

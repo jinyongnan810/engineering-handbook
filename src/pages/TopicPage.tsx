@@ -1,12 +1,10 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router";
-import LocalOnly from "../components/LocalOnly";
 import MarkdownSection from "../components/MarkdownSection";
 import PythonSection from "../components/PythonSection";
 import SiteHeader from "../components/SiteHeader";
 import { getPageBySlug } from "../data/contentLoader";
 import type { HandbookPageContent } from "../data/types";
-import { downloadTextFile } from "../utils/download";
 
 const HOME_SCROLL_POSITION_KEY = "home-scroll-position";
 
@@ -39,7 +37,6 @@ function TopicPage() {
     slug: null,
     page: null,
   });
-  const [deleteHelpSlug, setDeleteHelpSlug] = useState<string | null>(null);
   const shouldRestoreHomeScroll = location.state?.restoreHomeScroll === true;
   const isLoading = Boolean(slug) && loadedTopic.slug !== slug;
   const page = loadedTopic.slug === slug ? loadedTopic.page : null;
@@ -132,24 +129,6 @@ function TopicPage() {
 
   const currentPage = page;
 
-  function exportCurrentFiles() {
-    downloadTextFile("why-it-matters.md", currentPage.whyItMatters);
-    downloadTextFile("learning-goals.md", currentPage.learningGoals);
-    downloadTextFile("learning-memo.md", currentPage.learningMemo);
-    downloadTextFile("example.py", currentPage.pythonExample);
-  }
-
-  const neutralActionClass =
-    "inline-flex min-h-14 appearance-none items-center justify-center rounded-full border border-border bg-white/70 px-5 py-3 text-center font-body text-sm font-semibold leading-none tracking-normal transition hover:bg-panel/55";
-  const primaryActionClass =
-    "inline-flex min-h-14 items-center justify-center rounded-full bg-accent px-5 py-3 text-center font-body text-sm font-semibold leading-none tracking-normal text-white transition hover:opacity-90";
-  const dangerActionClass =
-    "inline-flex min-h-14 appearance-none items-center justify-center rounded-full border border-red-300 bg-red-50 px-5 py-3 text-center font-body text-sm font-semibold leading-none tracking-normal text-red-700 transition hover:bg-red-100";
-  const actionTextStyle = {
-    fontFamily: "var(--font-body)",
-    fontWeight: 600,
-  } as const;
-
   return (
     <>
       <SiteHeader
@@ -173,57 +152,6 @@ function TopicPage() {
           <h1 className="mt-5 font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
             {currentPage.title}
           </h1>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <LocalOnly>
-              <Link
-                to={`/local/edit?slug=${currentPage.slug}`}
-                className={primaryActionClass}
-                style={actionTextStyle}
-              >
-                Edit in Local Editor
-              </Link>
-            </LocalOnly>
-            <LocalOnly>
-              <button
-                type="button"
-                onClick={exportCurrentFiles}
-                className={neutralActionClass}
-                style={actionTextStyle}
-              >
-                Export Files
-              </button>
-            </LocalOnly>
-            <LocalOnly>
-              <button
-                type="button"
-                onClick={() =>
-                  setDeleteHelpSlug((current) =>
-                    current === currentPage.slug ? null : currentPage.slug,
-                  )
-                }
-                className={dangerActionClass}
-                style={actionTextStyle}
-              >
-                Delete Help
-              </button>
-            </LocalOnly>
-          </div>
-
-          <LocalOnly>
-            {deleteHelpSlug === currentPage.slug ? (
-              <div className="mt-6 rounded-[24px] border border-red-200 bg-red-50 p-5 text-sm leading-7 text-red-900">
-                Delete this page manually from the repo:
-                <div className="mt-3 rounded-2xl bg-white/70 px-4 py-3 font-mono text-xs text-red-900">
-                  content/{currentPage.folder}
-                </div>
-                <p className="mt-3">
-                  Also remove the corresponding entry from{" "}
-                  <code>content/index.json</code>, or rerun the generator if you
-                  want to regenerate clean starter content.
-                </p>
-              </div>
-            ) : null}
-          </LocalOnly>
         </section>
 
         <div className="mt-8 grid gap-6">

@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "preview": "vite preview",
-    "generate:content": "python3 scripts/generate_handbook_content.py"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

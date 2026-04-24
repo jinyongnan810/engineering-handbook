@@ -12,10 +12,7 @@ const pythonModules = import.meta.glob("../../content/pages/*/*.py", {
 }) as Record<string, () => Promise<string>>;
 
 const metas = pageIndex as HandbookPageMeta[];
-const pageContentCache = new Map<
-  string,
-  Promise<HandbookPageContent | null>
->();
+const pageContentCache = new Map<string, Promise<HandbookPageContent | null>>();
 
 function getContentPath(folder: string, fileName: string) {
   return `../../content/${folder}/${fileName}`;
@@ -38,7 +35,9 @@ export function getAllPageMetas() {
   return metas;
 }
 
-export function getPageBySlug(slug: string): Promise<HandbookPageContent | null> {
+export function getPageBySlug(
+  slug: string,
+): Promise<HandbookPageContent | null> {
   const cachedPage = pageContentCache.get(slug);
 
   if (cachedPage) {
