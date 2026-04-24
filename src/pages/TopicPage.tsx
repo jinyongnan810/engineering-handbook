@@ -1,47 +1,143 @@
-import { useEffect, useLayoutEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router";
-import MarkdownSection from "../components/MarkdownSection";
-import PythonSection from "../components/PythonSection";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useParams } from "react-router";
 import SiteHeader from "../components/SiteHeader";
-import { getPageBySlug } from "../data/contentLoader";
-import type { HandbookPageContent } from "../data/types";
-
-const HOME_SCROLL_POSITION_KEY = "home-scroll-position";
+import { getAllPageMetas, getPageBySlug } from "../data/contentLoader";
+import type {
+  HandbookPageContent,
+  HandbookPageMeta,
+  HandbookTag,
+} from "../data/types";
+import { getMarkdownHeadings, renderMarkdown } from "../utils/markdown";
 
 type LoadedTopicState = {
   slug: string | null;
   page: HandbookPageContent | null;
 };
 
-function BackIcon() {
+const allPages = getAllPageMetas();
+const tagLabels: Record<HandbookTag, string> = {
+  algorithms: "Algorithms",
+  algebra: "Linear algebra",
+  statistics: "Statistics",
+  math: "Math",
+};
+
+function groupPagesByPrimaryTag(pages: HandbookPageMeta[]) {
+  return pages.reduce(
+    (groups, page) => {
+      const tag = page.tags[0];
+      groups[tag] = [...(groups[tag] ?? []), page];
+      return groups;
+    },
+    {} as Partial<Record<HandbookTag, HandbookPageMeta[]>>,
+  );
+}
+
+function TopicSidebar({ currentSlug }: { currentSlug?: string }) {
+  const [query, setQuery] = useState("");
+  const filteredPages = allPages.filter((page) =>
+    page.title.toLowerCase().includes(query.trim().toLowerCase()),
+  );
+  const groupedPages = groupPagesByPrimaryTag(filteredPages);
+  const groups = Object.entries(groupedPages) as [
+    HandbookTag,
+    HandbookPageMeta[],
+  ][];
+
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-5 w-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
+    <aside className="border-b border-neutral-200 bg-white lg:sticky lg:top-14 lg:h-[calc(100vh-3.5rem)] lg:overflow-y-auto lg:border-b-0 lg:border-r">
+      <div className="px-5 py-5 sm:px-8 lg:w-72 lg:px-6">
+        <label className="block">
+          <span className="sr-only">Filter topics</span>
+          <input
+            type="search"
+            placeholder="Filter"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-4 text-[17px] text-neutral-950 outline-none transition placeholder:text-neutral-500 focus:border-neutral-950"
+          />
+        </label>
+
+        <nav aria-label="Topics" className="mt-6 space-y-6">
+          {groups.map(([tag, pages]) => (
+            <section key={tag}>
+              <h2 className="text-sm font-semibold text-neutral-950">
+                {tagLabels[tag] ?? tag}
+              </h2>
+              <ul className="mt-2 space-y-1">
+                {pages.map((page) => {
+                  const isCurrent = page.slug === currentSlug;
+
+                  return (
+                    <li key={page.slug}>
+                      <Link
+                        to={`/page/${page.slug}`}
+                        className={`block rounded-md py-1.5 text-sm leading-5 transition hover:text-neutral-950 ${
+                          isCurrent
+                            ? "font-semibold text-neutral-950"
+                            : "font-normal text-neutral-500"
+                        }`}
+                      >
+                        {page.title}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+          {filteredPages.length === 0 ? (
+            <p className="text-sm text-neutral-500">No matching topics.</p>
+          ) : null}
+        </nav>
+      </div>
+    </aside>
+  );
+}
+
+function PageTableOfContents({ markdown }: { markdown: string }) {
+  const headings = useMemo(() => getMarkdownHeadings(markdown), [markdown]);
+  const navigationHeadings = headings.filter((heading) => heading.level <= 3);
+
+  if (navigationHeadings.length === 0) {
+    return null;
+  }
+
+  return (
+    <aside className="hidden xl:block">
+      <div className="sticky top-24 w-56 border-l border-neutral-200 pl-4">
+        <p className="text-xs font-semibold text-neutral-950">On this page</p>
+        <nav aria-label="On this page" className="mt-3">
+          <ul className="space-y-2">
+            {navigationHeadings.map((heading) => (
+              <li key={heading.id}>
+                <a
+                  href={`#${heading.id}`}
+                  className={`block text-sm leading-5 text-neutral-500 transition hover:text-neutral-950 ${
+                    heading.level === 1 ? "font-semibold text-neutral-950" : ""
+                  } ${heading.level === 3 ? "pl-3" : ""}`}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
   );
 }
 
 function TopicPage() {
-  const location = useLocation();
   const { slug } = useParams();
   const [loadedTopic, setLoadedTopic] = useState<LoadedTopicState>({
     slug: null,
     page: null,
   });
-  const shouldRestoreHomeScroll = location.state?.restoreHomeScroll === true;
   const isLoading = Boolean(slug) && loadedTopic.slug !== slug;
   const page = loadedTopic.slug === slug ? loadedTopic.page : null;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.scrollTo({ top: 0, left: 0 });
   }, [slug]);
 
@@ -65,112 +161,43 @@ function TopicPage() {
     };
   }, [slug]);
 
-  if (isLoading) {
-    return (
-      <>
-        <SiteHeader
-          titleHref="/"
-          titleState={{ restoreHomeScroll: shouldRestoreHomeScroll }}
-          titleAriaLabel="Back to home"
-        />
-        <main className="mx-auto w-full max-w-5xl px-6 py-10 sm:px-8 lg:px-12">
-          <section className="rounded-[28px] border border-border/80 bg-surface/90 p-8">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
-              Loading Topic
-            </p>
-            <h1 className="mt-4 font-display text-3xl font-bold tracking-tight">
-              Fetching page content...
-            </h1>
-          </section>
-        </main>
-      </>
-    );
-  }
-
-  if (!page) {
-    return (
-      <>
-        <SiteHeader
-          titleHref="/"
-          titleState={{ restoreHomeScroll: shouldRestoreHomeScroll }}
-          titleAriaLabel="Back to home"
-        />
-        <main className="mx-auto w-full max-w-5xl px-6 py-10 sm:px-8 lg:px-12">
-          <section className="rounded-[28px] border border-border/80 bg-surface/90 p-8">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent">
-              Topic Not Found
-            </p>
-            <h1 className="mt-4 font-display text-3xl font-bold tracking-tight">
-              That handbook page does not exist.
-            </h1>
-            <Link
-              to="/"
-              state={{ restoreHomeScroll: shouldRestoreHomeScroll }}
-              aria-label="Back to home"
-              className="mt-8 inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white/70 text-text-primary transition hover:bg-panel/55"
-              onClick={() => {
-                if (!shouldRestoreHomeScroll) {
-                  return;
-                }
-
-                window.sessionStorage.setItem(
-                  HOME_SCROLL_POSITION_KEY,
-                  String(window.scrollY),
-                );
-              }}
-            >
-              <BackIcon />
-            </Link>
-          </section>
-        </main>
-      </>
-    );
-  }
-
-  const currentPage = page;
-
   return (
     <>
-      <SiteHeader
-        titleHref="/"
-        titleState={{ restoreHomeScroll: shouldRestoreHomeScroll }}
-        titleAriaLabel="Back to home"
-      />
-      <main className="mx-auto flex w-full max-w-5xl flex-col px-6 py-10 sm:px-8 lg:px-12">
-        <section className="rounded-[32px] border border-border/80 bg-surface/90 p-8 shadow-[0_24px_80px_rgba(68,49,22,0.08)]">
-          <div className="flex flex-wrap gap-2">
-            {currentPage.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-accent"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <h1 className="mt-5 font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-            {currentPage.title}
-          </h1>
-        </section>
-
-        <div className="mt-8 grid gap-6">
-          <MarkdownSection
-            title="Why It Matters"
-            markdown={currentPage.whyItMatters}
-            accent="green"
-          />
-          <MarkdownSection
-            title="Learning Goals"
-            markdown={currentPage.learningGoals}
-          />
-          <MarkdownSection
-            title="Learning Memo"
-            markdown={currentPage.learningMemo}
-          />
-          <PythonSection code={currentPage.pythonExample} />
-        </div>
-      </main>
+      <SiteHeader />
+      <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <TopicSidebar currentSlug={slug} />
+        <main
+          id="content"
+          className="grid min-w-0 px-5 py-10 sm:px-8 lg:px-12 lg:py-14 xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-16"
+        >
+          {isLoading ? (
+            <article className="space-y-4">
+              <p className="text-sm font-semibold text-neutral-500">
+                Loading topic
+              </p>
+              <h1 className="text-5xl font-semibold tracking-tight">
+                Fetching page content...
+              </h1>
+            </article>
+          ) : page ? (
+            <>
+              <article className="min-w-0 max-w-3xl space-y-7">
+                {renderMarkdown(page.markdown)}
+              </article>
+              <PageTableOfContents markdown={page.markdown} />
+            </>
+          ) : (
+            <article className="space-y-4">
+              <p className="text-sm font-semibold text-neutral-500">
+                Topic not found
+              </p>
+              <h1 className="text-5xl font-semibold tracking-tight">
+                That handbook page does not exist.
+              </h1>
+            </article>
+          )}
+        </main>
+      </div>
     </>
   );
 }

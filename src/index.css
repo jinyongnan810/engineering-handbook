@@ -1,28 +1,16 @@
 @import "tailwindcss";
-@import "@fontsource/outfit/400.css";
-@import "@fontsource/outfit/700.css";
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 
 @theme {
-  --font-display: "Outfit", sans-serif;
   --font-body: "Inter", sans-serif;
-
-  --color-page: #f7f4ec;
-  --color-surface: #fffcf7;
-  --color-panel: #efe6d6;
-  --color-border: #d7c8aa;
-  --color-accent: #1f5c4a;
-  --color-accent-soft: #d8ebe4;
-  --color-text-primary: #1d1a16;
-  --color-text-secondary: #5e5548;
 }
 
 :root {
   font-family: var(--font-body);
-  color: var(--color-text-primary);
-  background: var(--color-page);
+  color: #111111;
+  background: #ffffff;
 }
 
 * {
@@ -32,16 +20,14 @@
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(31, 92, 74, 0.14),
-      transparent 28%
-    ),
-    linear-gradient(180deg, #fbf7ef 0%, #f4ecdf 100%);
-  color: var(--color-text-primary);
+  background: #ffffff;
+  color: #111111;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 a {

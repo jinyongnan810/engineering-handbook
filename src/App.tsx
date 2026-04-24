@@ -1,14 +1,22 @@
 import { Navigate, Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
+import { getDefaultPageSlug } from "./data/contentLoader";
 import TopicPage from "./pages/TopicPage";
 
 function App() {
+  const defaultSlug = getDefaultPageSlug();
+
   return (
-    <div className="min-h-screen bg-page text-text-primary">
+    <div className="min-h-screen bg-white text-neutral-950">
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={<Navigate to={`/page/${defaultSlug}`} replace />}
+        />
         <Route path="/page/:slug" element={<TopicPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={<Navigate to={`/page/${defaultSlug}`} replace />}
+        />
       </Routes>
     </div>
   );

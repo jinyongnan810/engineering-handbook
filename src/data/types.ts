@@ -6,12 +6,9 @@ export type HandbookPageMeta = {
   slug: string;
   title: string;
   tags: HandbookTag[];
-  folder: string;
+  file: string;
 };
 
 export type HandbookPageContent = HandbookPageMeta & {
-  whyItMatters: string;
-  learningGoals: string;
-  learningMemo: string;
-  pythonExample: string;
+  markdown: string;
 };

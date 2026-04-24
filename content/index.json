@@ -3,168 +3,168 @@
     "slug": "arrays-dynamic-arrays-strings",
     "title": "Arrays / dynamic arrays / strings",
     "tags": ["algorithms"],
-    "folder": "pages/arrays-dynamic-arrays-strings"
+    "file": "topics/arrays-dynamic-arrays-strings.md"
   },
   {
     "slug": "common-algorithmic-patterns",
     "title": "Common algorithmic patterns",
     "tags": ["algorithms"],
-    "folder": "pages/common-algorithmic-patterns"
+    "file": "topics/common-algorithmic-patterns.md"
   },
   {
     "slug": "conditional-probability-and-bayes-rule",
-    "title": "Conditional probability and Bayes\u2019 rule",
+    "title": "Conditional probability and Bayes’ rule",
     "tags": ["statistics", "math"],
-    "folder": "pages/conditional-probability-and-bayes-rule"
+    "file": "topics/conditional-probability-and-bayes-rule.md"
   },
   {
     "slug": "confidence-intervals",
     "title": "Confidence intervals",
     "tags": ["statistics", "math"],
-    "folder": "pages/confidence-intervals"
+    "file": "topics/confidence-intervals.md"
   },
   {
     "slug": "correlation-vs-causation",
     "title": "Correlation vs causation",
     "tags": ["statistics", "math"],
-    "folder": "pages/correlation-vs-causation"
+    "file": "topics/correlation-vs-causation.md"
   },
   {
     "slug": "distributions",
     "title": "Distributions",
     "tags": ["statistics", "math"],
-    "folder": "pages/distributions"
+    "file": "topics/distributions.md"
   },
   {
     "slug": "dot-product",
     "title": "Dot product",
     "tags": ["algebra", "math"],
-    "folder": "pages/dot-product"
+    "file": "topics/dot-product.md"
   },
   {
     "slug": "eigenvalues-and-eigenvectors",
     "title": "Eigenvalues and eigenvectors",
     "tags": ["algebra", "math"],
-    "folder": "pages/eigenvalues-and-eigenvectors"
+    "file": "topics/eigenvalues-and-eigenvectors.md"
   },
   {
     "slug": "expected-value",
     "title": "Expected value",
     "tags": ["statistics", "math"],
-    "folder": "pages/expected-value"
+    "file": "topics/expected-value.md"
   },
   {
     "slug": "graphs",
     "title": "Graphs",
     "tags": ["algorithms"],
-    "folder": "pages/graphs"
+    "file": "topics/graphs.md"
   },
   {
     "slug": "hash-maps-and-sets",
     "title": "Hash maps and sets",
     "tags": ["algorithms"],
-    "folder": "pages/hash-maps-and-sets"
+    "file": "topics/hash-maps-and-sets.md"
   },
   {
     "slug": "heaps-priority-queues",
     "title": "Heaps / priority queues",
     "tags": ["algorithms"],
-    "folder": "pages/heaps-priority-queues"
+    "file": "topics/heaps-priority-queues.md"
   },
   {
     "slug": "hypothesis-testing-and-p-values",
     "title": "Hypothesis testing and p-values",
     "tags": ["statistics", "math"],
-    "folder": "pages/hypothesis-testing-and-p-values"
+    "file": "topics/hypothesis-testing-and-p-values.md"
   },
   {
     "slug": "linear-transformations",
     "title": "Linear transformations",
     "tags": ["algebra", "math"],
-    "folder": "pages/linear-transformations"
+    "file": "topics/linear-transformations.md"
   },
   {
     "slug": "matrix-multiplication",
     "title": "Matrix multiplication",
     "tags": ["algebra", "math"],
-    "folder": "pages/matrix-multiplication"
+    "file": "topics/matrix-multiplication.md"
   },
   {
     "slug": "mean-median-variance-standard-deviation",
     "title": "Mean, median, variance, standard deviation",
     "tags": ["statistics", "math"],
-    "folder": "pages/mean-median-variance-standard-deviation"
+    "file": "topics/mean-median-variance-standard-deviation.md"
   },
   {
     "slug": "probability-basics",
     "title": "Probability basics",
     "tags": ["statistics", "math"],
-    "folder": "pages/probability-basics"
+    "file": "topics/probability-basics.md"
   },
   {
     "slug": "recursion",
     "title": "Recursion",
     "tags": ["algorithms"],
-    "folder": "pages/recursion"
+    "file": "topics/recursion.md"
   },
   {
     "slug": "regression-basics",
     "title": "Regression basics",
     "tags": ["statistics", "math"],
-    "folder": "pages/regression-basics"
+    "file": "topics/regression-basics.md"
   },
   {
     "slug": "sampling-and-bias",
     "title": "Sampling and bias",
     "tags": ["statistics", "math"],
-    "folder": "pages/sampling-and-bias"
+    "file": "topics/sampling-and-bias.md"
   },
   {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "tags": ["algebra", "math"],
-    "folder": "pages/scalars-vectors-and-matrices"
+    "file": "topics/scalars-vectors-and-matrices.md"
   },
   {
     "slug": "sorting-and-binary-search",
     "title": "Sorting and binary search",
     "tags": ["algorithms"],
-    "folder": "pages/sorting-and-binary-search"
+    "file": "topics/sorting-and-binary-search.md"
   },
   {
     "slug": "stacks-and-queues",
     "title": "Stacks and queues",
     "tags": ["algorithms"],
-    "folder": "pages/stacks-and-queues"
+    "file": "topics/stacks-and-queues.md"
   },
   {
     "slug": "systems-of-linear-equations",
     "title": "Systems of linear equations",
     "tags": ["algebra", "math"],
-    "folder": "pages/systems-of-linear-equations"
+    "file": "topics/systems-of-linear-equations.md"
   },
   {
     "slug": "time-and-space-complexity",
     "title": "Time and space complexity",
     "tags": ["algorithms"],
-    "folder": "pages/time-and-space-complexity"
+    "file": "topics/time-and-space-complexity.md"
   },
   {
     "slug": "transpose-inverse-and-identity-matrix",
     "title": "Transpose, inverse, and identity matrix",
     "tags": ["algebra", "math"],
-    "folder": "pages/transpose-inverse-and-identity-matrix"
+    "file": "topics/transpose-inverse-and-identity-matrix.md"
   },
   {
     "slug": "trees",
     "title": "Trees",
     "tags": ["algorithms"],
-    "folder": "pages/trees"
+    "file": "topics/trees.md"
   },
   {
     "slug": "vector-arithmetic",
     "title": "Vector arithmetic",
     "tags": ["algebra", "math"],
-    "folder": "pages/vector-arithmetic"
+    "file": "topics/vector-arithmetic.md"
   }
 ]

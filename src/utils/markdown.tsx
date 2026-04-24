@@ -9,6 +9,20 @@ type Block =
   | { type: "blockquote"; lines: string[] }
   | { type: "rule" };
 
+export type MarkdownHeading = {
+  id: string;
+  level: number;
+  text: string;
+};
+
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/`|\*|\[|\]|\(|\)/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function parseBlocks(markdown: string): Block[] {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const blocks: Block[] = [];
@@ -104,6 +118,18 @@ function parseBlocks(markdown: string): Block[] {
   return blocks;
 }
 
+function getHeadingId(text: string, counts: Map<string, number>) {
+  const baseId = slugifyHeading(text) || "section";
+  const count = counts.get(baseId) ?? 0;
+  counts.set(baseId, count + 1);
+
+  if (count === 0) {
+    return baseId;
+  }
+
+  return `${baseId}-${count + 1}`;
+}
+
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   const pattern =
@@ -122,7 +148,7 @@ function renderInline(text: string): ReactNode[] {
       nodes.push(
         <code
           key={`${token}-${match.index}`}
-          className="rounded bg-[#efe6d6] px-1.5 py-0.5 text-[0.92em]"
+          className="rounded bg-neutral-100 px-1.5 py-0.5 text-[0.92em]"
         >
           {token.slice(1, -1)}
         </code>,
@@ -146,7 +172,7 @@ function renderInline(text: string): ReactNode[] {
           <a
             key={`${token}-${match.index}`}
             href={linkMatch[2]}
-            className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
+            className="font-medium text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition hover:decoration-neutral-950"
           >
             {linkMatch[1]}
           </a>,
@@ -167,33 +193,68 @@ function renderInline(text: string): ReactNode[] {
   return nodes;
 }
 
+export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
+  const counts = new Map<string, number>();
+
+  return parseBlocks(markdown)
+    .filter((block): block is Extract<Block, { type: "heading" }> => {
+      return block.type === "heading";
+    })
+    .map((block) => ({
+      id: getHeadingId(block.text, counts),
+      level: block.level,
+      text: block.text,
+    }));
+}
+
 export function renderMarkdown(markdown: string): ReactNode[] {
+  const headingCounts = new Map<string, number>();
+
   return parseBlocks(markdown).map((block, index) => {
     if (block.type === "heading") {
-      if (block.level <= 2) {
+      const id = getHeadingId(block.text, headingCounts);
+
+      if (block.level === 1) {
         return (
-          <h3
+          <h1
             key={`heading-${index}`}
-            className="font-display text-2xl font-bold tracking-tight"
+            id={id}
+            className="scroll-mt-24 text-5xl font-semibold tracking-tight text-balance sm:text-6xl"
           >
             {renderInline(block.text)}
-          </h3>
+          </h1>
+        );
+      }
+
+      if (block.level <= 2) {
+        return (
+          <h2
+            key={`heading-${index}`}
+            id={id}
+            className="scroll-mt-24 pt-6 text-3xl font-semibold tracking-tight text-balance"
+          >
+            {renderInline(block.text)}
+          </h2>
         );
       }
 
       return (
-        <h4
+        <h3
           key={`heading-${index}`}
-          className="font-display text-xl font-semibold tracking-tight"
+          id={id}
+          className="scroll-mt-24 pt-3 text-xl font-semibold tracking-tight text-balance"
         >
           {renderInline(block.text)}
-        </h4>
+        </h3>
       );
     }
 
     if (block.type === "paragraph") {
       return (
-        <p key={`paragraph-${index}`} className="text-[15px] leading-7">
+        <p
+          key={`paragraph-${index}`}
+          className="max-w-3xl text-[17px] leading-8 text-neutral-800"
+        >
           {renderInline(block.text)}
         </p>
       );
@@ -201,7 +262,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
 
     if (block.type === "unordered-list") {
       return (
-        <ul key={`unordered-${index}`} className="space-y-2 pl-6 list-disc">
+        <ul
+          key={`unordered-${index}`}
+          className="max-w-3xl list-disc space-y-2 pl-6 text-[17px] leading-8 text-neutral-800"
+        >
           {block.items.map((item, itemIndex) => (
             <li key={`unordered-${index}-${itemIndex}`}>
               {renderInline(item)}
@@ -213,7 +277,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
 
     if (block.type === "ordered-list") {
       return (
-        <ol key={`ordered-${index}`} className="space-y-2 pl-6 list-decimal">
+        <ol
+          key={`ordered-${index}`}
+          className="max-w-3xl list-decimal space-y-2 pl-6 text-[17px] leading-8 text-neutral-800"
+        >
           {block.items.map((item, itemIndex) => (
             <li key={`ordered-${index}-${itemIndex}`}>{renderInline(item)}</li>
           ))}
@@ -225,7 +292,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <blockquote
           key={`blockquote-${index}`}
-          className="border-l-4 border-accent/30 pl-4 italic text-text-secondary"
+          className="max-w-3xl border-l border-neutral-300 pl-4 italic text-neutral-700"
         >
           {block.lines.map((line, lineIndex) => (
             <p key={`blockquote-${index}-${lineIndex}`}>{renderInline(line)}</p>
@@ -238,13 +305,15 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <pre
           key={`code-${index}`}
-          className="overflow-x-auto rounded-2xl bg-[#1f1b18] px-4 py-4 text-sm leading-7 text-[#f7f0e2]"
+          className="max-w-3xl overflow-x-auto rounded-lg bg-neutral-950 px-4 py-4 text-sm leading-7 text-neutral-50"
         >
           <code>{block.lines.join("\n")}</code>
         </pre>
       );
     }
 
-    return <hr key={`rule-${index}`} className="border-border/70" />;
+    return (
+      <hr key={`rule-${index}`} className="max-w-3xl border-neutral-200" />
+    );
   });
 }

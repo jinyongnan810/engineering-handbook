@@ -1,12 +1,7 @@
 import pageIndex from "../../content/index.json";
 import type { HandbookPageContent, HandbookPageMeta } from "./types";
 
-const markdownModules = import.meta.glob("../../content/pages/*/*.md", {
-  query: "?raw",
-  import: "default",
-}) as Record<string, () => Promise<string>>;
-
-const pythonModules = import.meta.glob("../../content/pages/*/*.py", {
+const markdownModules = import.meta.glob("../../content/topics/*.md", {
   query: "?raw",
   import: "default",
 }) as Record<string, () => Promise<string>>;
@@ -14,8 +9,8 @@ const pythonModules = import.meta.glob("../../content/pages/*/*.py", {
 const metas = pageIndex as HandbookPageMeta[];
 const pageContentCache = new Map<string, Promise<HandbookPageContent | null>>();
 
-function getContentPath(folder: string, fileName: string) {
-  return `../../content/${folder}/${fileName}`;
+function getContentPath(file: string) {
+  return `../../content/${file}`;
 }
 
 async function getTextModule(
@@ -35,6 +30,10 @@ export function getAllPageMetas() {
   return metas;
 }
 
+export function getDefaultPageSlug() {
+  return metas[0]?.slug ?? "";
+}
+
 export function getPageBySlug(
   slug: string,
 ): Promise<HandbookPageContent | null> {
@@ -51,29 +50,14 @@ export function getPageBySlug(
       return null;
     }
 
-    const [whyItMatters, learningGoals, learningMemo, pythonExample] =
-      await Promise.all([
-        getTextModule(
-          markdownModules,
-          getContentPath(meta.folder, "why-it-matters.md"),
-        ),
-        getTextModule(
-          markdownModules,
-          getContentPath(meta.folder, "learning-goals.md"),
-        ),
-        getTextModule(
-          markdownModules,
-          getContentPath(meta.folder, "learning-memo.md"),
-        ),
-        getTextModule(pythonModules, getContentPath(meta.folder, "example.py")),
-      ]);
+    const markdown = await getTextModule(
+      markdownModules,
+      getContentPath(meta.file),
+    );
 
     return {
       ...meta,
-      whyItMatters,
-      learningGoals,
-      learningMemo,
-      pythonExample,
+      markdown,
     };
   })();
 
