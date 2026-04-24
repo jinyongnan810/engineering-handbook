@@ -6,7 +6,7 @@ function App() {
   const defaultSlug = getDefaultPageSlug();
 
   return (
-    <div className="min-h-screen bg-white text-neutral-950">
+    <div className="min-h-screen bg-white text-neutral-950 dark:bg-black dark:text-neutral-100">
       <Routes>
         <Route
           path="/"

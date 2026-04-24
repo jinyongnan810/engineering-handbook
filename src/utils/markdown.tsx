@@ -150,7 +150,7 @@ function renderInline(text: string): ReactNode[] {
       nodes.push(
         <code
           key={`${token}-${match.index}`}
-          className="rounded bg-neutral-100 px-1.5 py-0.5 text-[0.92em]"
+          className="rounded bg-neutral-100 px-1.5 py-0.5 text-[0.92em] text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
         >
           {token.slice(1, -1)}
         </code>,
@@ -174,7 +174,7 @@ function renderInline(text: string): ReactNode[] {
           <a
             key={`${token}-${match.index}`}
             href={linkMatch[2]}
-            className="font-medium text-[#06c] underline underline-offset-4 transition hover:text-[#004a99]"
+            className="font-medium text-[#06c] underline underline-offset-4 transition hover:text-[#004a99] dark:text-[#2997ff] dark:hover:text-[#7abfff]"
           >
             {linkMatch[1]}
           </a>,
@@ -340,7 +340,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
           <h1
             key={`heading-${index}`}
             id={id}
-            className="scroll-mt-24 text-5xl font-semibold tracking-tight text-balance sm:text-6xl"
+            className="scroll-mt-24 text-5xl font-semibold tracking-tight text-balance text-neutral-950 dark:text-neutral-100 sm:text-6xl"
           >
             {renderInline(block.text)}
           </h1>
@@ -352,7 +352,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
           <h2
             key={`heading-${index}`}
             id={id}
-            className="scroll-mt-24 pt-6 text-3xl font-semibold tracking-tight text-balance"
+            className="scroll-mt-24 pt-6 text-3xl font-semibold tracking-tight text-balance text-neutral-950 dark:text-neutral-100"
           >
             {renderInline(block.text)}
           </h2>
@@ -363,7 +363,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
         <h3
           key={`heading-${index}`}
           id={id}
-          className="scroll-mt-24 pt-3 text-xl font-semibold tracking-tight text-balance"
+          className="scroll-mt-24 pt-3 text-xl font-semibold tracking-tight text-balance text-neutral-950 dark:text-neutral-100"
         >
           {renderInline(block.text)}
         </h3>
@@ -374,7 +374,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <p
           key={`paragraph-${index}`}
-          className="max-w-3xl text-[17px] leading-8 text-neutral-800"
+          className="max-w-3xl text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
         >
           {renderInline(block.text)}
         </p>
@@ -385,7 +385,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <ul
           key={`unordered-${index}`}
-          className="max-w-3xl list-disc space-y-2 pl-6 text-[17px] leading-8 text-neutral-800"
+          className="max-w-3xl list-disc space-y-2 pl-6 text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
         >
           {block.items.map((item, itemIndex) => (
             <li key={`unordered-${index}-${itemIndex}`}>
@@ -400,7 +400,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <ol
           key={`ordered-${index}`}
-          className="max-w-3xl list-decimal space-y-2 pl-6 text-[17px] leading-8 text-neutral-800"
+          className="max-w-3xl list-decimal space-y-2 pl-6 text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
         >
           {block.items.map((item, itemIndex) => (
             <li key={`ordered-${index}-${itemIndex}`}>{renderInline(item)}</li>
@@ -413,7 +413,7 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       return (
         <blockquote
           key={`blockquote-${index}`}
-          className="max-w-3xl border-l border-neutral-300 pl-4 italic text-neutral-700"
+          className="max-w-3xl border-l border-neutral-300 pl-4 italic text-neutral-700 dark:border-neutral-700 dark:text-neutral-400"
         >
           {block.lines.map((line, lineIndex) => (
             <p key={`blockquote-${index}-${lineIndex}`}>{renderInline(line)}</p>
@@ -440,7 +440,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
     }
 
     return (
-      <hr key={`rule-${index}`} className="max-w-3xl border-neutral-200" />
+      <hr
+        key={`rule-${index}`}
+        className="max-w-3xl border-neutral-200 dark:border-neutral-800"
+      />
     );
   });
 }
