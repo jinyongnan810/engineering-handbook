@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
+import CodeBlock from "../components/CodeBlock";
 
 type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
   | { type: "unordered-list"; items: string[] }
   | { type: "ordered-list"; items: string[] }
-  | { type: "code"; lines: string[] }
+  | { type: "code"; lines: string[]; language: string }
   | { type: "blockquote"; lines: string[] }
   | { type: "rule" };
 
@@ -44,6 +45,7 @@ function parseBlocks(markdown: string): Block[] {
     }
 
     if (trimmed.startsWith("```")) {
+      const language = trimmed.replace(/^```/, "").trim().split(/\s+/)[0] ?? "";
       index += 1;
       const codeLines: string[] = [];
       while (index < lines.length && !lines[index].trim().startsWith("```")) {
@@ -51,7 +53,7 @@ function parseBlocks(markdown: string): Block[] {
         index += 1;
       }
       index += 1;
-      blocks.push({ type: "code", lines: codeLines });
+      blocks.push({ type: "code", lines: codeLines, language });
       continue;
     }
 
@@ -172,7 +174,7 @@ function renderInline(text: string): ReactNode[] {
           <a
             key={`${token}-${match.index}`}
             href={linkMatch[2]}
-            className="font-medium text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition hover:decoration-neutral-950"
+            className="font-medium text-[#06c] underline underline-offset-4 transition hover:text-[#004a99]"
           >
             {linkMatch[1]}
           </a>,
@@ -188,6 +190,125 @@ function renderInline(text: string): ReactNode[] {
 
   if (lastIndex < text.length) {
     nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes;
+}
+
+function normalizeCodeLanguage(language: string) {
+  const normalizedLanguage = language.toLowerCase();
+
+  if (["py", "python"].includes(normalizedLanguage)) {
+    return "python";
+  }
+
+  if (["ts", "tsx", "typescript"].includes(normalizedLanguage)) {
+    return "typescript";
+  }
+
+  if (["js", "jsx", "javascript"].includes(normalizedLanguage)) {
+    return "javascript";
+  }
+
+  return normalizedLanguage;
+}
+
+function getCodeLanguageLabel(language: string) {
+  const normalizedLanguage = normalizeCodeLanguage(language);
+
+  if (normalizedLanguage === "python") {
+    return "Python";
+  }
+
+  if (normalizedLanguage === "typescript") {
+    return "TypeScript";
+  }
+
+  if (normalizedLanguage === "javascript") {
+    return "JavaScript";
+  }
+
+  return language;
+}
+
+function renderHighlightedToken(
+  token: string,
+  language: string,
+  key: string,
+): ReactNode {
+  if (/^(#.*|\/\/.*)$/.test(token)) {
+    return (
+      <span key={key} className="text-neutral-500">
+        {token}
+      </span>
+    );
+  }
+
+  if (/^(['"`]).*\1$/.test(token)) {
+    return (
+      <span key={key} className="text-emerald-300">
+        {token}
+      </span>
+    );
+  }
+
+  if (/^\d+(\.\d+)?$/.test(token)) {
+    return (
+      <span key={key} className="text-sky-300">
+        {token}
+      </span>
+    );
+  }
+
+  const pythonKeywords =
+    /^(and|as|assert|async|await|break|class|continue|def|elif|else|except|False|finally|for|from|if|import|in|is|lambda|None|not|or|pass|raise|return|True|try|while|with|yield)$/;
+  const typeScriptKeywords =
+    /^(abstract|as|async|await|boolean|break|case|catch|class|const|continue|default|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|interface|let|new|null|number|private|protected|public|readonly|return|string|switch|this|throw|true|try|type|undefined|void|while)$/;
+
+  if (
+    (language === "python" && pythonKeywords.test(token)) ||
+    (["typescript", "javascript"].includes(language) &&
+      typeScriptKeywords.test(token))
+  ) {
+    return (
+      <span key={key} className="text-violet-300">
+        {token}
+      </span>
+    );
+  }
+
+  return token;
+}
+
+function renderCodeLine(line: string, language: string, lineIndex: number) {
+  const tokenPattern =
+    language === "python"
+      ? /(#.*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
+      : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
+
+  const nodes: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  match = tokenPattern.exec(line);
+  while (match) {
+    if (match.index > lastIndex) {
+      nodes.push(line.slice(lastIndex, match.index));
+    }
+
+    nodes.push(
+      renderHighlightedToken(
+        match[0],
+        language,
+        `code-${lineIndex}-${match.index}`,
+      ),
+    );
+    lastIndex = tokenPattern.lastIndex;
+    match = tokenPattern.exec(line);
+  }
+
+  if (lastIndex < line.length) {
+    nodes.push(line.slice(lastIndex));
   }
 
   return nodes;
@@ -302,13 +423,19 @@ export function renderMarkdown(markdown: string): ReactNode[] {
     }
 
     if (block.type === "code") {
+      const language = normalizeCodeLanguage(block.language);
+      const label = getCodeLanguageLabel(block.language) || "Code";
+      const code = block.lines.join("\n");
+
       return (
-        <pre
+        <CodeBlock
           key={`code-${index}`}
-          className="max-w-3xl overflow-x-auto rounded-lg bg-neutral-950 px-4 py-4 text-sm leading-7 text-neutral-50"
-        >
-          <code>{block.lines.join("\n")}</code>
-        </pre>
+          code={code}
+          language={language}
+          label={label}
+          lines={block.lines}
+          renderCodeLine={renderCodeLine}
+        />
       );
     }
 

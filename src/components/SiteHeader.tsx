@@ -7,18 +7,6 @@ function SiteHeader() {
         <Link to="/" className="min-w-0 text-xl font-semibold tracking-tight">
           Engineering Handbook
         </Link>
-
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-8 text-xs text-neutral-700 md:flex"
-        >
-          <a className="font-medium text-neutral-950" href="#content">
-            Topics
-          </a>
-          <a href="#references" className="transition hover:text-neutral-950">
-            References
-          </a>
-        </nav>
       </div>
     </header>
   );
