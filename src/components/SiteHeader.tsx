@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
 
-function SiteHeader() {
+type SiteHeaderProps = {
+  isTopicsOpen?: boolean;
+  onOpenTopics?: () => void;
+};
+
+function SiteHeader({ isTopicsOpen = false, onOpenTopics }: SiteHeaderProps) {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const syncSystemTheme = () => {
@@ -27,6 +32,38 @@ function SiteHeader() {
         </Link>
 
         <div aria-hidden="true" />
+        {onOpenTopics ? (
+          <button
+            type="button"
+            aria-controls="mobile-topic-sidebar"
+            aria-expanded={isTopicsOpen}
+            onClick={onOpenTopics}
+            className="grid size-10 shrink-0 place-items-center rounded-full text-neutral-800 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-900 lg:hidden"
+          >
+            <span className="sr-only">
+              {isTopicsOpen ? "Close topic list" : "Open topic list"}
+            </span>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-7">
+              {isTopicsOpen ? (
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="2.1"
+                />
+              ) : (
+                <path
+                  d="M5 7h14M5 12h14M5 17h14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="1.9"
+                />
+              )}
+            </svg>
+          </button>
+        ) : null}
       </div>
     </header>
   );
