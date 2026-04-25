@@ -1,13 +1,5 @@
 # Hypothesis testing and p-values
 
-## Why it matters
-
-Add notes for this section.
-
-## Learning goals
-
-Add notes for this section.
-
 ## Learning memo
 
 Add notes for this section.

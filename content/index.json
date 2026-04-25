@@ -1,39 +1,15 @@
 [
   {
-    "slug": "arrays-dynamic-arrays-strings",
-    "title": "Arrays / dynamic arrays / strings",
-    "tags": ["algorithms"],
-    "file": "topics/arrays-dynamic-arrays-strings.md"
+    "slug": "scalars-vectors-and-matrices",
+    "title": "Scalars, vectors, and matrices",
+    "tags": ["algebra", "math"],
+    "file": "topics/scalars-vectors-and-matrices.md"
   },
   {
-    "slug": "common-algorithmic-patterns",
-    "title": "Common algorithmic patterns",
-    "tags": ["algorithms"],
-    "file": "topics/common-algorithmic-patterns.md"
-  },
-  {
-    "slug": "conditional-probability-and-bayes-rule",
-    "title": "Conditional probability and Bayes’ rule",
-    "tags": ["statistics", "math"],
-    "file": "topics/conditional-probability-and-bayes-rule.md"
-  },
-  {
-    "slug": "confidence-intervals",
-    "title": "Confidence intervals",
-    "tags": ["statistics", "math"],
-    "file": "topics/confidence-intervals.md"
-  },
-  {
-    "slug": "correlation-vs-causation",
-    "title": "Correlation vs causation",
-    "tags": ["statistics", "math"],
-    "file": "topics/correlation-vs-causation.md"
-  },
-  {
-    "slug": "distributions",
-    "title": "Distributions",
-    "tags": ["statistics", "math"],
-    "file": "topics/distributions.md"
+    "slug": "vector-arithmetic",
+    "title": "Vector arithmetic",
+    "tags": ["algebra", "math"],
+    "file": "topics/vector-arithmetic.md"
   },
   {
     "slug": "dot-product",
@@ -42,40 +18,10 @@
     "file": "topics/dot-product.md"
   },
   {
-    "slug": "eigenvalues-and-eigenvectors",
-    "title": "Eigenvalues and eigenvectors",
+    "slug": "matrix-multiplication",
+    "title": "Matrix multiplication",
     "tags": ["algebra", "math"],
-    "file": "topics/eigenvalues-and-eigenvectors.md"
-  },
-  {
-    "slug": "expected-value",
-    "title": "Expected value",
-    "tags": ["statistics", "math"],
-    "file": "topics/expected-value.md"
-  },
-  {
-    "slug": "graphs",
-    "title": "Graphs",
-    "tags": ["algorithms"],
-    "file": "topics/graphs.md"
-  },
-  {
-    "slug": "hash-maps-and-sets",
-    "title": "Hash maps and sets",
-    "tags": ["algorithms"],
-    "file": "topics/hash-maps-and-sets.md"
-  },
-  {
-    "slug": "heaps-priority-queues",
-    "title": "Heaps / priority queues",
-    "tags": ["algorithms"],
-    "file": "topics/heaps-priority-queues.md"
-  },
-  {
-    "slug": "hypothesis-testing-and-p-values",
-    "title": "Hypothesis testing and p-values",
-    "tags": ["statistics", "math"],
-    "file": "topics/hypothesis-testing-and-p-values.md"
+    "file": "topics/matrix-multiplication.md"
   },
   {
     "slug": "linear-transformations",
@@ -84,10 +30,82 @@
     "file": "topics/linear-transformations.md"
   },
   {
-    "slug": "matrix-multiplication",
-    "title": "Matrix multiplication",
+    "slug": "systems-of-linear-equations",
+    "title": "Systems of linear equations",
     "tags": ["algebra", "math"],
-    "file": "topics/matrix-multiplication.md"
+    "file": "topics/systems-of-linear-equations.md"
+  },
+  {
+    "slug": "transpose-inverse-and-identity-matrix",
+    "title": "Transpose, inverse, and identity matrix",
+    "tags": ["algebra", "math"],
+    "file": "topics/transpose-inverse-and-identity-matrix.md"
+  },
+  {
+    "slug": "eigenvalues-and-eigenvectors",
+    "title": "Eigenvalues and eigenvectors",
+    "tags": ["algebra", "math"],
+    "file": "topics/eigenvalues-and-eigenvectors.md"
+  },
+  {
+    "slug": "time-and-space-complexity",
+    "title": "Time and space complexity",
+    "tags": ["algorithms"],
+    "file": "topics/time-and-space-complexity.md"
+  },
+  {
+    "slug": "arrays-dynamic-arrays-strings",
+    "title": "Arrays / dynamic arrays / strings",
+    "tags": ["algorithms"],
+    "file": "topics/arrays-dynamic-arrays-strings.md"
+  },
+  {
+    "slug": "hash-maps-and-sets",
+    "title": "Hash maps and sets",
+    "tags": ["algorithms"],
+    "file": "topics/hash-maps-and-sets.md"
+  },
+  {
+    "slug": "stacks-and-queues",
+    "title": "Stacks and queues",
+    "tags": ["algorithms"],
+    "file": "topics/stacks-and-queues.md"
+  },
+  {
+    "slug": "recursion",
+    "title": "Recursion",
+    "tags": ["algorithms"],
+    "file": "topics/recursion.md"
+  },
+  {
+    "slug": "trees",
+    "title": "Trees",
+    "tags": ["algorithms"],
+    "file": "topics/trees.md"
+  },
+  {
+    "slug": "graphs",
+    "title": "Graphs",
+    "tags": ["algorithms"],
+    "file": "topics/graphs.md"
+  },
+  {
+    "slug": "sorting-and-binary-search",
+    "title": "Sorting and binary search",
+    "tags": ["algorithms"],
+    "file": "topics/sorting-and-binary-search.md"
+  },
+  {
+    "slug": "heaps-priority-queues",
+    "title": "Heaps / priority queues",
+    "tags": ["algorithms"],
+    "file": "topics/heaps-priority-queues.md"
+  },
+  {
+    "slug": "common-algorithmic-patterns",
+    "title": "Common algorithmic patterns",
+    "tags": ["algorithms"],
+    "file": "topics/common-algorithmic-patterns.md"
   },
   {
     "slug": "mean-median-variance-standard-deviation",
@@ -102,16 +120,16 @@
     "file": "topics/probability-basics.md"
   },
   {
-    "slug": "recursion",
-    "title": "Recursion",
-    "tags": ["algorithms"],
-    "file": "topics/recursion.md"
+    "slug": "conditional-probability-and-bayes-rule",
+    "title": "Conditional probability and Bayes’ rule",
+    "tags": ["statistics", "math"],
+    "file": "topics/conditional-probability-and-bayes-rule.md"
   },
   {
-    "slug": "regression-basics",
-    "title": "Regression basics",
+    "slug": "distributions",
+    "title": "Distributions",
     "tags": ["statistics", "math"],
-    "file": "topics/regression-basics.md"
+    "file": "topics/distributions.md"
   },
   {
     "slug": "sampling-and-bias",
@@ -120,51 +138,33 @@
     "file": "topics/sampling-and-bias.md"
   },
   {
-    "slug": "scalars-vectors-and-matrices",
-    "title": "Scalars, vectors, and matrices",
-    "tags": ["algebra", "math"],
-    "file": "topics/scalars-vectors-and-matrices.md"
+    "slug": "correlation-vs-causation",
+    "title": "Correlation vs causation",
+    "tags": ["statistics", "math"],
+    "file": "topics/correlation-vs-causation.md"
   },
   {
-    "slug": "sorting-and-binary-search",
-    "title": "Sorting and binary search",
-    "tags": ["algorithms"],
-    "file": "topics/sorting-and-binary-search.md"
+    "slug": "regression-basics",
+    "title": "Regression basics",
+    "tags": ["statistics", "math"],
+    "file": "topics/regression-basics.md"
   },
   {
-    "slug": "stacks-and-queues",
-    "title": "Stacks and queues",
-    "tags": ["algorithms"],
-    "file": "topics/stacks-and-queues.md"
+    "slug": "hypothesis-testing-and-p-values",
+    "title": "Hypothesis testing and p-values",
+    "tags": ["statistics", "math"],
+    "file": "topics/hypothesis-testing-and-p-values.md"
   },
   {
-    "slug": "systems-of-linear-equations",
-    "title": "Systems of linear equations",
-    "tags": ["algebra", "math"],
-    "file": "topics/systems-of-linear-equations.md"
+    "slug": "confidence-intervals",
+    "title": "Confidence intervals",
+    "tags": ["statistics", "math"],
+    "file": "topics/confidence-intervals.md"
   },
   {
-    "slug": "time-and-space-complexity",
-    "title": "Time and space complexity",
-    "tags": ["algorithms"],
-    "file": "topics/time-and-space-complexity.md"
-  },
-  {
-    "slug": "transpose-inverse-and-identity-matrix",
-    "title": "Transpose, inverse, and identity matrix",
-    "tags": ["algebra", "math"],
-    "file": "topics/transpose-inverse-and-identity-matrix.md"
-  },
-  {
-    "slug": "trees",
-    "title": "Trees",
-    "tags": ["algorithms"],
-    "file": "topics/trees.md"
-  },
-  {
-    "slug": "vector-arithmetic",
-    "title": "Vector arithmetic",
-    "tags": ["algebra", "math"],
-    "file": "topics/vector-arithmetic.md"
+    "slug": "expected-value",
+    "title": "Expected value",
+    "tags": ["statistics", "math"],
+    "file": "topics/expected-value.md"
   }
 ]
