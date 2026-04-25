@@ -46,6 +46,21 @@ engineering-handbook/
 - Node.js 22 or compatible modern Node runtime
 - npm
 
+## Start From A Fresh Checkout
+
+```bash
+git clone <repo-url>
+cd engineering-handbook
+npm install
+git config core.hooksPath .githooks
+npm run dev
+```
+
+The Git hook configuration enables the tracked pre-commit hook in
+`.githooks/pre-commit`. The hook runs `make lint` before each commit. If
+formatting changes files, the commit stops so you can stage the updated files
+and commit again.
+
 ## Install
 
 ```bash
@@ -151,9 +166,9 @@ To remove a topic:
 
 ## Useful Files
 
-- [src/pages/HomePage.tsx](/Users/kin/Documents/GitHub/variaty-practices/engineering-handbook/src/pages/HomePage.tsx)
-- [src/pages/TopicPage.tsx](/Users/kin/Documents/GitHub/variaty-practices/engineering-handbook/src/pages/TopicPage.tsx)
-- [src/data/contentLoader.ts](/Users/kin/Documents/GitHub/variaty-practices/engineering-handbook/src/data/contentLoader.ts)
+- [src/pages/HomePage.tsx](/Users/kin/Documents/GitHub/engineering-handbook/src/pages/HomePage.tsx)
+- [src/pages/TopicPage.tsx](/Users/kin/Documents/GitHub/engineering-handbook/src/pages/TopicPage.tsx)
+- [src/data/contentLoader.ts](/Users/kin/Documents/GitHub/engineering-handbook/src/data/contentLoader.ts)
 
 ## Current Status
 
