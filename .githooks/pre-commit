@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+PATH="$HOME/.nvm/versions/node/v22.20.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH
+
+hook_dir=${0%/*}
+cd "$hook_dir/.."
+
+before=$(mktemp)
+after=$(mktemp)
+trap 'rm -f "$before" "$after"' EXIT
+
+git diff --no-ext-diff --binary > "$before"
+
+echo "Running make lint before commit..."
+make lint
+
+git diff --no-ext-diff --binary > "$after"
+
+if ! cmp -s "$before" "$after"; then
+  echo
+  echo "make lint changed files. Stage the updated files and commit again:"
+  git diff --name-only
+  exit 1
+fi
