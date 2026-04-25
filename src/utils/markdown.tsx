@@ -231,89 +231,6 @@ function getCodeLanguageLabel(language: string) {
   return language;
 }
 
-function renderHighlightedToken(
-  token: string,
-  language: string,
-  key: string,
-): ReactNode {
-  if (/^(#.*|\/\/.*)$/.test(token)) {
-    return (
-      <span key={key} className="text-neutral-500">
-        {token}
-      </span>
-    );
-  }
-
-  if (/^(['"`]).*\1$/.test(token)) {
-    return (
-      <span key={key} className="text-emerald-300">
-        {token}
-      </span>
-    );
-  }
-
-  if (/^\d+(\.\d+)?$/.test(token)) {
-    return (
-      <span key={key} className="text-sky-300">
-        {token}
-      </span>
-    );
-  }
-
-  const pythonKeywords =
-    /^(and|as|assert|async|await|break|class|continue|def|elif|else|except|False|finally|for|from|if|import|in|is|lambda|None|not|or|pass|raise|return|True|try|while|with|yield)$/;
-  const typeScriptKeywords =
-    /^(abstract|as|async|await|boolean|break|case|catch|class|const|continue|default|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|interface|let|new|null|number|private|protected|public|readonly|return|string|switch|this|throw|true|try|type|undefined|void|while)$/;
-
-  if (
-    (language === "python" && pythonKeywords.test(token)) ||
-    (["typescript", "javascript"].includes(language) &&
-      typeScriptKeywords.test(token))
-  ) {
-    return (
-      <span key={key} className="text-violet-300">
-        {token}
-      </span>
-    );
-  }
-
-  return token;
-}
-
-function renderCodeLine(line: string, language: string, lineIndex: number) {
-  const tokenPattern =
-    language === "python"
-      ? /(#.*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
-      : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
-
-  const nodes: ReactNode[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  match = tokenPattern.exec(line);
-  while (match) {
-    if (match.index > lastIndex) {
-      nodes.push(line.slice(lastIndex, match.index));
-    }
-
-    nodes.push(
-      renderHighlightedToken(
-        match[0],
-        language,
-        `code-${lineIndex}-${match.index}`,
-      ),
-    );
-    lastIndex = tokenPattern.lastIndex;
-    match = tokenPattern.exec(line);
-  }
-
-  if (lastIndex < line.length) {
-    nodes.push(line.slice(lastIndex));
-  }
-
-  return nodes;
-}
-
 export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
   const counts = new Map<string, number>();
 
@@ -434,7 +351,6 @@ export function renderMarkdown(markdown: string): ReactNode[] {
           language={language}
           label={label}
           lines={block.lines}
-          renderCodeLine={renderCodeLine}
         />
       );
     }
