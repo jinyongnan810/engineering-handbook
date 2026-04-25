@@ -49,3 +49,43 @@ textarea,
 select {
   font: inherit;
 }
+
+@keyframes mobile-page-navigation-list-enter {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+
+  to {
+    clip-path: inset(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-topic-navigation-list-enter {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    clip-path: inset(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-page-navigation-list {
+    animation: mobile-page-navigation-list-enter 180ms ease-out 45ms both;
+    transform-origin: top;
+  }
+
+  .mobile-topic-navigation-list {
+    animation: mobile-topic-navigation-list-enter 180ms ease-out 45ms both;
+    transform-origin: top;
+  }
+}

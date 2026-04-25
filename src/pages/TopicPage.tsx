@@ -82,7 +82,11 @@ function TopicNavigation({
             >
               {tagLabels[tag] ?? tag}
             </h2>
-            <ul className="mt-2 space-y-1">
+            <ul
+              className={`mt-2 space-y-1 ${
+                variant === "mobile" ? "mobile-topic-navigation-list" : ""
+              }`}
+            >
               {pages.map((page) => {
                 const isCurrent = page.slug === currentSlug;
 
@@ -274,7 +278,7 @@ function MobilePageNavigation({
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
             On this page
           </p>
-          <ul className="space-y-1">
+          <ul className="mobile-page-navigation-list space-y-1">
             {navigationHeadings.map((heading) => (
               <li key={heading.id}>
                 <a
