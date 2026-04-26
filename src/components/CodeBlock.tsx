@@ -117,15 +117,27 @@ function CodeBlock({ code, language, label, lines }: CodeBlockProps) {
           {copyState === "copied" ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto px-4 py-4 text-sm leading-7 text-neutral-50">
-        <code className={language ? `language-${language}` : undefined}>
-          {canHighlight
-            ? lines.map((line, lineIndex) => (
-                <span key={`line-${lineIndex}`} className="block">
-                  {renderCodeLine(line, language, lineIndex)}
-                </span>
-              ))
-            : code}
+      <pre className="overflow-hidden px-4 py-4 text-sm leading-7 text-neutral-50">
+        <code
+          className={`grid grid-cols-[max-content_minmax(0,1fr)] gap-x-4 ${
+            language ? `language-${language}` : ""
+          }`}
+        >
+          {lines.map((line, lineIndex) => (
+            <span key={`line-${lineIndex}`} className="contents">
+              <span
+                aria-hidden="true"
+                className="select-none text-right tabular-nums text-neutral-600"
+              >
+                {lineIndex + 1}
+              </span>
+              <span className="min-w-0 whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
+                {canHighlight
+                  ? renderCodeLine(line, language, lineIndex)
+                  : line}
+              </span>
+            </span>
+          ))}
         </code>
       </pre>
     </div>
