@@ -434,10 +434,15 @@ function renderInline(text: string): ReactNode[] {
     } else if (token.startsWith("[")) {
       const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (linkMatch) {
+        const href = linkMatch[2];
+        const opensInNewTab = !href.startsWith("#");
+
         nodes.push(
           <a
             key={`${token}-${match.index}`}
-            href={linkMatch[2]}
+            href={href}
+            target={opensInNewTab ? "_blank" : undefined}
+            rel={opensInNewTab ? "noreferrer" : undefined}
             className="font-medium text-[#06c] underline underline-offset-4 transition hover:text-[#004a99] dark:text-[#2997ff] dark:hover:text-[#7abfff]"
           >
             {linkMatch[1]}
