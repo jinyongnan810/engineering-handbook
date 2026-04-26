@@ -4,6 +4,12 @@ import CodeBlock from "../components/CodeBlock";
 type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
+  | {
+      type: "table";
+      headers: string[];
+      rows: string[][];
+      alignments: TableAlignment[];
+    }
   | { type: "unordered-list"; items: string[] }
   | { type: "ordered-list"; items: string[] }
   | { type: "code"; lines: string[]; language: string }
@@ -16,6 +22,8 @@ export type MarkdownHeading = {
   level: number;
   text: string;
 };
+
+type TableAlignment = "left" | "center" | "right";
 
 function slugifyHeading(text: string) {
   return text
@@ -91,6 +99,23 @@ function parseBlocks(markdown: string): Block[] {
       continue;
     }
 
+    if (isTableStart(lines, index)) {
+      const headers = parseTableRow(lines[index]);
+      const alignments = parseTableAlignments(lines[index + 1], headers.length);
+      const rows: string[][] = [];
+      index += 2;
+
+      while (index < lines.length && isTableRow(lines[index])) {
+        rows.push(
+          normalizeTableRow(parseTableRow(lines[index]), headers.length),
+        );
+        index += 1;
+      }
+
+      blocks.push({ type: "table", headers, rows, alignments });
+      continue;
+    }
+
     if (trimmed.startsWith(">")) {
       const quoteLines: string[] = [];
       while (index < lines.length && lines[index].trim().startsWith(">")) {
@@ -144,6 +169,65 @@ function parseBlocks(markdown: string): Block[] {
   return blocks;
 }
 
+function isTableRow(line: string) {
+  const trimmed = line.trim();
+  return trimmed.includes("|") && trimmed.length > 0;
+}
+
+function isTableSeparator(line: string) {
+  const cells = parseTableRow(line);
+
+  return (
+    cells.length > 0 &&
+    cells.every((cell) => /^:?-{3,}:?$/.test(cell.replace(/\s+/g, "")))
+  );
+}
+
+function isTableStart(lines: string[], index: number) {
+  return (
+    index + 1 < lines.length &&
+    isTableRow(lines[index]) &&
+    isTableSeparator(lines[index + 1])
+  );
+}
+
+function parseTableRow(line: string) {
+  const trimmed = line.trim();
+  const withoutOuterPipes = trimmed.replace(/^\|/, "").replace(/\|$/, "");
+
+  return withoutOuterPipes.split("|").map((cell) => cell.trim());
+}
+
+function parseTableAlignments(line: string, cellCount: number) {
+  return normalizeTableRow(parseTableRow(line), cellCount).map((cell) => {
+    const normalized = cell.replace(/\s+/g, "");
+    const startsWithColon = normalized.startsWith(":");
+    const endsWithColon = normalized.endsWith(":");
+
+    if (startsWithColon && endsWithColon) {
+      return "center";
+    }
+
+    if (endsWithColon) {
+      return "right";
+    }
+
+    return "left";
+  });
+}
+
+function normalizeTableRow(cells: string[], cellCount: number) {
+  if (cells.length === cellCount) {
+    return cells;
+  }
+
+  if (cells.length > cellCount) {
+    return cells.slice(0, cellCount);
+  }
+
+  return [...cells, ...Array<string>(cellCount - cells.length).fill("")];
+}
+
 function getHeadingId(text: string, counts: Map<string, number>) {
   const baseId = slugifyHeading(text) || "section";
   const count = counts.get(baseId) ?? 0;
@@ -157,6 +241,7 @@ function getHeadingId(text: string, counts: Map<string, number>) {
 }
 
 const latexSymbols: Record<string, string> = {
+  "|": "‖",
   alpha: "α",
   beta: "β",
   gamma: "γ",
@@ -206,6 +291,9 @@ const latexSymbols: Record<string, string> = {
   subseteq: "⊆",
   cup: "∪",
   cap: "∩",
+  Vert: "‖",
+  lVert: "‖",
+  rVert: "‖",
 };
 
 function readLatexGroup(text: string, startIndex: number) {
@@ -500,6 +588,18 @@ function getCodeLanguageLabel(language: string) {
   return language;
 }
 
+function getTableAlignmentClass(alignment: TableAlignment) {
+  if (alignment === "center") {
+    return "text-center";
+  }
+
+  if (alignment === "right") {
+    return "text-right";
+  }
+
+  return "text-left";
+}
+
 export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
   const counts = new Map<string, number>();
 
@@ -564,6 +664,51 @@ export function renderMarkdown(markdown: string): ReactNode[] {
         >
           {renderInline(block.text)}
         </p>
+      );
+    }
+
+    if (block.type === "table") {
+      return (
+        <div
+          key={`table-${index}`}
+          className="max-w-3xl overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800"
+        >
+          <table className="min-w-full border-collapse text-[15px] leading-7">
+            <thead className="bg-neutral-100 text-neutral-950 dark:bg-neutral-900 dark:text-neutral-100">
+              <tr>
+                {block.headers.map((header, headerIndex) => (
+                  <th
+                    key={`table-${index}-head-${headerIndex}`}
+                    className={`border-b border-neutral-200 px-4 py-2 font-semibold dark:border-neutral-800 ${getTableAlignmentClass(
+                      block.alignments[headerIndex] ?? "left",
+                    )}`}
+                  >
+                    {renderInline(header)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-200 text-neutral-800 dark:divide-neutral-800 dark:text-neutral-300">
+              {block.rows.map((row, rowIndex) => (
+                <tr
+                  key={`table-${index}-row-${rowIndex}`}
+                  className="bg-white dark:bg-neutral-950"
+                >
+                  {row.map((cell, cellIndex) => (
+                    <td
+                      key={`table-${index}-cell-${rowIndex}-${cellIndex}`}
+                      className={`px-4 py-2 align-top ${getTableAlignmentClass(
+                        block.alignments[cellIndex] ?? "left",
+                      )}`}
+                    >
+                      {renderInline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
     }
 
