@@ -7,6 +7,7 @@ type Block =
   | { type: "unordered-list"; items: string[] }
   | { type: "ordered-list"; items: string[] }
   | { type: "code"; lines: string[]; language: string }
+  | { type: "math"; lines: string[] }
   | { type: "blockquote"; lines: string[] }
   | { type: "rule" };
 
@@ -57,6 +58,28 @@ function parseBlocks(markdown: string): Block[] {
       continue;
     }
 
+    if (trimmed === "$$") {
+      index += 1;
+      const mathLines: string[] = [];
+      while (index < lines.length && lines[index].trim() !== "$$") {
+        mathLines.push(lines[index]);
+        index += 1;
+      }
+      index += 1;
+      blocks.push({ type: "math", lines: mathLines });
+      continue;
+    }
+
+    if (
+      trimmed.startsWith("$$") &&
+      trimmed.endsWith("$$") &&
+      trimmed.length > 4
+    ) {
+      blocks.push({ type: "math", lines: [trimmed.slice(2, -2).trim()] });
+      index += 1;
+      continue;
+    }
+
     const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
     if (headingMatch) {
       blocks.push({
@@ -104,6 +127,7 @@ function parseBlocks(markdown: string): Block[] {
       if (
         current === "---" ||
         current.startsWith("```") ||
+        current === "$$" ||
         current.startsWith(">") ||
         /^#{1,6}\s+/.test(current) ||
         /^[-*]\s+/.test(current) ||
@@ -132,10 +156,241 @@ function getHeadingId(text: string, counts: Map<string, number>) {
   return `${baseId}-${count + 1}`;
 }
 
+const latexSymbols: Record<string, string> = {
+  alpha: "α",
+  beta: "β",
+  gamma: "γ",
+  delta: "δ",
+  epsilon: "ε",
+  theta: "θ",
+  lambda: "λ",
+  mu: "μ",
+  pi: "π",
+  rho: "ρ",
+  sigma: "σ",
+  tau: "τ",
+  phi: "φ",
+  omega: "ω",
+  Gamma: "Γ",
+  Delta: "Δ",
+  Theta: "Θ",
+  Lambda: "Λ",
+  Pi: "Π",
+  Sigma: "Σ",
+  Phi: "Φ",
+  Omega: "Ω",
+  cdot: "·",
+  times: "×",
+  div: "÷",
+  pm: "±",
+  leq: "≤",
+  geq: "≥",
+  neq: "≠",
+  approx: "≈",
+  infty: "∞",
+  sum: "∑",
+  prod: "∏",
+  int: "∫",
+  partial: "∂",
+  nabla: "∇",
+  cdots: "⋯",
+  ldots: "…",
+  vdots: "⋮",
+  ddots: "⋱",
+  to: "→",
+  rightarrow: "→",
+  leftarrow: "←",
+  in: "∈",
+  notin: "∉",
+  subset: "⊂",
+  subseteq: "⊆",
+  cup: "∪",
+  cap: "∩",
+};
+
+function readLatexGroup(text: string, startIndex: number) {
+  if (text[startIndex] !== "{") {
+    return {
+      value: text[startIndex] ?? "",
+      endIndex: Math.min(startIndex + 1, text.length),
+    };
+  }
+
+  let depth = 0;
+  for (let index = startIndex; index < text.length; index += 1) {
+    if (text[index] === "{") {
+      depth += 1;
+    } else if (text[index] === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return {
+          value: text.slice(startIndex + 1, index),
+          endIndex: index + 1,
+        };
+      }
+    }
+  }
+
+  return { value: text.slice(startIndex + 1), endIndex: text.length };
+}
+
+function renderLatexInline(latex: string, keyPrefix = "math"): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let index = 0;
+
+  while (index < latex.length) {
+    const char = latex[index];
+
+    if (char === "\\") {
+      if (latex[index + 1] === "\\") {
+        nodes.push(<br key={`${keyPrefix}-br-${index}`} />);
+        index += 2;
+        continue;
+      }
+
+      const commandMatch = latex.slice(index + 1).match(/^[A-Za-z]+/);
+      const command = commandMatch?.[0] ?? latex[index + 1] ?? "";
+
+      if (command === "frac") {
+        const numerator = readLatexGroup(latex, index + command.length + 1);
+        const denominator = readLatexGroup(latex, numerator.endIndex);
+        nodes.push(
+          <span
+            key={`${keyPrefix}-frac-${index}`}
+            className="mx-0.5 inline-flex translate-y-[0.12em] flex-col items-center align-middle text-[0.88em] leading-none"
+          >
+            <span className="border-b border-current px-1 pb-0.5">
+              {renderLatexInline(numerator.value, `${keyPrefix}-num-${index}`)}
+            </span>
+            <span className="px-1 pt-0.5">
+              {renderLatexInline(
+                denominator.value,
+                `${keyPrefix}-den-${index}`,
+              )}
+            </span>
+          </span>,
+        );
+        index = denominator.endIndex;
+        continue;
+      }
+
+      if (command === "sqrt") {
+        const radicand = readLatexGroup(latex, index + command.length + 1);
+        nodes.push(
+          <span key={`${keyPrefix}-sqrt-${index}`} className="inline-flex">
+            <span>√</span>
+            <span className="border-t border-current px-1">
+              {renderLatexInline(radicand.value, `${keyPrefix}-sqrtv-${index}`)}
+            </span>
+          </span>,
+        );
+        index = radicand.endIndex;
+        continue;
+      }
+
+      if (["left", "right"].includes(command)) {
+        index += command.length + 1;
+        continue;
+      }
+
+      nodes.push(latexSymbols[command] ?? command);
+      index += command.length + 1;
+      continue;
+    }
+
+    if (char === "_" || char === "^") {
+      const group = readLatexGroup(latex, index + 1);
+      const Tag = char === "_" ? "sub" : "sup";
+      nodes.push(
+        <Tag key={`${keyPrefix}-${char}-${index}`}>
+          {renderLatexInline(group.value, `${keyPrefix}-script-${index}`)}
+        </Tag>,
+      );
+      index = group.endIndex;
+      continue;
+    }
+
+    if (char === "{" || char === "}") {
+      index += 1;
+      continue;
+    }
+
+    nodes.push(char);
+    index += 1;
+  }
+
+  return nodes;
+}
+
+function renderLatexMatrix(latex: string, keyPrefix: string) {
+  const matrixMatch = latex.match(
+    /\\begin\{([pbvB]?matrix)\}([\s\S]*?)\\end\{\1\}/,
+  );
+
+  if (!matrixMatch) {
+    return null;
+  }
+
+  const before = latex.slice(0, matrixMatch.index).trim();
+  const after = latex
+    .slice((matrixMatch.index ?? 0) + matrixMatch[0].length)
+    .trim();
+  const rows = matrixMatch[2]
+    .split(/\\\\/)
+    .map((row) => row.trim())
+    .filter(Boolean)
+    .map((row) => row.split("&").map((cell) => cell.trim()));
+
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-3">
+      {before ? (
+        <span>{renderLatexInline(before, `${keyPrefix}-before`)}</span>
+      ) : null}
+      <span className="inline-flex items-stretch font-serif text-[1.08em]">
+        <span className="rounded-l border-y-2 border-l-2 border-neutral-600 px-1 dark:border-neutral-400" />
+        <span className="grid gap-x-5 gap-y-2 px-2">
+          {rows.map((row, rowIndex) => (
+            <span
+              key={`${keyPrefix}-row-${rowIndex}`}
+              className="grid grid-flow-col auto-cols-fr gap-x-5 text-center"
+            >
+              {row.map((cell, cellIndex) => (
+                <span key={`${keyPrefix}-cell-${rowIndex}-${cellIndex}`}>
+                  {renderLatexInline(
+                    cell,
+                    `${keyPrefix}-cell-${rowIndex}-${cellIndex}`,
+                  )}
+                </span>
+              ))}
+            </span>
+          ))}
+        </span>
+        <span className="rounded-r border-y-2 border-r-2 border-neutral-600 px-1 dark:border-neutral-400" />
+      </span>
+      {after ? (
+        <span>{renderLatexInline(after, `${keyPrefix}-after`)}</span>
+      ) : null}
+    </div>
+  );
+}
+
+function renderDisplayMath(latex: string, key: string) {
+  const matrix = renderLatexMatrix(latex, key);
+
+  return (
+    <div
+      key={key}
+      className="max-w-3xl overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-50 px-5 py-4 text-center font-serif text-[18px] leading-8 text-neutral-950 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
+    >
+      {matrix ?? renderLatexInline(latex, key)}
+    </div>
+  );
+}
+
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   const pattern =
-    /(`[^`]+`)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(\[[^\]]+\]\([^)]+\))/g;
+    /(`[^`]+`)|(\$[^$\n]+\$)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(\[[^\]]+\]\([^)]+\))/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -154,6 +409,15 @@ function renderInline(text: string): ReactNode[] {
         >
           {token.slice(1, -1)}
         </code>,
+      );
+    } else if (token.startsWith("$")) {
+      nodes.push(
+        <span
+          key={`${token}-${match.index}`}
+          className="whitespace-nowrap font-serif text-[1.04em] text-neutral-950 dark:text-neutral-100"
+        >
+          {renderLatexInline(token.slice(1, -1), `inline-${match.index}`)}
+        </span>,
       );
     } else if (token.startsWith("**")) {
       nodes.push(
@@ -353,6 +617,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
           lines={block.lines}
         />
       );
+    }
+
+    if (block.type === "math") {
+      return renderDisplayMath(block.lines.join("\n"), `math-${index}`);
     }
 
     return (
