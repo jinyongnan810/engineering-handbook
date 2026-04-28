@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import katex from "katex";
 import CodeBlock from "../components/CodeBlock";
 
 type Block =
@@ -410,67 +411,56 @@ function renderLatexInline(latex: string, keyPrefix = "math"): ReactNode[] {
   return nodes;
 }
 
-function renderLatexMatrix(latex: string, keyPrefix: string) {
-  const matrixMatch = latex.match(
-    /\\begin\{([pbvB]?matrix)\}([\s\S]*?)\\end\{\1\}/,
-  );
+function renderKatex(latex: string, displayMode: boolean) {
+  return katex.renderToString(latex, {
+    displayMode,
+    output: "htmlAndMathml",
+    strict: "ignore",
+    throwOnError: false,
+  });
+}
 
-  if (!matrixMatch) {
-    return null;
-  }
-
-  const before = latex.slice(0, matrixMatch.index).trim();
-  const after = latex
-    .slice((matrixMatch.index ?? 0) + matrixMatch[0].length)
-    .trim();
-  const rows = matrixMatch[2]
-    .split(/\\\\/)
-    .map((row) => row.trim())
-    .filter(Boolean)
-    .map((row) => row.split("&").map((cell) => cell.trim()));
-
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3">
-      {before ? (
-        <span>{renderLatexInline(before, `${keyPrefix}-before`)}</span>
-      ) : null}
-      <span className="inline-flex items-stretch font-serif text-[1.08em]">
-        <span className="rounded-l border-y-2 border-l-2 border-neutral-600 px-1 dark:border-neutral-400" />
-        <span className="grid gap-x-5 gap-y-2 px-2">
-          {rows.map((row, rowIndex) => (
-            <span
-              key={`${keyPrefix}-row-${rowIndex}`}
-              className="grid grid-flow-col auto-cols-fr gap-x-5 text-center"
-            >
-              {row.map((cell, cellIndex) => (
-                <span key={`${keyPrefix}-cell-${rowIndex}-${cellIndex}`}>
-                  {renderLatexInline(
-                    cell,
-                    `${keyPrefix}-cell-${rowIndex}-${cellIndex}`,
-                  )}
-                </span>
-              ))}
-            </span>
-          ))}
-        </span>
-        <span className="rounded-r border-y-2 border-r-2 border-neutral-600 px-1 dark:border-neutral-400" />
+function renderInlineMath(latex: string, key: string) {
+  try {
+    return (
+      <span
+        key={key}
+        className="whitespace-nowrap text-neutral-950 dark:text-neutral-100"
+        dangerouslySetInnerHTML={{ __html: renderKatex(latex, false) }}
+      />
+    );
+  } catch {
+    return (
+      <span
+        key={key}
+        className="whitespace-nowrap font-serif text-[1.04em] text-neutral-950 dark:text-neutral-100"
+      >
+        {renderLatexInline(latex, key)}
       </span>
-      {after ? (
-        <span>{renderLatexInline(after, `${keyPrefix}-after`)}</span>
-      ) : null}
-    </div>
-  );
+    );
+  }
 }
 
 function renderDisplayMath(latex: string, key: string) {
-  const matrix = renderLatexMatrix(latex, key);
+  let content: ReactNode;
+
+  try {
+    content = (
+      <div
+        className="text-[18px]"
+        dangerouslySetInnerHTML={{ __html: renderKatex(latex, true) }}
+      />
+    );
+  } catch {
+    content = renderLatexInline(latex, key);
+  }
 
   return (
     <div
       key={key}
-      className="max-w-3xl overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-50 px-5 py-4 text-center font-serif text-[18px] leading-8 text-neutral-950 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
+      className="max-w-3xl overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-50 px-5 py-4 text-center leading-8 text-neutral-950 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100"
     >
-      {matrix ?? renderLatexInline(latex, key)}
+      {content}
     </div>
   );
 }
@@ -500,12 +490,7 @@ function renderInline(text: string): ReactNode[] {
       );
     } else if (token.startsWith("$")) {
       nodes.push(
-        <span
-          key={`${token}-${match.index}`}
-          className="whitespace-nowrap font-serif text-[1.04em] text-neutral-950 dark:text-neutral-100"
-        >
-          {renderLatexInline(token.slice(1, -1), `inline-${match.index}`)}
-        </span>,
+        renderInlineMath(token.slice(1, -1), `${token}-${match.index}`),
       );
     } else if (token.startsWith("**")) {
       nodes.push(
