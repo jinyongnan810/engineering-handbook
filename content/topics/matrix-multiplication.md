@@ -1,9 +1,223 @@
 # Matrix multiplication
 
-## Learning memo
+## Matrix multiplication
 
-Add notes for this section.
+Matrix multiplication is a way to combine linear transformations(scale/rotation etc.) and apply to data.
+
+## Shape compatibility
+
+Only matrix that have same inner dimension can be multiplied.
+
+$$
+A_{m \times n} B_{n \times p} = C_{m \times p}
+$$
+
+## Matrix × Vector
+
+A vector can be treated as a column matrix.
+Apply transform A to vector x look like
+
+$$
+Ax =
+\begin{bmatrix}
+1 & 2 \\
+3 & 4
+\end{bmatrix}
+\begin{bmatrix}
+5 \\
+6
+\end{bmatrix}
+$$
+
+The key is to multiply each row of A with the vector.
+
+$$
+Ax =
+\begin{bmatrix}
+1 \cdot 5 + 2 \cdot 6 \\
+3 \cdot 5 + 4 \cdot 6
+\end{bmatrix}
+=
+
+\begin{bmatrix}
+17 \\
+39
+\end{bmatrix}
+$$
+
+## Matrix × Matrix
+
+Matrix × Matrix is like applying matrix × vector multiple times.
+Each cell is calculated by
+
+$$
+C_{ij} = \text{row } i \text{ of } A \cdot \text{column } j \text{ of } B  = \sum_{k=1}^{n} A_{ik}B_{kj}
+$$
+
+For example
+
+$$
+AB =
+\begin{bmatrix}
+1 & 2 \\
+3 & 4
+\end{bmatrix}
+\begin{bmatrix}
+5 & 6 \\
+7 & 8
+\end{bmatrix}
+=
+\begin{bmatrix}
+19 & 22 \\
+43 & 50
+\end{bmatrix}
+$$
+
+A more complicated example:
+
+$$
+AB =
+\begin{bmatrix}
+1 & 2 \\
+3 & 4 \\
+5 & 6
+\end{bmatrix}
+\begin{bmatrix}
+7 & 8 & 9 \\
+10 & 11 & 12
+\end{bmatrix}
+=
+\begin{bmatrix}
+1\cdot7 + 2\cdot10 & 1\cdot8 + 2\cdot11 & 1\cdot9 + 2\cdot12 \\
+3\cdot7 + 4\cdot10 & 3\cdot8 + 4\cdot11 & 3\cdot9 + 4\cdot12 \\
+5\cdot7 + 6\cdot10 & 5\cdot8 + 6\cdot11 & 5\cdot9 + 6\cdot12
+\end{bmatrix}
+=
+\begin{bmatrix}
+27 & 30 & 33 \\
+61 & 68 & 75 \\
+95 & 106 & 117
+\end{bmatrix}
+$$
+
+## Multiplication order matters
+
+$$
+AB =
+\begin{bmatrix}
+19 & 22 \\
+43 & 50
+\end{bmatrix}
+$$
+
+$$
+BA =
+\begin{bmatrix}
+5 & 6 \\
+7 & 8
+\end{bmatrix}
+\begin{bmatrix}
+1 & 2 \\
+3 & 4
+\end{bmatrix}
+=
+\begin{bmatrix}
+23 & 34 \\
+31 & 46
+\end{bmatrix}
+$$
+
+## Composition intuition
+
+Matrix multiplication means function composition.
+
+$$
+ABx
+$$
+
+means
+
+> first apply B, then apply A
+
+For example
+This scales the first row by 2
+
+$$
+S =
+\begin{bmatrix}
+2 & 0 \\
+0 & 1
+\end{bmatrix}
+$$
+
+and this rotates vector by 90 degrees
+
+$$
+R =
+\begin{bmatrix}
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+$$
+
+For
+
+$$
+x =
+\begin{bmatrix}
+1 \\
+1
+\end{bmatrix}
+$$
+
+First scale
+
+$$
+Sx =
+\begin{bmatrix}
+2 & 0 \\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+1 \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+2 \\
+1
+\end{bmatrix}
+$$
+
+Then rotate
+
+$$
+R(Sx) =
+\begin{bmatrix}
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+2 \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+-1 \\
+2
+\end{bmatrix}
+$$
+
+If first rotate, then scale, the result will be different.
+
+$$
+SRx =
+\begin{bmatrix}
+-2 \\
+1
+\end{bmatrix}
+$$
 
 ## References
 
-- Add primary references, docs, papers, or source material here.
+- [Matrix multiplication as composition | Chapter 4, Essence of linear algebra](https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD)
