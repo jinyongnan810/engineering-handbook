@@ -4,6 +4,31 @@
 
 Matrix multiplication is a way to combine linear transformations(scale/rotation etc.) and apply to data.
 
+## Linear Transformation
+
+Linear transformation requires these 2 criteria:
+
+- The center is un moved after transformation
+- The grid lines(including diagonal ones) are not curved after transformation
+
+Since all the point in the grid can be expressed by
+
+$$\hat{i}x + \hat{j}y$$
+
+The transformation of i hat and j hat could express `(x,y)`'s location after transformation.
+
+## 2D Linear Transformation
+
+In 2d grid, a transformation could be expressed by 2x2 matrices.
+For example, this matrix means that after transformation, the i hat is in `(0,1)`, and j hat is in `(-1,0)`. so this matrix means a transformation that rotates 90 degrees counterclockwise.
+
+$$
+\begin{bmatrix}
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+$$
+
 ## Shape compatibility
 
 Only matrix that have same inner dimension can be multiplied.
@@ -13,6 +38,8 @@ A_{m \times n} B_{n \times p} = C_{m \times p}
 $$
 
 ## Matrix × Vector
+
+For 2D linear transformation
 
 A vector can be treated as a column matrix.
 Apply transform A to vector x look like
@@ -33,6 +60,18 @@ The key is to multiply each row of A with the vector.
 
 $$
 Ax =
+5
+\begin{bmatrix}
+1 \\
+3
+\end{bmatrix}
++
+6
+\begin{bmatrix}
+2 \\
+4
+\end{bmatrix}
+=
 \begin{bmatrix}
 1 \cdot 5 + 2 \cdot 6 \\
 3 \cdot 5 + 4 \cdot 6
@@ -100,6 +139,67 @@ AB =
 \end{bmatrix}
 $$
 
+In python
+
+```py
+def matmul(A, B):
+    rows_A = len(A)
+    cols_A = len(A[0])
+    rows_B = len(B)
+    cols_B = len(B[0])
+
+    if cols_A != rows_B:
+        raise ValueError(f"Cannot multiply shapes ({rows_A}, {cols_A}) and ({rows_B}, {cols_B})")
+
+    result = []
+
+    for i in range(rows_A):
+        row = []
+        for j in range(cols_B):
+            value = 0
+            for k in range(cols_A):
+                value += A[i][k] * B[k][j]
+            row.append(value)
+        result.append(row)
+
+    return result
+
+
+A = [
+    [1, 2],
+    [3, 4],
+    [5, 6],
+]
+
+B = [
+    [7, 8, 9],
+    [10, 11, 12],
+]
+
+print(matmul(A, B))
+# [[27, 30, 33], [61, 68, 75], [95, 106, 117]]
+```
+
+Or with numpy
+
+```py
+import numpy as np
+
+A = np.array([
+    [1, 2],
+    [3, 4],
+    [5, 6],
+])
+
+B = np.array([
+    [7, 8, 9],
+    [10, 11, 12],
+])
+
+print(A @ B)
+# [[27, 30, 33], [61, 68, 75], [95, 106, 117]]
+```
+
 ## Multiplication order matters
 
 $$
@@ -125,6 +225,12 @@ BA =
 23 & 34 \\
 31 & 46
 \end{bmatrix}
+$$
+
+But if order is the same, the results are the same for
+
+$$
+(AB)Cx = A(BC)x
 $$
 
 ## Composition intuition
@@ -220,4 +326,5 @@ $$
 
 ## References
 
+- [Linear transformations and matrices | Chapter 3, Essence of linear algebra](https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv)
 - [Matrix multiplication as composition | Chapter 4, Essence of linear algebra](https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD)
