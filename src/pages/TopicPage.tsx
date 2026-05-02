@@ -133,7 +133,7 @@ function TopicNavigation({
 
 function TopicSidebar({ currentSlug }: { currentSlug?: string }) {
   return (
-    <aside className="hidden border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black lg:sticky lg:top-14 lg:block lg:h-[calc(100vh-3.5rem)] lg:overflow-y-auto lg:border-r">
+    <aside className="hidden border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black lg:sticky lg:top-14 lg:block lg:h-[calc(100vh-3.5rem)] lg:overflow-x-hidden lg:overflow-y-auto lg:border-r">
       <div className="lg:w-72 lg:px-6 lg:py-5">
         <TopicNavigation currentSlug={currentSlug} />
       </div>
