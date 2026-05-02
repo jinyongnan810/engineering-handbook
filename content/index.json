@@ -18,16 +18,16 @@
     "file": "topics/dot-product.md"
   },
   {
-    "slug": "matrix-multiplication",
-    "title": "Matrix multiplication",
-    "tags": ["algebra", "math"],
-    "file": "topics/matrix-multiplication.md"
-  },
-  {
     "slug": "linear-transformations",
     "title": "Linear transformations",
     "tags": ["algebra", "math"],
     "file": "topics/linear-transformations.md"
+  },
+  {
+    "slug": "matrix-multiplication",
+    "title": "Matrix multiplication",
+    "tags": ["algebra", "math"],
+    "file": "topics/matrix-multiplication.md"
   },
   {
     "slug": "systems-of-linear-equations",

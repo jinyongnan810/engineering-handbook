@@ -4,31 +4,6 @@
 
 Matrix multiplication is a way to combine linear transformations(scale/rotation etc.) and apply to data.
 
-## Linear Transformation
-
-Linear transformation requires these 2 criteria:
-
-- The center is un moved after transformation
-- The grid lines(including diagonal ones) are not curved after transformation
-
-Since all the point in the grid can be expressed by
-
-$$\hat{i}x + \hat{j}y$$
-
-The transformation of i hat and j hat could express `(x,y)`'s location after transformation.
-
-## 2D Linear Transformation
-
-In 2d grid, a transformation could be expressed by 2x2 matrices.
-For example, this matrix means that after transformation, the i hat is in `(0,1)`, and j hat is in `(-1,0)`. so this matrix means a transformation that rotates 90 degrees counterclockwise.
-
-$$
-\begin{bmatrix}
-0 & -1 \\
-1 & 0
-\end{bmatrix}
-$$
-
 ## Shape compatibility
 
 Only matrix that have same inner dimension can be multiplied.
@@ -37,52 +12,6 @@ $$
 A_{m \times n} B_{n \times p} = C_{m \times p}
 $$
 
-## Matrix × Vector
-
-For 2D linear transformation
-
-A vector can be treated as a column matrix.
-Apply transform A to vector x look like
-
-$$
-Ax =
-\begin{bmatrix}
-1 & 2 \\
-3 & 4
-\end{bmatrix}
-\begin{bmatrix}
-5 \\
-6
-\end{bmatrix}
-$$
-
-The key is to multiply each row of A with the vector.
-
-$$
-Ax =
-5
-\begin{bmatrix}
-1 \\
-3
-\end{bmatrix}
-+
-6
-\begin{bmatrix}
-2 \\
-4
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 \cdot 5 + 2 \cdot 6 \\
-3 \cdot 5 + 4 \cdot 6
-\end{bmatrix}
-=
-
-\begin{bmatrix}
-17 \\
-39
-\end{bmatrix}
-$$
 
 ## Matrix × Matrix
 
