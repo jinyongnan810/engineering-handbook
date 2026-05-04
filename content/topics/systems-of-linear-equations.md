@@ -133,6 +133,20 @@ Then we got y = 2, x = 3.
 
 Just like 2 lines can have 1, none, or infinite number of intersections, depends on the system, there could have 1, none or infinite number of solutions.
 
-## References
+## Solve in python with numpy
 
-- Add primary references, docs, papers, or source material here.
+```py
+import numpy as np
+
+A = np.array([
+    [1, 2],
+    [3, 4],
+], dtype=float)
+
+b = np.array([5, 11], dtype=float)
+
+x = np.linalg.solve(A, b)
+
+print(x)
+# [1. 2.]
+```
