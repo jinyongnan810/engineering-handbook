@@ -32,6 +32,90 @@ and
 
 > rows = features, columns = samples
 
+### Transpose to dot product
+
+For a, b, which both are column vectors
+
+$$
+a =
+\begin{bmatrix}
+1 \\
+2 \\
+3
+\end{bmatrix},
+\quad
+b =
+\begin{bmatrix}
+4 \\
+5 \\
+6
+\end{bmatrix}
+$$
+
+We can multiply and get dot product by
+
+$$
+a^T b
+=
+\begin{bmatrix}
+1 & 2 & 3
+\end{bmatrix}
+\begin{bmatrix}
+4 \\
+5 \\
+6
+\end{bmatrix}
+=
+1 \cdot 4 + 2 \cdot 5 + 3 \cdot 6
+=
+32
+$$
+
+### Transpose to outer product
+
+Use the outer product when you want to create a matrix of all pairwise interactions between two vectors.
+
+$$
+ab^T
+=
+\begin{bmatrix}
+1 \\
+2 \\
+3
+\end{bmatrix}
+\begin{bmatrix}
+4 & 5 & 6
+\end{bmatrix}
+=
+\begin{bmatrix}
+4 & 5 & 6 \\
+8 & 10 & 12 \\
+12 & 15 & 18
+\end{bmatrix}
+$$
+
+| Operation     |           Shape | Meaning                                               |
+| ------------- | --------------: | ----------------------------------------------------- |
+| Dot product   | vector → scalar | “How similar are these?”                              |
+| Outer product | vector → matrix | “How does every item interact with every other item?” |
+
+### Covariance computation
+
+$$
+\text{Cov}(X) = \frac{1}{n - 1} X^T X
+$$
+
+$$
+X^T X
+=
+(\text{features} \times \text{samples})
+(\text{samples} \times \text{features})
+=
+\text{features} \times \text{features}
+$$
+
+So transpose lets us change from sample-oriented data to feature-oriented comparison.
+
 ## Identity matrix
 
 The identity matrix is the matrix version of the number 1.
