@@ -1,9 +1,11 @@
 # Linear transformations
 
 ## Big idea
+
 A linear transformation is a function that takes a vector as input and returns another vector as output, while preserving the “linear structure” of space.
 
 The transformation takes a 2D vector and returns another 2D vector.
+
 $$
 T\left(
 \begin{bmatrix}
@@ -19,6 +21,7 @@ y'
 $$
 
 ## About Linear
+
 Linear transformation requires these 2 criteria:
 
 - The center is un moved after transformation
@@ -33,6 +36,7 @@ The transformation of i hat and j hat could express `(x,y)`'s location after tra
 ## 2D Linear Transformation
 
 In 2d grid, a transformation could be expressed by 2x2 matrices.
+
 $$
 A =
 \begin{bmatrix}
@@ -40,6 +44,7 @@ a & b \\
 c & d
 \end{bmatrix}
 $$
+
 For example, this matrix means that after transformation, the i hat is in `(0,1)`, and j hat is in `(-1,0)`. so this matrix means a transformation that rotates 90 degrees counterclockwise.
 
 $$
@@ -57,6 +62,7 @@ A vector can be treated as a column matrix.
 And apply transform A to vector x look like
 
 In general
+
 $$
 A\vec{v}
 =
@@ -76,6 +82,7 @@ cx + dy
 $$
 
 For example
+
 $$
 A\vec{v} =
 \begin{bmatrix}
@@ -117,9 +124,11 @@ A\vec{v} =
 $$
 
 ## One of the transformations: Rotation
+
 Rotation turns vectors around the origin.
 
 The standard 2D rotation matrix is:
+
 $$
 R(\theta)
 =
@@ -128,7 +137,9 @@ R(\theta)
 \sin\theta & \cos\theta
 \end{bmatrix}
 $$
+
 θ is the rotation degree which is counterclockwise.
+
 $$
 R(90^\circ)
 =
@@ -138,8 +149,6 @@ R(90^\circ)
 \end{bmatrix}
 $$
 
-
-
 ## References
 
-- Add primary references, docs, papers, or source material here.
+- [Linear transformations and matrices | Chapter 3, Essence of linear algebra](https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv)

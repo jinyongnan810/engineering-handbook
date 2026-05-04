@@ -12,7 +12,6 @@ $$
 A_{m \times n} B_{n \times p} = C_{m \times p}
 $$
 
-
 ## Matrix × Matrix
 
 Matrix × Matrix is like applying matrix × vector multiple times.
@@ -255,5 +254,4 @@ $$
 
 ## References
 
-- [Linear transformations and matrices | Chapter 3, Essence of linear algebra](https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv)
 - [Matrix multiplication as composition | Chapter 4, Essence of linear algebra](https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD)
