@@ -132,6 +132,70 @@ Mindfullness can help loosen the grip of our habits and create the possiblity of
 
 ## where are you coming from?
 
+In Non-Violent-Communication, we learn to identify the specific _observations_ we want to discuss, our _feelings_ about those events, the deeper human _needs_ from which those feelings arise, and our _requests_ for how to move forward together.
+
+Meet each other's needs isn't about _what_ we say but rather _where_ we're coming from. It's about our intention.
+
+### Interest come from curiosity and care
+
+The less blame and criticism, the eaiser it is for others to hear us. It's in our best interest to come from curiosity and care. When rooted in this intention, our verbal and nonverbal communication sends the message that we're genuinely interested, which enormously helps create the space to hear each other and work together.
+
+### Needs
+
+What happiness looks like differs from person to person, even day to day, but at the root of it, everything we do, we do to meed a need.
+
+### Curiosity and Care
+
+Curiosity means that we are interested in learning. And learning requires humility, we must be willing to accept not know. It's needed to put aside our preconveived ideas and be open to new ways of seeing.
+
+In order to be interested in something, to give our attention, we also need to care. Care means that we are open to being affected by what we learn, that we are committed to seeing the other person's humanity, and finially we are willing to include their needs in the situation.
+
+### Mindfulness in building the attention
+
+Our ordinary realationshipt to experience is to judge and control. Mindfulness can help observe and notice these tendencies firsthand.
+
+When we unconsciouly choose to lead with these habitual actions, with mindfullness we can learn that we always end up wasting a lot of energy chasing pleasure and resisting pain, trying to control things beyond our sphere or influence.
+
+The first steps is to be able to identify when we're on the autopilot. Then we can return to our inner ground, and prepare to get curious: "What's happening here? Let me try to understand this."
+
+In practice, notice some common signs will be helpful.
+
+- Physical signs
+  - Tightness in the jaw
+  - Tension in the limbs and body
+  - Shallow and rapid breathing
+  - Flushes of heat, sweating, or cold
+- Emotional signs
+  - Fear, anxiety, wanting to run away
+  - Irritation, anger, annoyance, aggression
+  - Urge to protect, explain, and defend yourself
+  - Frozen, overwhelmed, stuck
+- Memtal signs
+  - Thoughts of anger, hate, negativity
+  - Thoughts of hopelessness and despair
+  - Thoughts of worst-case scenarios
+- Verbal signs
+  - An increase in pace, pitch, or volume of speech
+  - Reluctance to speak or respond
+  - Some phrase like
+    - "But that's not what i meant..."
+    - "You don't understand..."
+    - "should/never/always"
+
+When the sign appears, try to pause and relax tension or tightness. Then remembering there is always chooses about how to proceed. Finally, return to presence and bring back curious and care.
+
+- "What if there were something to learn here?"
+- "what if we figure this out and became closer?"
+- "What might work for both of us?"
+- "Regardless of the outcome, how do i want to handle myself here?"
+- "What's most important to me? What are my needs?"
+- "What matters to them? What do they need?"
+
+### Two questions
+
+- "What do i want the other person to do?"
+- "What do i want their reasons to be for doing it?"
+
 ## don't let the call drop
 
 # part three: focus on what matters
