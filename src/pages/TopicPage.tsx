@@ -317,7 +317,14 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
         <nav aria-label="On this page" className="mt-3">
           <ul className="space-y-2">
             {navigationHeadings.map((heading) => (
-              <li key={heading.id}>
+              <li
+                key={heading.id}
+                className={
+                  heading.level === 1
+                    ? "border-t border-neutral-200 pt-2 dark:border-neutral-800"
+                    : ""
+                }
+              >
                 <a
                   href={`#${heading.id}`}
                   className={`block text-sm leading-5 transition hover:text-neutral-950 dark:hover:text-neutral-100 ${
