@@ -407,14 +407,13 @@ function TopicPage() {
           className="grid min-w-0 px-5 py-10 sm:px-8 lg:px-12 lg:py-14 xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-16"
         >
           {isLoading ? (
-            <article className="space-y-4">
-              <p className="text-sm font-semibold text-neutral-500 dark:text-neutral-500">
-                Loading topic
-              </p>
-              <h1 className="text-5xl font-semibold tracking-tight">
-                Fetching page content...
-              </h1>
-            </article>
+            <div
+              role="status"
+              aria-label="Loading topic"
+              className="flex min-h-[50vh] items-center justify-center xl:col-span-2"
+            >
+              <div className="size-8 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-950 dark:border-neutral-800 dark:border-t-neutral-100" />
+            </div>
           ) : page ? (
             <>
               <article className="min-w-0 max-w-3xl space-y-7">
