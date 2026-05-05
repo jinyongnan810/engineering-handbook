@@ -310,7 +310,7 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
 
   return (
     <aside className="hidden xl:block">
-      <div className="sticky top-24 w-56 border-l border-neutral-200 pl-4 dark:border-neutral-800">
+      <div className="sticky top-24 max-h-[calc(100vh-6rem)] w-56 overflow-y-auto overscroll-contain border-l border-neutral-200 pl-4 pr-2 dark:border-neutral-800">
         <p className="text-xs font-semibold text-neutral-950 dark:text-neutral-100">
           On this page
         </p>
