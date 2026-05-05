@@ -12,8 +12,7 @@ type Block =
       rows: string[][];
       alignments: TableAlignment[];
     }
-  | { type: "unordered-list"; items: string[] }
-  | { type: "ordered-list"; items: string[] }
+  | { type: "list"; ordered: boolean; items: ListItem[] }
   | { type: "code"; lines: string[]; language: string }
   | { type: "math"; lines: string[] }
   | { type: "blockquote"; lines: string[] }
@@ -26,6 +25,16 @@ export type MarkdownHeading = {
 };
 
 type TableAlignment = "left" | "center" | "right";
+
+type ListItem = {
+  text: string;
+  children: ListBlock[];
+};
+
+type ListBlock = {
+  ordered: boolean;
+  items: ListItem[];
+};
 
 function slugifyHeading(text: string) {
   return text
@@ -128,23 +137,10 @@ function parseBlocks(markdown: string): Block[] {
       continue;
     }
 
-    if (/^[-*]\s+/.test(trimmed)) {
-      const items: string[] = [];
-      while (index < lines.length && /^[-*]\s+/.test(lines[index].trim())) {
-        items.push(lines[index].trim().replace(/^[-*]\s+/, ""));
-        index += 1;
-      }
-      blocks.push({ type: "unordered-list", items });
-      continue;
-    }
-
-    if (/^\d+\.\s+/.test(trimmed)) {
-      const items: string[] = [];
-      while (index < lines.length && /^\d+\.\s+/.test(lines[index].trim())) {
-        items.push(lines[index].trim().replace(/^\d+\.\s+/, ""));
-        index += 1;
-      }
-      blocks.push({ type: "ordered-list", items });
+    if (isListLine(line)) {
+      const parsedList = parseList(lines, index);
+      blocks.push(parsedList.block);
+      index = parsedList.nextIndex;
       continue;
     }
 
@@ -157,8 +153,7 @@ function parseBlocks(markdown: string): Block[] {
         current === "$$" ||
         current.startsWith(">") ||
         /^#{1,6}\s+/.test(current) ||
-        /^[-*]\s+/.test(current) ||
-        /^\d+\.\s+/.test(current)
+        isListLine(lines[index])
       ) {
         break;
       }
@@ -169,6 +164,99 @@ function parseBlocks(markdown: string): Block[] {
   }
 
   return blocks;
+}
+
+function getIndentWidth(indent: string) {
+  return indent.replace(/\t/g, "    ").length;
+}
+
+function getListLine(line: string) {
+  const match = line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
+
+  if (!match) {
+    return null;
+  }
+
+  return {
+    indent: getIndentWidth(match[1]),
+    ordered: /^\d+\.$/.test(match[2]),
+    text: match[3].trim(),
+  };
+}
+
+function isListLine(line: string) {
+  return Boolean(getListLine(line));
+}
+
+function parseList(lines: string[], startIndex: number) {
+  const firstLine = getListLine(lines[startIndex]);
+  const root: ListBlock = {
+    ordered: firstLine?.ordered ?? false,
+    items: [],
+  };
+  const stack: { indent: number; block: ListBlock; lastItem?: ListItem }[] = [
+    {
+      indent: firstLine?.indent ?? 0,
+      block: root,
+    },
+  ];
+  let index = startIndex;
+
+  while (index < lines.length) {
+    const listLine = getListLine(lines[index]);
+
+    if (!listLine) {
+      break;
+    }
+
+    if (listLine.indent < stack[0].indent) {
+      break;
+    }
+
+    while (
+      stack.length > 1 &&
+      listLine.indent <= stack[stack.length - 1].indent
+    ) {
+      stack.pop();
+    }
+
+    let currentLevel = stack[stack.length - 1];
+
+    if (listLine.indent > currentLevel.indent && currentLevel.lastItem) {
+      const childBlock: ListBlock = {
+        ordered: listLine.ordered,
+        items: [],
+      };
+      currentLevel.lastItem.children.push(childBlock);
+      currentLevel = {
+        indent: listLine.indent,
+        block: childBlock,
+      };
+      stack.push(currentLevel);
+    } else if (
+      listLine.indent === currentLevel.indent &&
+      listLine.ordered !== currentLevel.block.ordered
+    ) {
+      break;
+    }
+
+    const item: ListItem = {
+      text: listLine.text,
+      children: [],
+    };
+    currentLevel.block.items.push(item);
+    currentLevel.lastItem = item;
+    index += 1;
+  }
+
+  return {
+    block: {
+      type: "list" as const,
+      ordered: root.ordered,
+      items: root.items,
+    },
+    nextIndex: index,
+  };
 }
 
 function isTableRow(line: string) {
@@ -586,6 +674,39 @@ function getTableAlignmentClass(alignment: TableAlignment) {
   return "text-left";
 }
 
+function renderListItems(items: ListItem[], keyPrefix: string): ReactNode[] {
+  return items.map((item, itemIndex) => (
+    <li key={`${keyPrefix}-${itemIndex}`}>
+      {renderInline(item.text)}
+      {item.children.map((childList, childIndex) =>
+        renderList(
+          childList,
+          `${keyPrefix}-${itemIndex}-${childIndex}`,
+          "mt-2",
+        ),
+      )}
+    </li>
+  ));
+}
+
+function renderList(
+  list: ListBlock,
+  key: string,
+  extraClassName = "",
+): ReactNode {
+  const Tag = list.ordered ? "ol" : "ul";
+  const listStyleClass = list.ordered ? "list-decimal" : "list-disc";
+
+  return (
+    <Tag
+      key={key}
+      className={`${listStyleClass} space-y-2 pl-6 ${extraClassName}`}
+    >
+      {renderListItems(list.items, key)}
+    </Tag>
+  );
+}
+
 export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
   const counts = new Map<string, number>();
 
@@ -698,31 +819,14 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       );
     }
 
-    if (block.type === "unordered-list") {
+    if (block.type === "list") {
       return (
-        <ul
-          key={`unordered-${index}`}
-          className="max-w-3xl list-disc space-y-2 pl-6 text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
+        <div
+          key={`list-${index}`}
+          className="max-w-3xl text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
         >
-          {block.items.map((item, itemIndex) => (
-            <li key={`unordered-${index}-${itemIndex}`}>
-              {renderInline(item)}
-            </li>
-          ))}
-        </ul>
-      );
-    }
-
-    if (block.type === "ordered-list") {
-      return (
-        <ol
-          key={`ordered-${index}`}
-          className="max-w-3xl list-decimal space-y-2 pl-6 text-[17px] leading-8 text-neutral-800 dark:text-neutral-300"
-        >
-          {block.items.map((item, itemIndex) => (
-            <li key={`ordered-${index}-${itemIndex}`}>{renderInline(item)}</li>
-          ))}
-        </ol>
+          {renderList(block, `list-${index}`)}
+        </div>
       );
     }
 
