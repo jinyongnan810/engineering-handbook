@@ -68,7 +68,67 @@ Relational awareness means we are sensing ourselves, the other person, and the c
 
 # part two: come from curiosity and care
 
+Intention is the motivation or inner quality of heart behind our words and actions.Others can feel where we're coming from inside, regardless of how polished our words are.
+
+Intention can determine whole tone and trajectory of a conversation. It can easily become automatic and start relying on unconscious, habitual patterns if we're not consciously choosing our intention.
+
 ## the blame game
+
+When our needs are not met, we tend to play blame game. But the logic is that, if i want you to change your behavior, how useful is it for me to tell you what's wrong with you?
+
+### The deeper roots
+
+Everyone come with conditioned worldviews, which learned unconsciously while we growing. Parents(who have much more power) force children to do what they want because it seems more efficient, or because they lack of energy or skill to do it differently.
+
+So most of the people grew up learning:
+
+1. difference usually means someone wins and someone loses
+2. those with more power get their needs met more often
+3. conflict is dangerous because we can lose what's important to us
+
+We're taught to rely on external concepts of morality and obligation rather than recognize our innate ethical sensitivity or to rely on dialogue.
+
+### View determines intention
+
+How we view things determines how we related to them, which shapes our intention.
+
+If we view conflict as a dangerous affair, in which our only options are to win or lose, we tend to play the blame game. We get offensive trying to protect ourselves, and get to right side of right and wrong. The other human being will become just a object that aiding or blocking up from our needs, and this lead us to manipulate or control the situation to get our way.
+
+The outcome experience (which is thoughtable) in this intention will reinforce the view, and the view will reinforce the intention, which will certainly reproduce the experience.
+
+```mermaid
+graph LR
+    Intentions --> Experiences
+    Experiences --> Views
+    Views --> Intentions
+```
+
+### Habitual ways of responding to conflict
+
+Withour consciously choosing our intention, we tend to respond to conflict in following ways.
+
+- Conflict avoidance
+  - Changing the subject, focus on positive things, ignore problem or pretend there is none.
+  - Aim for keep the peace, and wish for problem to go away by itself.
+  - When employed unconsciously, it can lead to mistrust, self-doubt, and could endanger emotional deadness.
+- Competitive confrontation
+  - Exclusive focus on our own needs by raising our voice, blame, judge, or even threaten others.
+  - Goal is to ensure our needs are met at any cost, during which we can sense some protectiveness and security.
+  - Leads to great cost, and people no longer give us honest feedback. And cost our own well-being by leading to isolation.
+- Passivity
+  - Give up what we want and meet other's demand.
+  - Comes from needs for belonging, harmony, safety and connection.
+  - Leads to disconnect from our own feelings, needs, and desires. And make relationship dull over time.
+- Passive Aggression
+  - Agree on demands, but creates new problem for them.
+  - Aims to find some way to meed our needs while don't believe direct engagement will help.
+  - Comes from helplessness.
+
+### Lossening the grip of habit
+
+When stuck in habitual way of confronting conflict, our nervous system enter the familiar pattern based on our views and intentions.
+
+Mindfullness can help loosen the grip of our habits and create the possiblity of choosing a different course, which means guid our energy in a different direction.
 
 ## where are you coming from?
 
