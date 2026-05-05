@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import katex from "katex";
 import CodeBlock from "../components/CodeBlock";
+import MermaidDiagram from "../components/MermaidDiagram";
 
 type Block =
   | { type: "heading"; level: number; text: string }
@@ -742,6 +743,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       const language = normalizeCodeLanguage(block.language);
       const label = getCodeLanguageLabel(block.language) || "Code";
       const code = block.lines.join("\n");
+
+      if (language === "mermaid") {
+        return <MermaidDiagram key={`mermaid-${index}`} chart={code} />;
+      }
 
       return (
         <CodeBlock
