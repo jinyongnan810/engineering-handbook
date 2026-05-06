@@ -198,6 +198,30 @@ When the sign appears, try to pause and relax tension or tightness. Then remembe
 
 ## don't let the call drop
 
+When we com from curiosity an care, we're willing and able to listen. True listening allows us to appreciate the presence of a loved one or to let kindness to touch us.
+
+To truly listen depends on a kind of inner silence, and requires we empty ourselves and make space to receive something new.
+
+The silence of listening isn't forced or strained, it's a natural quiet that arises from interest.
+
+### Maintain the connection.
+
+Our aim in dialogue is to make a connection, and then maintain the connection until the needs are met.
+
+The connection could easily break during a heated arguments, where no one is actually hearing each other. The talking goes on, but the ball is already dropped.
+
+Express our acknowledgement for other person with nonverbal gestures, or even insert verbal yes/no questions like "Does that make sense?" can create a call-and-response rhythm that strengthens the connection.
+
+### Reflection
+
+A reflection is a restatement of or inquiry about what's been said to confirm understanding. It can make the difference betwwen an effective conversation and an argument.
+
+But this should not be used unconsciously, but should come with curiosity and care.
+
+### Tips
+
+Before giving advices, first check "I have an idea that i think might be helpful. Are you open to some advice?"
+
 # part three: focus on what matters
 
 ## gettting down to what matters
