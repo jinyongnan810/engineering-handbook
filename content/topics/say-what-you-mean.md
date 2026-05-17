@@ -224,7 +224,24 @@ Before giving advices, first check "I have an idea that i think might be helpful
 
 # part three: focus on what matters
 
+We adjust our attention to keep identifying what matters most in any given moment, by observations, emotions, nees, and requests.
+
 ## gettting down to what matters
+
+Needs are the core values that motivate aour actions. They are what matter most, the root reasons for why we want what we want. And any actions can be understood as an attempt to meet many needs.
+
+Understanding other's needs are great for noticing connections across differences. And identifying our own needs can be equally important for us to have more space to listen to others.
+
+### Tips of confirming needs
+
+- Drop the word `need`
+  - "Do you need more respect?" -> "Sounds like you really value respect?"
+- Describe the need
+  - "Sounds like you need more order?" -> "You really like knowing that everything is in its place, yes?"
+- Stay positive
+  - "I hear how much you dislike getting mixed messages, yes?" -> "I hear how much you want clarity and directness, knowing you can take what's said at face value. Am i correct?"
+- Ask, don't tell
+  - "You want to feel more engaged at work" -> "Do you want to feel more engaged at work?"
 
 ## emotional agility
 
