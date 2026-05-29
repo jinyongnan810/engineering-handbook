@@ -6,6 +6,7 @@ import MermaidDiagram from "../components/MermaidDiagram";
 type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
+  | { type: "image"; src: string; alt: string; title?: string }
   | {
       type: "table";
       headers: string[];
@@ -34,6 +35,12 @@ type ListItem = {
 type ListBlock = {
   ordered: boolean;
   items: ListItem[];
+};
+
+type MarkdownImage = {
+  src: string;
+  alt: string;
+  title?: string;
 };
 
 function slugifyHeading(text: string) {
@@ -106,6 +113,13 @@ function parseBlocks(markdown: string): Block[] {
         level: headingMatch[1].length,
         text: headingMatch[2],
       });
+      index += 1;
+      continue;
+    }
+
+    const standaloneImage = parseImageToken(trimmed);
+    if (standaloneImage) {
+      blocks.push({ type: "image", ...standaloneImage });
       index += 1;
       continue;
     }
@@ -328,6 +342,61 @@ function getHeadingId(text: string, counts: Map<string, number>) {
   }
 
   return `${baseId}-${count + 1}`;
+}
+
+function parseHtmlAttributes(attributes: string) {
+  const parsedAttributes: Record<string, string> = {};
+  const attributePattern =
+    /([A-Za-z_:][-A-Za-z0-9_:.]*)\s*=\s*("([^"]*)"|'([^']*)'|([^\s"'>]+))/g;
+  let match: RegExpExecArray | null;
+
+  match = attributePattern.exec(attributes);
+  while (match) {
+    parsedAttributes[match[1].toLowerCase()] =
+      match[3] ?? match[4] ?? match[5] ?? "";
+    match = attributePattern.exec(attributes);
+  }
+
+  return parsedAttributes;
+}
+
+function parseMarkdownImageToken(token: string): MarkdownImage | null {
+  const match = token.match(/^!\[([^\]]*)\]\((\S+?)(?:\s+"([^"]*)")?\)$/);
+
+  if (!match) {
+    return null;
+  }
+
+  return {
+    alt: match[1],
+    src: match[2],
+    title: match[3],
+  };
+}
+
+function parseHtmlImageToken(token: string): MarkdownImage | null {
+  const match = token.match(/^<img\s+([^>]*?)\/?>$/i);
+
+  if (!match) {
+    return null;
+  }
+
+  const attributes = parseHtmlAttributes(match[1]);
+  const src = attributes.src;
+
+  if (!src) {
+    return null;
+  }
+
+  return {
+    alt: attributes.alt ?? "",
+    src,
+    title: attributes.title,
+  };
+}
+
+function parseImageToken(token: string): MarkdownImage | null {
+  return parseMarkdownImageToken(token) ?? parseHtmlImageToken(token);
 }
 
 const latexSymbols: Record<string, string> = {
@@ -554,10 +623,24 @@ function renderDisplayMath(latex: string, key: string) {
   );
 }
 
+function renderImage(image: MarkdownImage, key: string) {
+  return (
+    <img
+      key={key}
+      src={image.src}
+      alt={image.alt}
+      title={image.title}
+      loading="lazy"
+      decoding="async"
+      className="my-3 block h-auto max-h-[640px] w-full max-w-3xl rounded-xl border border-neutral-200/70 object-contain shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-neutral-800 dark:shadow-[0_16px_40px_rgba(0,0,0,0.38)]"
+    />
+  );
+}
+
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   const pattern =
-    /(`[^`]+`)|(\$[^$\n]+\$)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(\[[^\]]+\]\([^)]+\))/g;
+    /(`[^`]+`)|(\$[^$\n]+\$)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(!\[[^\]]*\]\([^)]+\))|(<img\s+[^>]*?\/?>)|(\[[^\]]+\]\([^)]+\))/gi;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -593,6 +676,16 @@ function renderInline(text: string): ReactNode[] {
           {token.slice(1, -1)}
         </em>,
       );
+    } else if (
+      token.startsWith("!") ||
+      token.toLowerCase().startsWith("<img")
+    ) {
+      const image = parseImageToken(token);
+      if (image) {
+        nodes.push(renderImage(image, `${token}-${match.index}`));
+      } else {
+        nodes.push(token);
+      }
     } else if (token.startsWith("[")) {
       const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (linkMatch) {
@@ -772,6 +865,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
           {renderInline(block.text)}
         </p>
       );
+    }
+
+    if (block.type === "image") {
+      return renderImage(block, `image-${index}`);
     }
 
     if (block.type === "table") {
