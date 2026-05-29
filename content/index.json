@@ -172,5 +172,11 @@
     "title": "say whay you mean",
     "tags": ["Others"],
     "file": "topics/say-what-you-mean.md"
+  },
+  {
+    "slug": "music-theory",
+    "title": "Basic Music theory",
+    "tags": ["Others"],
+    "file": "topics/music-theory.md"
   }
 ]
