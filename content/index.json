@@ -102,12 +102,6 @@
     "file": "topics/heaps-priority-queues.md"
   },
   {
-    "slug": "common-algorithmic-patterns",
-    "title": "Common algorithmic patterns",
-    "tags": ["algorithms"],
-    "file": "topics/common-algorithmic-patterns.md"
-  },
-  {
     "slug": "mean-median-variance-standard-deviation",
     "title": "Mean, median, variance, standard deviation",
     "tags": ["statistics", "math"],
