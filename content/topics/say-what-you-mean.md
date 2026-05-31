@@ -278,6 +278,26 @@ And the more we hear others' feelings as a reflection of their needs, the easier
 
 ## enhancing empathy and inner resilience
 
+### Self-empathy
+
+Self-empathy strengthens patience. With a moment of mindful self-empathy, we can acknowledge our inner experience, put it aside temporarily, and create the space to hear someone else.
+
+### Empathy Distress
+
+At times, empathy can come so easily that we feel overwhelmed of flooded by the depth of feeling. In these moments, the skill of empathy involves learning to manage our distress and sense our separateness. If we become overwhelmed, we lose the ability to engage skillfully.
+
+We can pause for a moment with words like:
+
+- "I think I need a moment to gather my thoughts."
+- "I'd like some time to take that in. Can we pause here for a moment?"
+- "I'd really like to continue discussing this, and I'm feeling a little overwhelmed. Could we take a break and come back to this tomorrow?"
+
+### What is not empathy
+
+When we try to fix, change, or resolve another's pain, we contribute to their fear and helplessness. So "Let me do it for you." is rarely helpful.
+
+The first and best step of empathy is to hear without passing judgement, and without taking responsibility for the other person. And set goal to make the other feel listened to and start to re-perceive their world in a new way and to go on.
+
 ## how to raise an issue without starting a fight
 
 ## if you want for something, ask for it
