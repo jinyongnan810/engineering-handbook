@@ -245,6 +245,37 @@ Understanding other's needs are great for noticing connections across difference
 
 ## emotional agility
 
+Our emotions are immutable expressions of our biology. They are as natural and essential to our life as our body's own immune system.
+_If There is emothion, something matters_. Emotions are the primary ways the body-mind sends signals about our needs.
+
+### The blame game
+
+One of the myths about emotions is that they are someone else's fault. Which is reinforced by the modern media. And funding the blame game in which I throw some blame and you toss it back, arguing and defending.
+
+```mermaid
+---
+title: We tend to think emotions are caused by events.
+---
+graph LR
+    Event --> Emotions
+```
+
+But our feelings are never caused _directly_ by other people or their actions. The out ward event is the stimulus for our feelings, and the most direct root cause is how we relate to the event: our needs and values.
+
+```mermaid
+---
+title: Events are only the stimulus
+---
+graph LR
+    Event --> Needs --> Emotions
+```
+
+We are each responsible for our actions and our reactions.
+
+The more we take responsibility for our feelings, connecting them to our needs rather than to other's actions, the easier it is for others to hear us.
+
+And the more we hear others' feelings as a reflection of their needs, the easier it is for us to understand them without hearing blame, needing to agree, or feeling responsible for their emotions.
+
 ## enhancing empathy and inner resilience
 
 ## how to raise an issue without starting a fight
