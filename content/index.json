@@ -162,6 +162,12 @@
     "file": "topics/expected-value.md"
   },
   {
+    "slug": "xss-and-csrf",
+    "title": "XSS and CSRF",
+    "tags": ["Security"],
+    "file": "topics/xss-and-csrf.md"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "tags": ["Others"],
