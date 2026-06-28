@@ -300,6 +300,53 @@ The first and best step of empathy is to hear without passing judgement, and wit
 
 ## how to raise an issue without starting a fight
 
+It's better to listen be for speak, because if we don't make observations, we can end up arguing about stuff that don't matter or make conversation confusing.
+
+### Avoid adding to experiences
+
+When we experience something, we tend to add our own interpretations and judgements to it. But these are not the facts, and should be distinguished from the actual observations.
+
+To make better observations, we can notice following:
+
+- Use mindfulness to take in raw data of what happened.
+- Separate what you actually know from assumptions or interpretations.
+- Avoid words like always, never, ever, whenever, rarely.
+- State the experience in the first person, "when I see/hear/notice" rather than "when you did/said".
+
+When observation is near the fact, we can make it more easier for understand other's feelings and needs.
+
+### The ladder of inference
+
+```mermaid
+flowchart BT
+    A["All Observable Data"]
+    B["Select Data"]
+    C["Meanings & Assumptions"]
+    D["Draw Conclusions"]
+    E["Form Views & Beliefs"]
+    F["Take Action"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+```
+
+Aware of this ladder of inference, we can pause and check our check each step before taking action, or even go down the ladder and redo whole process.
+
+### Tips of expressing gratitude
+
+Instead of saying Thank you, take a risk and share the fullness of your appreciation. Be specific about what they did, how you feel, and why.
+
+### There is no right or wrong way to speak
+
+As long as we are coming from curiosity and care, there is no right or wrong way to speak. We can express our feelings and needs in any way that feels authentic to us.
+
+### We can't controll other's reactions
+
+No matter how we express ourselves, we cannot control how others will respond. All we can do is com from curiosity and care, and express our feelings and needs in a skillful way that is authentic to us.
+
 ## if you want for something, ask for it
 
 # part four: bring it all together
