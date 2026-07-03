@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import SiteHeader from "../components/SiteHeader";
+import TopicGroup from "../components/TopicGroup";
 import { getAllPageMetas, getPageBySlug } from "../data/contentLoader";
 import type {
   HandbookPageContent,
@@ -74,48 +75,14 @@ function TopicNavigation({
         className={variant === "mobile" ? "mt-7 space-y-7" : "mt-6 space-y-6"}
       >
         {groups.map(([tag, pages]) => (
-          <section key={tag}>
-            <h2
-              className={`font-semibold text-neutral-950 dark:text-neutral-100 ${
-                variant === "mobile" ? "text-[19px]" : "text-sm"
-              }`}
-            >
-              {tagLabels[tag] ?? tag}
-            </h2>
-            <ul
-              className={`mt-2 space-y-1 ${
-                variant === "mobile" ? "mobile-topic-navigation-list" : ""
-              }`}
-            >
-              {pages.map((page) => {
-                const isCurrent = page.slug === currentSlug;
-
-                return (
-                  <li key={page.slug}>
-                    <Link
-                      to={`/page/${page.slug}`}
-                      onClick={onNavigate}
-                      className={`block transition hover:text-neutral-950 dark:hover:text-neutral-100 ${
-                        variant === "mobile"
-                          ? "rounded-xl px-4 py-2 text-[20px] leading-7"
-                          : "rounded-md py-1.5 text-sm leading-5"
-                      } ${
-                        isCurrent
-                          ? variant === "mobile"
-                            ? "bg-neutral-100 font-semibold text-neutral-950 dark:bg-neutral-900 dark:text-neutral-100"
-                            : "font-semibold text-neutral-950 dark:text-neutral-100"
-                          : variant === "mobile"
-                            ? "font-normal text-neutral-600 dark:text-neutral-400"
-                            : "font-normal text-neutral-500 dark:text-neutral-500"
-                      }`}
-                    >
-                      {page.title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+          <TopicGroup
+            key={tag}
+            label={tagLabels[tag] ?? tag}
+            pages={pages}
+            variant={variant}
+            currentSlug={currentSlug}
+            onNavigate={onNavigate}
+          />
         ))}
         {filteredPages.length === 0 ? (
           <p
