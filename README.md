@@ -2,51 +2,18 @@
 
 https://engineering-handbook-alpha.vercel.app
 
-Static handbook site for engineering study topics across algebra, algorithms,
-statistics, and math.
+A static, file-based handbook for engineering study topics across algebra,
+algorithms, statistics, math, and more.
 
-The project is intentionally file-based:
-
-- each topic page is backed by plain markdown files and one Python file
-- the site renders those files into a readable public-facing handbook
-- content stays editable in your local editor without a CMS, backend, or
-  browser-side editing workflow
-
-## What The App Does
-
-- shows a tag-filtered topic library on the home page
-- renders one topic per page
-- displays these sections together on each topic page:
-  - `Why It Matters`
-  - `Learning Goals`
-  - `Learning Memo`
-  - `Python Example`
-
-## Project Structure
-
-```text
-engineering-handbook/
-  content/
-    index.json
-    pages/
-      <slug>/
-        why-it-matters.md
-        learning-goals.md
-        learning-memo.md
-        example.py
-  src/
-    components/
-    data/
-    pages/
-    utils/
-```
+Each topic is a plain markdown file. The site renders those files into a
+readable, tag-filtered handbook. No CMS, backend, or browser-side editing.
 
 ## Prerequisites
 
-- Node.js 22 or compatible modern Node runtime
+- Node.js 22 (or a compatible modern Node runtime)
 - npm
 
-## Start From A Fresh Checkout
+## Getting Started
 
 ```bash
 git clone <repo-url>
@@ -56,126 +23,54 @@ git config core.hooksPath .githooks
 npm run dev
 ```
 
-The Git hook configuration enables the tracked pre-commit hook in
-`.githooks/pre-commit`. The hook runs `make lint` before each commit. If
-formatting changes files, the commit stops so you can stage the updated files
-and commit again.
+The hook config enables the tracked pre-commit hook in `.githooks/pre-commit`,
+which runs `make lint` before each commit.
 
-## Install
+## Scripts
 
 ```bash
-cd engineering-handbook
-npm install
-```
-
-## Run The App
-
-Development:
-
-```bash
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
-```
-
-Preview production build:
-
-```bash
-npm run preview
-```
-
-Code quality:
-
-```bash
-npm run format
-npm run lint
-npm run typecheck
-```
-
-Or use the local make target:
-
-```bash
-make lint
+npm run dev        # start the dev server
+npm run build      # production build
+npm run preview    # preview the production build
+npm run lint       # lint
+npm run typecheck  # type-check
+npm run format     # format with prettier
+make lint          # format + lint + typecheck
 ```
 
 ## Content Model
 
-Each page folder contains:
+Topic content lives in `content/`:
 
-- `why-it-matters.md`
-- `learning-goals.md`
-- `learning-memo.md`
-- `example.py`
+```text
+content/
+  index.json        # topic metadata
+  topics/
+    <slug>.md       # one markdown file per topic
+```
 
-`content/index.json` stores the page metadata used by the app:
+Each entry in `content/index.json` describes one topic:
 
-- `slug`
-- `title`
-- `area`
-- `tags`
-- `folder`
+- `slug` — URL path for the topic
+- `title` — display title
+- `tags` — list of tags (e.g. `math`, `algebra`, `statistics`, `algorithms`, `aws`)
+- `file` — path to the markdown file, relative to `content/`
 
-Current tags:
+Markdown supports headings, code blocks, KaTeX math, and Mermaid diagrams.
 
-- `math`
-- `algebra`
-- `statistics`
-- `algorithms`
+## Add A Topic
 
-## Editing Workflow
+1. Create `content/topics/<slug>.md`.
+2. Add a matching entry to `content/index.json`.
+3. Run `npm run dev` and verify the page renders.
 
-Recommended workflow:
+## Remove A Topic
 
-1. Edit topic files directly in `content/pages/<slug>/` using your local
-   editor.
-2. Update `content/index.json` when you add, rename, retag, or remove a topic.
-3. Run `npm run dev` and review the rendered page in the browser.
-
-The app is read-only at runtime. There is no browser editor, file export,
-content import, or delete helper.
-
-## Add A New Topic Manually
-
-1. Create a new folder under `content/pages/<slug>/`.
-2. Add:
-   - `why-it-matters.md`
-   - `learning-goals.md`
-   - `learning-memo.md`
-   - `example.py`
-3. Add the metadata entry to `content/index.json`.
-4. Start the app and verify the page renders.
-
-## Delete A Topic
-
-To remove a topic:
-
-1. Delete the folder in `content/pages/<slug>/`.
-2. Remove the matching entry from `content/index.json`.
-3. Run the app and confirm the page no longer appears.
+1. Delete `content/topics/<slug>.md`.
+2. Remove its entry from `content/index.json`.
 
 ## Implementation Notes
 
-- runtime content loading uses `import.meta.glob`
+- content is loaded at runtime via `import.meta.glob`
 - markdown rendering is implemented locally in `src/utils/markdown.tsx`
-- python is displayed as code only in this version; it is not executed in the
-  browser
-
-## Useful Files
-
-- [src/pages/HomePage.tsx](/Users/kin/Documents/GitHub/engineering-handbook/src/pages/HomePage.tsx)
-- [src/pages/TopicPage.tsx](/Users/kin/Documents/GitHub/engineering-handbook/src/pages/TopicPage.tsx)
-- [src/data/contentLoader.ts](/Users/kin/Documents/GitHub/engineering-handbook/src/data/contentLoader.ts)
-
-## Current Status
-
-The main product flow is in place:
-
-- static topic library
-- topic detail rendering
-
-The remaining work is mostly polish, tests, and any future content workflow
-improvements.
+- the site is read-only at runtime; edit content in your local editor
