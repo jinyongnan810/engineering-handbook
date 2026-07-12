@@ -1,7 +1,7 @@
 import pageIndex from "../../content/index.json";
 import type { HandbookPageContent, HandbookPageMeta } from "./types";
 
-const markdownModules = import.meta.glob("../../content/topics/*.md", {
+const markdownModules = import.meta.glob("../../content/topics/**/*.md", {
   query: "?raw",
   import: "default",
 }) as Record<string, () => Promise<string>>;
