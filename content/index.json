@@ -1,5 +1,11 @@
 [
   {
+    "slug": "iam",
+    "title": "IAM",
+    "tags": ["aws"],
+    "file": "topics/aws/iam.md"
+  },
+  {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "tags": ["algebra", "math"],

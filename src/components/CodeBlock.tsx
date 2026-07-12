@@ -40,11 +40,14 @@ function renderHighlightedToken(
     /^(and|as|assert|async|await|break|class|continue|def|elif|else|except|False|finally|for|from|if|import|in|is|lambda|None|not|or|pass|raise|return|True|try|while|with|yield)$/;
   const typeScriptKeywords =
     /^(abstract|as|async|await|boolean|break|case|catch|class|const|continue|default|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|interface|let|new|null|number|private|protected|public|readonly|return|string|switch|this|throw|true|try|type|undefined|void|while)$/;
+  const hclKeywords =
+    /^(resource|variable|output|module|provider|data|locals|terraform|for|in|if|true|false|null)$/;
 
   if (
     (language === "python" && pythonKeywords.test(token)) ||
     (["typescript", "javascript"].includes(language) &&
-      typeScriptKeywords.test(token))
+      typeScriptKeywords.test(token)) ||
+    (language === "hcl" && hclKeywords.test(token))
   ) {
     return (
       <span key={key} className="text-violet-300">
@@ -60,7 +63,9 @@ function renderCodeLine(line: string, language: string, lineIndex: number) {
   const tokenPattern =
     language === "python"
       ? /(#.*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
-      : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
+      : language === "hcl"
+        ? /(#.*|\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
+        : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
 
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
@@ -95,7 +100,8 @@ function CodeBlock({ code, language, label, lines }: CodeBlockProps) {
   const canHighlight =
     language === "python" ||
     language === "typescript" ||
-    language === "javascript";
+    language === "javascript" ||
+    language === "hcl";
 
   async function copyCode() {
     await navigator.clipboard.writeText(code);
