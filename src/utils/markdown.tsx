@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import katex from "katex";
 import CodeBlock from "../components/CodeBlock";
 import MermaidDiagram from "../components/MermaidDiagram";
+import { ImageWithSkeleton } from "../components/ImageWithSkeleton";
 
 type Block =
   | { type: "heading"; level: number; text: string }
@@ -625,14 +626,11 @@ function renderDisplayMath(latex: string, key: string) {
 
 function renderImage(image: MarkdownImage, key: string) {
   return (
-    <img
+    <ImageWithSkeleton
       key={key}
       src={image.src}
       alt={image.alt}
       title={image.title}
-      loading="lazy"
-      decoding="async"
-      className="my-3 block h-auto max-h-[640px] w-full max-w-3xl rounded-xl border border-neutral-200/70 object-contain shadow-[0_14px_36px_rgba(0,0,0,0.12)] dark:border-neutral-800 dark:shadow-[0_16px_40px_rgba(0,0,0,0.38)]"
     />
   );
 }
