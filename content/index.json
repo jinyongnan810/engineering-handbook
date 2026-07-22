@@ -30,6 +30,18 @@
     "file": "topics/aws/cloudwatch.md"
   },
   {
+    "slug": "ecs",
+    "title": "ECS",
+    "tags": ["aws"],
+    "file": "topics/aws/ecs.md"
+  },
+  {
+    "slug": "loadbalancer",
+    "title": "Load Balancer",
+    "tags": ["aws"],
+    "file": "topics/aws/loadbalancer.md"
+  },
+  {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "tags": ["algebra", "math"],
