@@ -1,4 +1,4 @@
-## Why IAM matters
+# IAM
 
 In AWS, **IAM (Identity and Access Management)** is the absolute foundation of security—it controls exactly who (or what) can interact with cloud resources.
 
@@ -89,6 +89,7 @@ If an EC2 instance (a virtual server) needs to write to an S3 bucket, we don't h
 
 #### Worked Example
 
+```hcl
 **Example: Creating an IAM Role for an EC2 Instance to Access S3**
 
 # Define the Trust Relationship (The "Who is allowed to put this on?")
@@ -122,3 +123,5 @@ role = aws_iam_role.app_server_role.name
 
 policy_arn = aws_iam_policy.s3_upload_policy.arn
 }
+
+```
