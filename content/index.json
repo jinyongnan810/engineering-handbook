@@ -24,6 +24,12 @@
     "file": "topics/aws/lambda.md"
   },
   {
+    "slug": "cloudwatch",
+    "title": "CloudWatch",
+    "tags": ["aws"],
+    "file": "topics/aws/cloudwatch.md"
+  },
+  {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "tags": ["algebra", "math"],
