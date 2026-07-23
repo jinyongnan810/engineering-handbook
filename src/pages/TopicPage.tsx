@@ -3,11 +3,7 @@ import { useParams } from "react-router";
 import SiteHeader from "../components/SiteHeader";
 import TopicGroup from "../components/TopicGroup";
 import { getAllPageMetas, getPageBySlug } from "../data/contentLoader";
-import type {
-  HandbookPageContent,
-  HandbookPageMeta,
-  HandbookTag,
-} from "../data/types";
+import type { HandbookPageContent, HandbookPageMeta } from "../data/types";
 import { getMarkdownHeadings, renderMarkdown } from "../utils/markdown";
 
 type LoadedTopicState = {
@@ -16,21 +12,15 @@ type LoadedTopicState = {
 };
 
 const allPages = getAllPageMetas();
-const tagLabels: Record<HandbookTag, string> = {
-  algorithms: "Algorithms",
-  algebra: "Linear algebra",
-  statistics: "Statistics",
-  math: "Math",
-};
 
 function groupPagesByPrimaryTag(pages: HandbookPageMeta[]) {
   return pages.reduce(
     (groups, page) => {
-      const tag = page.tags[0];
+      const tag = page.tag;
       groups[tag] = [...(groups[tag] ?? []), page];
       return groups;
     },
-    {} as Partial<Record<HandbookTag, HandbookPageMeta[]>>,
+    {} as Partial<Record<string, HandbookPageMeta[]>>,
   );
 }
 
@@ -48,10 +38,7 @@ function TopicNavigation({
     page.title.toLowerCase().includes(query.trim().toLowerCase()),
   );
   const groupedPages = groupPagesByPrimaryTag(filteredPages);
-  const groups = Object.entries(groupedPages) as [
-    HandbookTag,
-    HandbookPageMeta[],
-  ][];
+  const groups = Object.entries(groupedPages) as [string, HandbookPageMeta[]][];
 
   return (
     <>
@@ -77,7 +64,7 @@ function TopicNavigation({
         {groups.map(([tag, pages]) => (
           <TopicGroup
             key={tag}
-            label={tagLabels[tag] ?? tag}
+            label={tag}
             pages={pages}
             variant={variant}
             currentSlug={currentSlug}

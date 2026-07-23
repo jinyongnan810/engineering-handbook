@@ -2,235 +2,235 @@
   {
     "slug": "iam",
     "title": "IAM",
-    "tags": ["aws"],
-    "file": "topics/aws/iam.md"
+    "file": "topics/aws/iam.md",
+    "tag": "AWS"
   },
   {
     "slug": "networking",
     "title": "Networking",
-    "tags": ["aws"],
-    "file": "topics/aws/networking.md"
+    "file": "topics/aws/networking.md",
+    "tag": "AWS"
   },
   {
     "slug": "ec2",
     "title": "EC2",
-    "tags": ["aws"],
-    "file": "topics/aws/ec2.md"
+    "file": "topics/aws/ec2.md",
+    "tag": "AWS"
   },
   {
     "slug": "lambda",
     "title": "Lambda",
-    "tags": ["aws"],
-    "file": "topics/aws/lambda.md"
+    "file": "topics/aws/lambda.md",
+    "tag": "AWS"
   },
   {
     "slug": "cloudwatch",
     "title": "CloudWatch",
-    "tags": ["aws"],
-    "file": "topics/aws/cloudwatch.md"
+    "file": "topics/aws/cloudwatch.md",
+    "tag": "AWS"
   },
   {
     "slug": "ecs",
     "title": "ECS",
-    "tags": ["aws"],
-    "file": "topics/aws/ecs.md"
+    "file": "topics/aws/ecs.md",
+    "tag": "AWS"
   },
   {
     "slug": "loadbalancer",
     "title": "Load Balancer",
-    "tags": ["aws"],
-    "file": "topics/aws/loadbalancer.md"
+    "file": "topics/aws/loadbalancer.md",
+    "tag": "AWS"
   },
   {
     "slug": "waf",
     "title": "WAF",
-    "tags": ["aws"],
-    "file": "topics/aws/waf.md"
+    "file": "topics/aws/waf.md",
+    "tag": "AWS"
   },
   {
     "slug": "chatbot",
     "title": "Chatbot",
-    "tags": ["aws"],
-    "file": "topics/aws/chatbot.md"
+    "file": "topics/aws/chatbot.md",
+    "tag": "AWS"
   },
   {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
-    "tags": ["algebra", "math"],
-    "file": "topics/scalars-vectors-and-matrices.md"
+    "file": "topics/scalars-vectors-and-matrices.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "vector-arithmetic",
     "title": "Vector arithmetic",
-    "tags": ["algebra", "math"],
-    "file": "topics/vector-arithmetic.md"
+    "file": "topics/vector-arithmetic.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "dot-product",
     "title": "Dot product",
-    "tags": ["algebra", "math"],
-    "file": "topics/dot-product.md"
+    "file": "topics/dot-product.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "linear-transformations",
     "title": "Linear transformations",
-    "tags": ["algebra", "math"],
-    "file": "topics/linear-transformations.md"
+    "file": "topics/linear-transformations.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "matrix-multiplication",
     "title": "Matrix multiplication",
-    "tags": ["algebra", "math"],
-    "file": "topics/matrix-multiplication.md"
+    "file": "topics/matrix-multiplication.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "systems-of-linear-equations",
     "title": "Systems of linear equations",
-    "tags": ["algebra", "math"],
-    "file": "topics/systems-of-linear-equations.md"
+    "file": "topics/systems-of-linear-equations.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "transpose-inverse-and-identity-matrix",
     "title": "Transpose, inverse, and identity matrix",
-    "tags": ["algebra", "math"],
-    "file": "topics/transpose-inverse-and-identity-matrix.md"
+    "file": "topics/transpose-inverse-and-identity-matrix.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "eigenvalues-and-eigenvectors",
     "title": "Eigenvalues and eigenvectors",
-    "tags": ["algebra", "math"],
-    "file": "topics/eigenvalues-and-eigenvectors.md"
+    "file": "topics/eigenvalues-and-eigenvectors.md",
+    "tag": "Linear Algebra"
   },
   {
     "slug": "time-and-space-complexity",
     "title": "Time and space complexity",
-    "tags": ["algorithms"],
-    "file": "topics/time-and-space-complexity.md"
+    "file": "topics/time-and-space-complexity.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "arrays-dynamic-arrays-strings",
     "title": "Arrays / dynamic arrays / strings",
-    "tags": ["algorithms"],
-    "file": "topics/arrays-dynamic-arrays-strings.md"
+    "file": "topics/arrays-dynamic-arrays-strings.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "hash-maps-and-sets",
     "title": "Hash maps and sets",
-    "tags": ["algorithms"],
-    "file": "topics/hash-maps-and-sets.md"
+    "file": "topics/hash-maps-and-sets.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "stacks-and-queues",
     "title": "Stacks and queues",
-    "tags": ["algorithms"],
-    "file": "topics/stacks-and-queues.md"
+    "file": "topics/stacks-and-queues.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "recursion",
     "title": "Recursion",
-    "tags": ["algorithms"],
-    "file": "topics/recursion.md"
+    "file": "topics/recursion.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "trees",
     "title": "Trees",
-    "tags": ["algorithms"],
-    "file": "topics/trees.md"
+    "file": "topics/trees.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "graphs",
     "title": "Graphs",
-    "tags": ["algorithms"],
-    "file": "topics/graphs.md"
+    "file": "topics/graphs.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "sorting-and-binary-search",
     "title": "Sorting and binary search",
-    "tags": ["algorithms"],
-    "file": "topics/sorting-and-binary-search.md"
+    "file": "topics/sorting-and-binary-search.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "heaps-priority-queues",
     "title": "Heaps / priority queues",
-    "tags": ["algorithms"],
-    "file": "topics/heaps-priority-queues.md"
+    "file": "topics/heaps-priority-queues.md",
+    "tag": "Algorithms"
   },
   {
     "slug": "mean-median-variance-standard-deviation",
     "title": "Mean, median, variance, standard deviation",
-    "tags": ["statistics", "math"],
-    "file": "topics/mean-median-variance-standard-deviation.md"
+    "file": "topics/mean-median-variance-standard-deviation.md",
+    "tag": "Statistics"
   },
   {
     "slug": "probability-basics",
     "title": "Probability basics",
-    "tags": ["statistics", "math"],
-    "file": "topics/probability-basics.md"
+    "file": "topics/probability-basics.md",
+    "tag": "Statistics"
   },
   {
     "slug": "conditional-probability-and-bayes-rule",
     "title": "Conditional probability and Bayes’ rule",
-    "tags": ["statistics", "math"],
-    "file": "topics/conditional-probability-and-bayes-rule.md"
+    "file": "topics/conditional-probability-and-bayes-rule.md",
+    "tag": "Statistics"
   },
   {
     "slug": "distributions",
     "title": "Distributions",
-    "tags": ["statistics", "math"],
-    "file": "topics/distributions.md"
+    "file": "topics/distributions.md",
+    "tag": "Statistics"
   },
   {
     "slug": "sampling-and-bias",
     "title": "Sampling and bias",
-    "tags": ["statistics", "math"],
-    "file": "topics/sampling-and-bias.md"
+    "file": "topics/sampling-and-bias.md",
+    "tag": "Statistics"
   },
   {
     "slug": "correlation-vs-causation",
     "title": "Correlation vs causation",
-    "tags": ["statistics", "math"],
-    "file": "topics/correlation-vs-causation.md"
+    "file": "topics/correlation-vs-causation.md",
+    "tag": "Statistics"
   },
   {
     "slug": "regression-basics",
     "title": "Regression basics",
-    "tags": ["statistics", "math"],
-    "file": "topics/regression-basics.md"
+    "file": "topics/regression-basics.md",
+    "tag": "Statistics"
   },
   {
     "slug": "hypothesis-testing-and-p-values",
     "title": "Hypothesis testing and p-values",
-    "tags": ["statistics", "math"],
-    "file": "topics/hypothesis-testing-and-p-values.md"
+    "file": "topics/hypothesis-testing-and-p-values.md",
+    "tag": "Statistics"
   },
   {
     "slug": "confidence-intervals",
     "title": "Confidence intervals",
-    "tags": ["statistics", "math"],
-    "file": "topics/confidence-intervals.md"
+    "file": "topics/confidence-intervals.md",
+    "tag": "Statistics"
   },
   {
     "slug": "expected-value",
     "title": "Expected value",
-    "tags": ["statistics", "math"],
-    "file": "topics/expected-value.md"
+    "file": "topics/expected-value.md",
+    "tag": "Statistics"
   },
   {
     "slug": "xss-and-csrf",
     "title": "XSS and CSRF",
-    "tags": ["Security"],
-    "file": "topics/xss-and-csrf.md"
+    "file": "topics/xss-and-csrf.md",
+    "tag": "Security"
   },
   {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
-    "tags": ["Others"],
-    "file": "topics/say-what-you-mean.md"
+    "file": "topics/say-what-you-mean.md",
+    "tag": "Others"
   },
   {
     "slug": "music-theory",
     "title": "Basic Music theory",
-    "tags": ["Others"],
-    "file": "topics/music-theory.md"
+    "file": "topics/music-theory.md",
+    "tag": "Others"
   }
 ]
