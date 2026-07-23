@@ -48,6 +48,12 @@
     "file": "topics/aws/waf.md"
   },
   {
+    "slug": "chatbot",
+    "title": "Chatbot",
+    "tags": ["aws"],
+    "file": "topics/aws/chatbot.md"
+  },
+  {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "tags": ["algebra", "math"],
