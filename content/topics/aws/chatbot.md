@@ -34,5 +34,5 @@ Linking Amazon Q Developer (formerly AWS Chatbot) to a Slack channel is done in 
 2.  Run the command: `/invite @Amazon Q`
 3.  If configuring a **private channel**, copy the Channel ID (found in channel details/link) and paste it into the **Channel URL** field in the AWS Console.
 
-![Chatbot Integration1](https://ik.imagekit.io/kinn/my%20assets/chatbot1.png)
-![Chatbot Integration2](https://ik.imagekit.io/kinn/my%20assets/chatbot2.png)
+![Use chatbot to check aws info](https://ik.imagekit.io/kinn/my%20assets/chatbot1.png)
+![Receive alarms from chatbot](https://ik.imagekit.io/kinn/my%20assets/chatbot2.png)

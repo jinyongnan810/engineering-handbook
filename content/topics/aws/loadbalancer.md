@@ -190,4 +190,4 @@ output "alb_dns_name" {
 - **`internal = false`:** Marks the ALB as internet-facing, giving it a publicly resolvable DNS name in the public subnets.
 
 ![ALB Architecture](https://ik.imagekit.io/kinn/my%20assets/alb1.png)
-![ALB Architecture 2](https://ik.imagekit.io/kinn/my%20assets/alb2.png)
+![ALB Rules](https://ik.imagekit.io/kinn/my%20assets/alb2.png)

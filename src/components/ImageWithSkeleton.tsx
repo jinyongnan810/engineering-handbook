@@ -35,10 +35,9 @@ export const ImageWithSkeleton: React.FC<ImageWithSkeletonProps> = ({
   }, [src]);
 
   return (
-    <div
+    <figure
       className={`relative my-4 block w-full max-w-3xl overflow-hidden rounded-xl border border-neutral-200/70 bg-neutral-100/60 dark:border-neutral-800 dark:bg-neutral-900/60 shadow-[0_14px_36px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.32)] transition-all ${className}`}
     >
-      {/* Skeleton Placeholder */}
       {!isLoaded && !hasError && (
         <div
           aria-hidden="true"
@@ -109,6 +108,13 @@ export const ImageWithSkeleton: React.FC<ImageWithSkeletonProps> = ({
           }`}
         />
       )}
-    </div>
+
+      {/* Caption from markdown image title, falling back to alt text */}
+      {(title ?? alt) && isLoaded && !hasError && (
+        <figcaption className="border-t border-neutral-200/70 bg-neutral-50/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400">
+          {title ?? alt}
+        </figcaption>
+      )}
+    </figure>
   );
 };
