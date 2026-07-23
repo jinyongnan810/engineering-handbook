@@ -1,4 +1,6 @@
-Linking Amazon Q Developer (formerly AWS Chatbot) to a Slack channel is done in a few straightforward setup steps.
+# Chatbot related
+
+## Linking Amazon Q Developer to Slack
 
 ### Prerequisites
 
@@ -36,3 +38,11 @@ Linking Amazon Q Developer (formerly AWS Chatbot) to a Slack channel is done in 
 
 ![Use chatbot to check aws info](https://ik.imagekit.io/kinn/my%20assets/chatbot1.png)
 ![Receive alarms from chatbot](https://ik.imagekit.io/kinn/my%20assets/chatbot2.png)
+
+## Using Cloudwatch AI operations
+
+- Enable CloudWatch AI Operations to automatically detect anomalies and generate insights from your AWS resources.
+- Edit alarm and set investigation actions
+
+![Edit alarm](https://ik.imagekit.io/kinn/my%20assets/edit%20alarm.png)
+![AI Operations](https://ik.imagekit.io/kinn/my%20assets/ai%20operations.png)
