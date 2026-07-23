@@ -8,12 +8,14 @@ export default function TopicGroup({
   variant,
   currentSlug,
   onNavigate,
+  isFiltering = false,
 }: {
   label: string;
   pages: HandbookPageMeta[];
   variant: "desktop" | "mobile";
   currentSlug?: string;
   onNavigate?: () => void;
+  isFiltering?: boolean;
 }) {
   const containsCurrentPage = pages.some((page) => page.slug === currentSlug);
   const [isOpen, setIsOpen] = useState(containsCurrentPage);
@@ -25,6 +27,8 @@ export default function TopicGroup({
       setIsOpen(true);
     }
   }
+
+  const effectiveIsOpen = isFiltering || isOpen;
 
   return (
     <section>
@@ -40,7 +44,7 @@ export default function TopicGroup({
           aria-hidden="true"
           viewBox="0 0 24 24"
           className={`size-4 shrink-0 text-neutral-500 transition-transform dark:text-neutral-400 ${
-            isOpen ? "rotate-180" : ""
+            effectiveIsOpen ? "rotate-180" : ""
           }`}
         >
           <path
@@ -53,7 +57,7 @@ export default function TopicGroup({
           />
         </svg>
       </button>
-      {isOpen ? (
+      {effectiveIsOpen ? (
         <ul
           className={`mt-2 space-y-1 ${
             variant === "mobile" ? "mobile-topic-navigation-list" : ""

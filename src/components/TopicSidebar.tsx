@@ -32,6 +32,8 @@ export function TopicNavigation({
   const groupedPages = groupPagesByPrimaryTag(filteredPages);
   const groups = Object.entries(groupedPages) as [string, HandbookPageMeta[]][];
 
+  const isFiltering = query.trim().length > 0;
+
   return (
     <>
       <label className="block">
@@ -61,6 +63,7 @@ export function TopicNavigation({
             variant={variant}
             currentSlug={currentSlug}
             onNavigate={onNavigate}
+            isFiltering={isFiltering}
           />
         ))}
         {filteredPages.length === 0 ? (
