@@ -349,8 +349,48 @@ No matter how we express ourselves, we cannot control how others will respond. A
 
 ## if you want for something, ask for it
 
+When making requests, we genuinely don't want others to feel obligated. It all starts from respecting their autonomy, time, and energy. And we want to ensure that they feel free to say no, and that we will be okay with their answer.
+Requests are gifts and invitations to experience the joy of giving and receiving, if put in a skillful way that can meet as many needs as possible.
+
 # part four: bring it all together
+
+The 3 steps to effective conversation - lead with presence, come from curiosity and care, focus on what matters - are not linear, but rather a continuous flow of dialogue.
 
 ## the flow of dialogue
 
+The first and most essential aspect of setting initial conditions is agreeing to have the conversation. If we are too focused on the issues, we can forget to negotiate this most basic aspect of relating.
+
+Then during the conversation, tracking and knowing where we are in the flow of dialogue is essential.
+
+### Center of attention
+
+One of the most basic kind of tracking is to notice the center of attention, or who has the floor.
+
+In every conversation, there is a center of gravity that shifts back and forth between the participants. Whenever possible, offer the center of attention to the other person, and shift back to oneself after they feel heard and complete, which is the timing where they're more likely to have space to listen.
+
+### Tracking content
+
+Most conversations has more than one piece of content to discuss. Tracking all that can be tricky, since it twists and turns, breaks off, and sometimes loops back on itself.
+
+When one topic is splintered into multiple threads, it can be helpful to gently guide back to the main thread, and to acknowledge the other threads as well. This can be done by saying something like, "Yes, that's important, and I want to make sure we address those as well. Let's finish this topic first, and then we can come back to those."
+
+### Being succinct
+
+When we feel passionate about something, or if we don't feel heard, we often repeat ourselves. Yet the more words we use, the less understanding we usually get. Speaking in short, succinct chunks makes it easier for others to hear us.
+
+Chunking (in opposite to Flooding all the information at once) is the ability to share information in manageable pieces, one or two at a time. It makes it easier for the other person to take things in and gives us the opportunity to gather our thoughts, and check for understanding and complete the cycle.
+
 ## running the rapids
+
+As Bruce Lee said, "We don't rise to meet our expectations, we fall to the level of our training." The more we practice these skills, the more likely we are to be able to use them in the heat of the moment.
+
+When navigating tough conversations, We can do internal preparation to engage in a way that is in line with our intentions.
+
+- Nourishing Yourself
+  - Find the empathy, which can reduce reactivity
+- Investigating what's at stake
+  - Focus on what matters most, and if the goal is realistic
+  - If we feel the pulse of judgement in ourselves, recognize it as valuable information about our own needs and values, and use it to guide our actions.
+- Humanizing the other person
+  - Step out your own story and consider other perspectives.
+  - However confusing or harmful another's actions and words may be, there is some internal logic behind their choices.
