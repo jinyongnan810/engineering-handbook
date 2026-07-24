@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Base Open Book - Left Page -->
+  <path
+    d="M 64 168 C 128 128 192 144 256 176 V 432 C 192 392 128 376 64 416 Z"
+    fill="none"
+    stroke="#111111"
+    stroke-width="24"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+
+  <!-- Base Open Book - Right Page -->
+  <path
+    d="M 448 168 C 384 128 320 144 256 176 V 432 C 320 392 384 376 448 416 Z"
+    fill="none"
+    stroke="#111111"
+    stroke-width="24"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+
+  <!-- Realistic 4-Corner Turning Page (Curved Rectangular Sheet in 3D) -->
+  <path
+    d="M 256 176 C 290 132 328 104 364 96 C 378 184 380 272 376 360 C 332 392 288 416 256 432 Z"
+    fill="#111111"
+    fill-opacity="0.12"
+    stroke="#111111"
+    stroke-width="22"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+
+  <!-- Center Spine Crease -->
+  <path
+    d="M 256 176 V 432"
+    stroke="#111111"
+    stroke-width="22"
+    stroke-linecap="round"
+  />
+</svg>

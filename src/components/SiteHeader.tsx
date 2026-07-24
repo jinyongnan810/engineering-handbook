@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
+import { SiteLogo } from "./SiteLogo";
 
 type SiteHeaderProps = {
   isTopicsOpen?: boolean;
@@ -26,9 +27,12 @@ function SiteHeader({ isTopicsOpen = false, onOpenTopics }: SiteHeaderProps) {
       <div className="mx-auto flex h-14 w-full max-w-[1500px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link
           to="/"
-          className="min-w-0 text-xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-100"
+          className="flex items-center gap-2.5 min-w-0 text-xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-100 group"
         >
-          Engineering Handbook
+          <SiteLogo size={32} />
+          <span className="group-hover:opacity-90 transition-opacity">
+            Engineering Handbook
+          </span>
         </Link>
 
         <div aria-hidden="true" />
