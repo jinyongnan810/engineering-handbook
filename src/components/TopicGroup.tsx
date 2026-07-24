@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import type { HandbookPageMeta } from "../data/types";
+import { TagIcon } from "./TagIcon";
 
 export default function TopicGroup({
   label,
@@ -39,7 +40,15 @@ export default function TopicGroup({
           variant === "mobile" ? "text-[19px]" : "text-sm"
         }`}
       >
-        {label}
+        <span className="flex items-center gap-2">
+          <TagIcon
+            tag={label}
+            className={`shrink-0 text-neutral-500 dark:text-neutral-400 ${
+              variant === "mobile" ? "size-5" : "size-4"
+            }`}
+          />
+          <span>{label}</span>
+        </span>
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"

@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import SiteHeader from "../components/SiteHeader";
 import TopicSidebar, { MobileTopicSidebar } from "../components/TopicSidebar";
 import { getAllPageMetas } from "../data/contentLoader";
+import { TagIcon } from "../components/TagIcon";
+import { getTagTheme } from "../utils/tagTheme";
 
 export default function IndexPage() {
   const [isMobileTopicSidebarOpen, setIsMobileTopicSidebarOpen] =
@@ -43,11 +45,10 @@ export default function IndexPage() {
           {/* Hero Section */}
           <section className="mb-16 max-w-3xl">
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-neutral-950 dark:text-white sm:text-6xl md:text-7xl">
-              Engineering Handbook
+              Kinn's Engineering Handbook
             </h1>
             <p className="text-xl text-neutral-500 dark:text-neutral-400 md:text-2xl leading-relaxed">
-              In-depth resources, principles, and best practices for normal
-              engineer.
+              A Handbook for myself.
             </p>
           </section>
 
@@ -56,25 +57,33 @@ export default function IndexPage() {
             {groups.map((group) => {
               const firstPage = groupedPages[group][0];
               const pageCount = groupedPages[group].length;
+              const theme = getTagTheme(group);
 
               return (
                 <Link
                   key={group}
                   to={`/page/${firstPage.slug}`}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-neutral-100 p-8 transition-all duration-300 hover:scale-[1.02] hover:bg-neutral-200 hover:shadow-lg dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-neutral-100 p-8 transition-all duration-300 hover:scale-[1.02] hover:bg-neutral-200/80 hover:shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 >
                   <div>
-                    <h3 className="mb-3 text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+                    <div className="mb-6 flex items-center justify-between">
+                      <div
+                        className={`flex size-12 items-center justify-center rounded-2xl border ${theme.bg} ${theme.text} ${theme.border} transition-transform duration-300 group-hover:scale-110`}
+                      >
+                        <TagIcon tag={group} className="size-6" />
+                      </div>
+                    </div>
+                    <h3 className="mb-2 text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
                       {group}
                     </h3>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
                       {pageCount} {pageCount === 1 ? "article" : "articles"}
                     </p>
                   </div>
 
                   {/* A subtle arrow indicator that appears on hover, similar to Apple interfaces */}
-                  <div className="mt-8 flex items-center justify-end opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm dark:bg-neutral-700 dark:text-white">
+                  <div className="mt-8 flex items-center justify-end">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 dark:bg-neutral-800 dark:text-white">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
