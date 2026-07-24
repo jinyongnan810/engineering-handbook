@@ -1,2 +1,2 @@
 lint:
-	npm run format && npm run lint && npm run typecheck
+	pnpm run format && pnpm run lint && pnpm run typecheck

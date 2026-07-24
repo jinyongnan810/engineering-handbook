@@ -10,17 +10,16 @@ readable, tag-filtered handbook. No CMS, backend, or browser-side editing.
 
 ## Prerequisites
 
-- Node.js 22 (or a compatible modern Node runtime)
-- npm
+- Node.js 22 & pnpm (configured via `mise.toml` if using [mise](https://mise.jdx.dev/))
 
 ## Getting Started
 
 ```bash
 git clone <repo-url>
 cd engineering-handbook
-npm install
+pnpm install
 git config core.hooksPath .githooks
-npm run dev
+pnpm dev
 ```
 
 The hook config enables the tracked pre-commit hook in `.githooks/pre-commit`,
@@ -29,13 +28,13 @@ which runs `make lint` before each commit.
 ## Scripts
 
 ```bash
-npm run dev        # start the dev server
-npm run build      # production build
-npm run preview    # preview the production build
-npm run lint       # lint
-npm run typecheck  # type-check
-npm run format     # format with prettier
-make lint          # format + lint + typecheck
+pnpm dev        # start the dev server
+pnpm build      # production build
+pnpm preview    # preview the production build
+pnpm lint       # lint
+pnpm typecheck  # type-check
+pnpm format     # format with prettier
+make lint       # format + lint + typecheck
 ```
 
 ## Content Model
@@ -62,7 +61,7 @@ Markdown supports headings, code blocks, KaTeX math, and Mermaid diagrams.
 
 1. Create `content/topics/<slug>.md`.
 2. Add a matching entry to `content/index.json`.
-3. Run `npm run dev` and verify the page renders.
+3. Run `pnpm dev` and verify the page renders.
 
 ## Remove A Topic
 
