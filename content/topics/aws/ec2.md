@@ -125,7 +125,7 @@ resource "aws_iam_instance_profile" "app_server_profile" {
 **Key Code Breakdown:**
 
 - `availability_zone`: Notice how we use `aws_instance.app_server.availability_zone` when creating the EBS volume. This guarantees the hard drive is created in the exact same physical data center as the server, satisfying AWS's architecture requirement.
-- `aws_s3_bucket_lifecycle_configuration`: This is a critical FinOps (Financial Operations) tool. It automatically archives and deletes old data so you don't pay standard S3 storage prices for files you no longer actively use.
+- `aws_s3_bucket_lifecycle_configuration`: This is a critical FinOps (Financial Operations) tool. It automatically archives and deletes old data so standard S3 storage prices are not paid for files that are no longer actively used.
 - `AmazonSSMManagedInstanceCore`: This AWS-managed policy allows us to connect to the EC2 instance via Session Manager, which is a secure way to access servers without opening SSH ports or managing key pairs. And it works even if the EC2 instance is in a private subnet with no public IP address.
 - **Note:** Use these commands to mount the EBS volume on the EC2 instance:
 

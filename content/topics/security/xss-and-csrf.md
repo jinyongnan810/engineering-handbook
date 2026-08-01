@@ -6,13 +6,13 @@
 
 | Attack   | Attacker abuses                                    | Main victim             |
 | -------- | -------------------------------------------------- | ----------------------- |
-| **XSS**  | The browser’s trust in your website                | Users of the site       |
+| **XSS**  | The browser’s trust in a website                   | Users of the site       |
 | **CSRF** | The server’s trust in the user’s logged-in browser | The server/user account |
 
 Very roughly:
 
 ```text
-XSS  = attacker makes your site run malicious JavaScript
+XSS  = attacker makes a site run malicious JavaScript
 CSRF = attacker makes the victim’s browser send an unwanted request
 ```
 
@@ -61,7 +61,7 @@ Example risk:
 fetch("/api/account/delete", { method: "POST" });
 ```
 
-If the attacker’s script runs inside your site, it may be able to call your own APIs as the user.
+If the attacker’s script runs inside a site, it may be able to call its APIs as the user.
 
 ---
 
@@ -101,7 +101,7 @@ Vulnerable page:
 
 ```html
 <p>
-  You searched for:
+  Search results for:
   <script>
     alert("XSS");
   </script>
@@ -174,7 +174,7 @@ Then the browser displays it as text instead of running it.
 
 ### 2. Sanitize allowed HTML
 
-Sometimes you intentionally allow limited HTML, like:
+Sometimes limited HTML is intentionally allowed, like:
 
 ```html
 <b>Hello</b> <a href="...">link</a>
@@ -328,15 +328,15 @@ The key point:
 Browsers automatically include cookies for the target site.
 ```
 
-Suppose you are logged in to:
+Suppose a user is logged in to:
 
 ```text
 https://bank.example.com
 ```
 
-Your browser has a session cookie for that site.
+The user's browser has a session cookie for that site.
 
-Then you visit an attacker’s page:
+Then the user visits an attacker’s page:
 
 ```text
 https://evil.example.com
@@ -455,7 +455,7 @@ For highly sensitive apps, consider `SameSite=Strict`, though it can affect user
 For sensitive requests, the server can check:
 
 ```http
-Origin: https://your-site.com
+Origin: https://app.example.com
 ```
 
 If the origin is not trusted, reject the request.
@@ -532,7 +532,7 @@ Access-Control-Allow-Origin: *
 
 This combination is invalid in modern browsers, but the idea is still dangerous.
 
-If you allow credentials, only allow trusted origins.
+If credentials are allowed, only allow trusted origins.
 
 Better:
 
@@ -561,7 +561,7 @@ XSS can often bypass CSRF protection.
 
 Why?
 
-Because if attacker JavaScript runs inside your real site, it can often read the CSRF token from the page and send valid requests.
+Because if attacker JavaScript runs inside the real site, it can often read the CSRF token from the page and send valid requests.
 
 So:
 
@@ -574,14 +574,14 @@ XSS protection is more fundamental.
 
 # 10. XSS vs CSRF comparison
 
-| Question                                   | XSS                     | CSRF                               |
-| ------------------------------------------ | ----------------------- | ---------------------------------- |
-| Does attacker run JavaScript on your site? | Yes                     | Usually no                         |
-| Does victim need to be logged in?          | Often, but not always   | Usually yes                        |
-| Can attacker read page data?               | Often yes               | Usually no                         |
-| Can attacker perform actions?              | Yes                     | Yes                                |
-| Main defense                               | Escaping/sanitizing/CSP | CSRF tokens/SameSite/Origin checks |
-| Mostly server-side or client-side?         | Both                    | Mostly server-side                 |
+| Question                                  | XSS                     | CSRF                               |
+| ----------------------------------------- | ----------------------- | ---------------------------------- |
+| Does attacker run JavaScript on the site? | Yes                     | Usually no                         |
+| Does victim need to be logged in?         | Often, but not always   | Usually yes                        |
+| Can attacker read page data?              | Often yes               | Usually no                         |
+| Can attacker perform actions?             | Yes                     | Yes                                |
+| Main defense                              | Escaping/sanitizing/CSP | CSRF tokens/SameSite/Origin checks |
+| Mostly server-side or client-side?        | Both                    | Mostly server-side                 |
 
 # 11. Mental model
 

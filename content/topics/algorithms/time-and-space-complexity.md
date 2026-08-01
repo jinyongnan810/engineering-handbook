@@ -175,7 +175,7 @@ is `O(1)`
 
 ### Space-time tradeoff
 
-Sometimes you use more memory to make the algorithm faster.
+Sometimes more memory is used to make the algorithm faster.
 
 For example, an time `O(n^2)` + space `O(1)`
 

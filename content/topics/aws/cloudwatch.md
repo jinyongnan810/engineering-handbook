@@ -1,6 +1,6 @@
 # CloudWatch
 
-**Amazon CloudWatch** is AWS's built-in monitoring and observability service. It collects **metrics** (numeric time-series data such as CPU utilization or request counts), **logs**, and **events** from nearly every AWS service, and lets you react to them automatically.
+**Amazon CloudWatch** is AWS's built-in monitoring and observability service. It collects **metrics** (numeric time-series data such as CPU utilization or request counts), **logs**, and **events** from nearly every AWS service, and enables automatic reactions to them.
 
 ## Alarms
 

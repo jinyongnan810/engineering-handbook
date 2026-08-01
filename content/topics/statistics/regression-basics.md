@@ -336,7 +336,7 @@ Think of linear regression as:
 
 > “Draw the best straight line through noisy data, then use that line for prediction or interpretation.”
 
-The line gives you:
+The line provides:
 
 - general direction
 - approximate prediction

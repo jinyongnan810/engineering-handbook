@@ -72,4 +72,4 @@ Markdown supports headings, code blocks, KaTeX math, and Mermaid diagrams.
 
 - content is loaded at runtime via `import.meta.glob`
 - markdown rendering is implemented locally in `src/utils/markdown.tsx`
-- the site is read-only at runtime; edit content in your local editor
+- the site is read-only at runtime; edit content in a local editor

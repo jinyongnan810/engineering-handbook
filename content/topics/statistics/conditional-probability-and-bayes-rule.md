@@ -40,8 +40,8 @@ Even a small false-positive rate can affect many of the 9,900 healthy people.
 In disease testing:
 | Result | Reality |
 | ------------- | --------------------------------- |
-| Positive test | Test says you have disease |
-| Negative test | Test says you do not have disease |
+| Positive test | Test indicates presence of disease |
+| Negative test | Test indicates absence of disease |
 
 ## Bayes’ rule
 
@@ -105,7 +105,7 @@ So 495 healthy people test positive by mistake.
 | Healthy but positive |   495 |
 | Total positive       |   594 |
 
-So if you got a positive result:
+So for a positive result:
 
 $$
 P(\text{disease} \mid \text{positive})
@@ -153,7 +153,7 @@ This is the false positive rate.
 
 > Among all positive alerts, how many are real?
 
-This is usually what you actually care about.
+This is usually the primary metric of interest.
 
 ## Mental model:
 
@@ -167,4 +167,4 @@ Where:
 - Evidence strength = how strongly the evidence points to A
 - New belief = updated probability after seeing the evidence
 
-A positive alert is not the final answer. It is evidence that should update your probability.
+A positive alert is not the final answer. It is evidence that should update the prior probability.

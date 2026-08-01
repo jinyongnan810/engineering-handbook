@@ -49,13 +49,13 @@ Possible explanations:
 3. A third factor, like job type or lifestyle, affects both.
 4. The pattern is partly random.
 
-So correlation gives you a clue, not proof.
+So correlation gives a clue, not proof.
 
 ---
 
 ## 3. Confounding variables
 
-A **confounding variable** is a hidden or extra variable that affects both things you are studying.
+A **confounding variable** is a hidden or extra variable that affects both variables under study.
 
 Example:
 
@@ -114,11 +114,11 @@ Both may be affected by economic growth, urbanization, inflation, population, or
 
 ## 5. Why observational data is limited
 
-**Observational data** means you just observe what happens naturally.
+**Observational data** means simply observing what happens naturally.
 
 Example:
 
-> You compare people who drink coffee with people who do not.
+> Comparing people who drink coffee with people who do not.
 
 Problem: those groups may differ in many ways.
 
@@ -144,7 +144,7 @@ But it usually cannot fully prove:
 
 ## 6. Better evidence for causation
 
-To argue causation, you usually want more than correlation.
+To argue causation, usually more than correlation is needed.
 
 Useful evidence includes:
 
@@ -165,7 +165,7 @@ Example:
 
 ## 7. Simple mental checklist
 
-When you see “A is linked to B,” ask:
+When encountering “A is linked to B,” ask:
 
 ```text
 1. Could B cause A instead?
@@ -189,7 +189,7 @@ Certain classes require laptops and are harder.
 Students using laptops may also multitask more.
 ```
 
-So you should not immediately conclude:
+So one should not immediately conclude:
 
 > “Laptops cause bad grades.”
 

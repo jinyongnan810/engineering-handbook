@@ -73,7 +73,7 @@ $$
 
 ### Transpose to outer product
 
-Use the outer product when you want to create a matrix of all pairwise interactions between two vectors.
+Use the outer product when creating a matrix of all pairwise interactions between two vectors.
 
 $$
 ab^T

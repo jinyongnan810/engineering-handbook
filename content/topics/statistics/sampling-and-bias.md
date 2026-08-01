@@ -2,15 +2,15 @@
 
 ### 1. Sample vs Population
 
-**Population** = the full group you care about.
-**Sample** = the smaller group you actually observe.
+**Population** = the full group of interest.
+**Sample** = the smaller group actually observed.
 
 Example:
 
-> You want to know the average height of all adults in Japan.
+> Goal: Determine the average height of all adults in Japan.
 
 - Population: all adults in Japan
-- Sample: 1,000 adults you measure
+- Sample: 1,000 adults measured
 
 The goal of sampling is to use the sample to estimate something about the population.
 
@@ -28,7 +28,7 @@ A large sample is useful only if it is collected in a fair way.
 
 Example:
 
-> You ask only gym members about average exercise habits.
+> Surveying only gym members about average exercise habits.
 
 That sample will probably overestimate how much people exercise, because gym members are not representative of everyone.
 
@@ -40,7 +40,7 @@ Better conclusion:
 
 > “Among gym members, many people exercise often.”
 
-Sampling bias means the data is already distorted before you analyze it.
+Sampling bias means the data is already distorted before analysis.
 
 ---
 
@@ -71,13 +71,13 @@ Selection bias often appears when:
 
 **Survivorship bias** is a special type of selection bias.
 
-It happens when you look only at the “survivors” and ignore those who failed or disappeared.
+It happens when looking only at the “survivors” and ignoring those who failed or disappeared.
 
 Classic example:
 
 > Studying only successful startups to learn what makes startups succeed.
 
-You may find patterns like:
+Patterns may appear such as:
 
 > “Successful founders worked long hours.”
 
@@ -89,7 +89,7 @@ Another example:
 
 > “This old building is very strong because it lasted 100 years.”
 
-Maybe many weak buildings from the same time already collapsed. You are only seeing the ones that survived.
+Maybe many weak buildings from the same time already collapsed. Only the ones that survived are visible.
 
 Survivorship bias often creates false success advice.
 
@@ -115,11 +115,11 @@ But it does **not** fix bias.
 
 Example:
 
-> You ask 100,000 Twitter/X users about political opinions.
+> Surveying 100,000 Twitter/X users about political opinions.
 
 That is a large sample, but it may still not represent the whole country.
 
-**More biased data just gives you a more confident wrong answer.**
+**More biased data just produces a more confident wrong answer.**
 
 Important idea:
 
@@ -137,7 +137,7 @@ The sample is fair, but small.
 
 Example:
 
-> You randomly ask 10 people.
+> Randomly surveying 10 people.
 
 The result may be unstable.
 
@@ -151,7 +151,7 @@ The sample is collected unfairly.
 
 Example:
 
-> You ask only people in a luxury gym.
+> Surveying only people in a luxury gym.
 
 Even 10,000 answers may be misleading.
 
@@ -185,7 +185,7 @@ This is sampling bias / selection bias.
 
 Question:
 
-> A website asks visitors, “Do you like our new design?”
+> A website asks visitors for feedback on the new design.
 
 Problem?
 
@@ -232,8 +232,8 @@ The most useful question is:
 
 ## Key Takeaways
 
-- **Population** is the full group you care about.
-- **Sample** is the smaller group you observe.
+- **Population** is the full group of interest.
+- **Sample** is the smaller group observed.
 - A sample must be representative, not just large.
 - **Sampling bias** happens when the sample does not reflect the population.
 - **Selection bias** happens when the selection process distorts the result.

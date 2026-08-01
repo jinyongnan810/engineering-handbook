@@ -6,12 +6,12 @@ A **Confidence Interval (CI)** is a tool in statistics that gives a range of pla
 
 ## 1. Interval Estimate vs. Point Estimate
 
-- **Point Estimate:** A single value calculated from sample data to estimate a population parameter. For example, if you survey 100 people and find their average sleep is **7.2 hours**, 7.2 is your point estimate.
+- **Point Estimate:** A single value calculated from sample data to estimate a population parameter. For example, if 100 people are surveyed and their average sleep is **7.2 hours**, 7.2 is the point estimate.
 - **Interval Estimate:** A range of values, derived from the sample data, that is likely to contain the true population parameter. For example, "The average sleep is between **6.8 and 7.6 hours**."
 
-A point estimate is almost certainly wrong by at least a small amount due to **sampling error** (the luck of the draw in who you surveyed).
+A point estimate is almost certainly wrong by at least a small amount due to **sampling error** (the luck of the draw in who was surveyed).
 
-Telling someone the average sleep is _exactly_ 7.2 hours implies absolute certainty, which is misleading. It provides zero information about how much that estimate might bounce around if you took a different sample.
+Telling someone the average sleep is _exactly_ 7.2 hours implies absolute certainty, which is misleading. It provides zero information about how much that estimate might bounce around if a different sample were taken.
 
 An interval estimate accepts this reality and provides a buffer zone, making it a much more honest and complete statistic.
 
@@ -21,8 +21,8 @@ An interval estimate accepts this reality and provides a buffer zone, making it 
 
 When looking at a confidence interval, it is usually accompanied by a percentage, like a **95% Confidence Interval**.
 
-- **The Meaning:** If you were to repeat the entire experiment or survey 100 times, creating a new interval from each new sample, roughly 95 of those 100 intervals would contain the true, actual population average.
-- **The Trade-off (Width vs. Uncertainty):** The width of the interval represents your uncertainty range.
+- **The Meaning:** If the entire experiment or survey were repeated 100 times, creating a new interval from each new sample, roughly 95 of those 100 intervals would contain the true, actual population average.
+- **The Trade-off (Width vs. Uncertainty):** The width of the interval represents the uncertainty range.
 
 ### Wider intervals mean more uncertainty
 
@@ -40,7 +40,7 @@ The formula for the margin of error (which dictates the width) divides the stand
 $$\text{Margin of Error} \propto \frac{1}{\sqrt{n}}$$
 
 - **Small Sample Size ($n$):** High variability. One or two unusual data points can skew the results. The interval must be **wider** to ensure it captures the truth.
-- **Large Sample Size ($n$):** The law of large numbers kicks in. Individual fluctuations balance out, giving you a much clearer picture. The interval becomes **narrower** and more precise.
+- **Large Sample Size ($n$):** The law of large numbers kicks in. Individual fluctuations balance out, giving a much clearer picture. The interval becomes **narrower** and more precise.
 
 ---
 
@@ -159,14 +159,14 @@ When executing this script, the resulting values are:
 
 The function `stats.t.ppf()` from the `scipy.stats` module stands for **Percent Point Function**. It is the exact inverse of the Cumulative Distribution Function (CDF).
 
-In plain English: **You give it a probability (area under the curve), and it gives you the corresponding $t$-score.**
+In plain English: **Inputting a probability (area under the curve) yields the corresponding $t$-score.**
 
 Here is a breakdown of how it works and why we used it in the confidence interval calculation.
 
 ### The Concept of ppf: Inverse Lookup
 
 The function `stats.t.ppf()` from the `scipy.stats` module stands for **Percent Point Function**. It is the exact inverse of the Cumulative Distribution Function (CDF).
-In plain language: You give it a probability (area under the curve), and it gives you the corresponding t-score.
+In plain language: Inputting a probability (area under the curve) yields the corresponding t-score.
 
 When calculating a confidence interval, we know the percentage of data we want to capture (e.g., $95\%$). To use the formula, we need to translate that percentage into a critical value ($t^*$), which is the number of standard errors we need to move away from the mean.
 
@@ -198,7 +198,7 @@ Because a confidence interval is **two-tailed** (it has a lower limit and an upp
 
 ##### 2. The `df` Argument (Degrees of Freedom)
 
-The shape of a $t$-distribution changes depending on your sample size.
+The shape of a $t$-distribution changes depending on sample size.
 
 - `df` is calculated as $n - 1$ (Sample Size minus 1).
-- Passing `df` tells Python exactly which curve to look at so it can give you the highly precise $t$-score for your specific sample size.
+- Passing `df` tells Python exactly which curve to look at so it can return the highly precise $t$-score for the specific sample size.

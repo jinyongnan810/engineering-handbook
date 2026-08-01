@@ -41,7 +41,7 @@
 
 ## Using Cloudwatch AI operations
 
-- Enable CloudWatch AI Operations to automatically detect anomalies and generate insights from your AWS resources.
+- Enable CloudWatch AI Operations to automatically detect anomalies and generate insights from AWS resources.
 - Edit alarm and set investigation actions
 
 ![Edit alarm](https://ik.imagekit.io/kinn/my%20assets/edit%20alarm.png)

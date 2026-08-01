@@ -5,11 +5,11 @@
 An eigenvector is a direction that a matrix transformation does not rotate away from.
 The vector may become longer, shorter, or point in the opposite direction, but it stays on the same line.
 
-An eigenvalue tells you how much that eigenvector is scaled.
+An eigenvalue indicates how much that eigenvector is scaled.
 
 ## Eigenvector
 
-Usually, when you apply a matrix to a vector, the vector changes both length and direction.
+Usually, when a matrix is applied to a vector, the vector changes both length and direction.
 But an eigenvector is special:
 
 > It only changes length, not direction.
@@ -180,7 +180,7 @@ When k is 2, the 1000 data points with 10 features(original feature space) becom
 
 ## Explain variance ratio
 
-Usually you also want to calculate how much variance each component explains.
+Usually calculating how much variance each component explains is also required.
 
 ```py
 eigenvalues = np.array([8.0, 2.0, 0.5])
@@ -309,4 +309,4 @@ $$
 X_{\text{approx}} = Z W^T + \text{mean}
 $$
 
-If you kept enough principal components, X_approx will be close to the original X.
+If enough principal components are kept, X_approx will be close to the original X.

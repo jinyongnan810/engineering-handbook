@@ -2,7 +2,7 @@
 
 ## Big picture
 
-A **heap** is a data structure that lets you repeatedly access the “best” item efficiently.
+A **heap** is a data structure that allows repeated access to the “best” item efficiently.
 
 Heaps are useful when one need repeated “smallest/largest/priority” access without fully sorting everything.
 

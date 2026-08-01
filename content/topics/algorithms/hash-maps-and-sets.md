@@ -65,7 +65,7 @@ $$
 
 ## Map vs Set
 
-Use a set when you only care whether something exists.
+Use a set when only checking whether something exists.
 
 ```py
 seen = set()
@@ -76,7 +76,7 @@ if "apple" in seen:
     print("Already saw apple")
 ```
 
-Use a map/dict when you need to associate a key with a value.
+Use a map/dict when associating a key with a value.
 
 ```py
 counts = {}

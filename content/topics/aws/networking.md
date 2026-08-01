@@ -6,8 +6,8 @@ Before one can deploy a database or a web server, it's necessary to have a netwo
 
 Inside the VPC, we divide the network into smaller chunks called Subnets:
 
-- **Public Subnets**: These have a direct route to the outside world via an Internet Gateway (IGW). You put public-facing resources here, like load balancers or bastion hosts.
-- **Private Subnets**: These have no direct route to the internet. This is where your sensitive backend resources live, like application servers and databases.
+- **Public Subnets**: These have a direct route to the outside world via an Internet Gateway (IGW). Public-facing resources, like load balancers or bastion hosts, are placed here.
+- **Private Subnets**: These have no direct route to the internet. Sensitive backend resources live here, like application servers and databases.
 
 To control how traffic flows between these subnets and the internet, we use **Route Tables**. A Route Table is essentially a set of rules (routes) that acts as a traffic cop, directing network packets exactly where they need to go.
 

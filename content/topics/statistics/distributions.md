@@ -139,7 +139,7 @@ print(f"Probability of finding {k} defective products: {probability:.4f}")
 
 ## Percentiles
 
-A percentile tells you the percentage of observations at or below a value.
+A percentile indicates the percentage of observations at or below a value.
 Examples:
 
 - 25th percentile: 25% of values are at or below it.

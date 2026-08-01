@@ -9,7 +9,7 @@ A stack and a queue are both containers for storing items, but they remove items
 | Stack     | **LIFO** | Last In, First Out  |
 | Queue     | **FIFO** | First In, First Out |
 
-Think of a **stack** like a pile of plates. You put a new plate on top, and you also take from the top.
+Think of a **stack** like a pile of plates. A new plate is placed on top, and plates are also taken from the top.
 
 Think of a **queue** like people waiting in line. The first person who entered the line is served first.
 

@@ -2,7 +2,7 @@
 
 ## Sorting
 
-Sorting turns messy data into ordered data. Once data is ordered, many problems become easier because you can use structure instead of checking every possible item.
+Sorting turns messy data into ordered data. Once data is ordered, many problems become easier because structure can be used instead of checking every possible item.
 
 ### Bubble sort
 

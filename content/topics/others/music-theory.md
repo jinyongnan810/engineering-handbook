@@ -4,7 +4,7 @@ These notes are based on the Udemy course **Music Theory Comprehensive**.
 
 ## General Principles
 
-- **Always trust your ear.** If it sounds good, it is good.
+- **Always trust the ear.** If it sounds good, it is good.
 - **Break the rules often.** Music theory is descriptive, not prescriptive.
 
 ---

@@ -19,10 +19,10 @@ Where $P$ is the probability of an event, and $V$ is its value (payout/cost).
 
 ### Let's Compute a Simple Decision
 
-Imagine a friend offers you a bet. You flip a fair coin:
+Imagine a scenario offering a bet on flipping a fair coin:
 
-- **Heads (50% chance):** You win $10.
-- **Tails (50% chance):** You lose $4.
+- **Heads (50% chance):** Win $10.
+- **Tails (50% chance):** Lose $4.
 
 Let's plug it in:
 
@@ -30,7 +30,7 @@ $$\text{EV} = (0.50 \times \$10) + (0.50 \times -\$4)$$
 
 $$\text{EV} = \$5 + (-\$2) = +\$3$$
 
-> **The Takeaway:** The expected value of this bet is +3. Even though you will _never_ actually walk away from a single flip with exactly 3 dollars in your hand, this number tells you the bet is heavily weighted in your favor.
+> **The Takeaway:** The expected value of this bet is +3. Even though one will _never_ actually walk away from a single flip with exactly 3 dollars in hand, this number indicates the bet is heavily weighted in favor of the player.
 
 ---
 
@@ -55,7 +55,7 @@ This is where human psychology usually trips up. We naturally confuse "what is m
 
 ## 4. Comparing Two Risky Choices Rationally
 
-To tie this all together, let’s look at a real-world business decision. Imagine you are launching a product and have to choose between two marketing strategies:
+To tie this all together, consider a real-world business decision involving launching a product with a choice between two marketing strategies:
 
 | Strategy               | Out-of-the-Park Success | Moderate Success   | Complete Flop       |
 | ---------------------- | ----------------------- | ------------------ | ------------------- |
@@ -77,8 +77,8 @@ $$= \$40,000 + \$2,000 - \$4,000 = \mathbf{\$38,000}$$
 
 ### The Rational Verdict
 
-Even though Strategy Y has a massive 40% chance of completely flopping and costing you money, its **Expected Value ($38,000) is much higher** than Strategy X ($21,000).
+Even though Strategy Y has a massive 40% chance of completely flopping and costing money, its **Expected Value ($38,000) is much higher** than Strategy X ($21,000).
 
-If your business can survive the worst-case scenario (the -$10k flop), taking the calculated risk on Strategy Y is the mathematically superior choice.
+If the business can survive the worst-case scenario (the -$10k flop), taking the calculated risk on Strategy Y is the mathematically superior choice.
 
 This is the reason why wealthy people can get more wealthy easily because then they can afford to take calculated risks that have a higher expected value, even if they come with higher variance.

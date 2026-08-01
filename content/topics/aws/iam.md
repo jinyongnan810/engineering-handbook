@@ -4,7 +4,7 @@ In AWS, **IAM (Identity and Access Management)** is the absolute foundation of s
 
 ## AWS IAM Components
 
-AWS IAM relies on four main pillars to govern access to resources. To secure an AWS environment effectively, you must understand how these components interact:
+AWS IAM relies on four main pillars to govern access to resources. To secure an AWS environment effectively, one must understand how these components interact:
 
 - **Users:** Individuals or applications requiring long-term credentials.
 - **Groups:** Collections of users that share identical permission levels.
@@ -20,12 +20,12 @@ Think of it as a classic "Who" vs. "What" dynamic in AWS security.
 
 #### How They Work Together
 
-To give a role any actual power, you must **attach** a policy to it.
+To give a role any actual power, a policy must be **attached** to it.
 
 - The **Policy** dictates the boundaries of what can or cannot be done.
 - The **Role** serves as the temporary identity that a service "puts on" to inherit those exact permissions.
 
-By separating the identity (the Role) from the permissions (the Policy), AWS allows you to securely pass temporary access to resources without needing to manage long-term credentials or hardcoded keys.
+By separating the identity (the Role) from the permissions (the Policy), AWS allows securely passing temporary access to resources without needing to manage long-term credentials or hardcoded keys.
 
 #### Worked Examples
 

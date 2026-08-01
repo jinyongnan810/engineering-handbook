@@ -57,7 +57,7 @@ Here:
 
 ## 3. Alternative Hypothesis
 
-The **alternative hypothesis**, usually written as H1 or Ha, is what you are looking for evidence of.
+The **alternative hypothesis**, usually written as H1 or Ha, is what evidence is being sought for.
 
 It says:
 
@@ -94,9 +94,9 @@ Example:
 
 ### Simple Example
 
-Suppose your website currently has a conversion rate of 10%.
+Suppose a website currently has a conversion rate of 10%.
 
-You test a new design.
+A new design is tested.
 
 - Old design: 10% conversion
 - New design sample: 12% conversion
@@ -105,7 +105,7 @@ Question:
 
 > Did the new design truly improve conversion, or could this happen by random chance?
 
-You set:
+Setting:
 
 $$
 H_0: \text{new design has the same conversion rate as old design}
@@ -115,7 +115,7 @@ $$
 H_1: \text{new design has a different conversion rate}
 $$
 
-Then you calculate a p-value.
+Then a p-value is calculated.
 
 ---
 
@@ -145,7 +145,7 @@ Correct interpretation:
 
 ### Example
 
-Suppose you run an A/B test and get:
+Suppose an A/B test is run, yielding:
 
 $$
 p = 0.03
@@ -155,16 +155,16 @@ Plain-language interpretation:
 
 > Assuming the new design actually has no real effect, a result this strong or stronger would happen about 3% of the time due to random chance.
 
-That is somewhat surprising, so you may reject the null hypothesis.
+That is somewhat surprising, so the null hypothesis may be rejected.
 
 ### Calculating p-values
 
-A **p-value is calculated by comparing your observed result to the distribution of results you would expect if the null hypothesis were true**.
+A **p-value is calculated by comparing an observed result to the distribution of results expected if the null hypothesis were true**.
 
 The general process is:
 
 1. Assume the null hypothesis is true.
-2. Compute a test statistic from your data.
+2. Compute a test statistic from the data.
 3. Ask: “Under the null hypothesis, how often would we see a test statistic this extreme or more extreme?”
 4. That probability is the p-value.
 
@@ -178,7 +178,7 @@ $$
 H_0: \text{the coin is fair}
 $$
 
-You flip a coin 10 times and get 9 heads.
+Flipping a coin 10 times yields 9 heads.
 
 Question:
 
@@ -270,7 +270,7 @@ For the coin example:
 - One-sided: probability of 9 or more heads
   - Is the coin biased toward heads?
 - Two-sided: probability of 9 or more heads **or** 1 or fewer heads
-  - If your question is “is the coin unfair?”, then both extreme heads and extreme tails are suspicious.
+  - If the question is “is the coin unfair?”, then both extreme heads and extreme tails are suspicious.
 
 So the two-sided p-value is larger:
 
@@ -320,7 +320,7 @@ print(result.pvalue)
 
 The key idea:
 
-> A p-value is calculated from the probability distribution expected under the null hypothesis. It measures how rare your observed result would be if the null hypothesis were true.
+> A p-value is calculated from the probability distribution expected under the null hypothesis. It measures how rare an observed result would be if the null hypothesis were true.
 
 ---
 
@@ -360,19 +360,19 @@ A **Type I error** is a false positive.
 
 It means:
 
-> You reject the null hypothesis even though the null hypothesis is actually true.
+> Rejecting the null hypothesis even though the null hypothesis is actually true.
 
 In plain language:
 
-> You think there is an effect, but there is no real effect.
+> Concluding there is an effect when there is no real effect.
 
 Example:
 
-A drug actually does not work, but your experiment says it does.
+A drug actually does not work, but an experiment indicates it does.
 
 Another example:
 
-A new button does not really improve conversion, but your A/B test makes it look like it does.
+A new button does not really improve conversion, but an A/B test makes it appear to.
 
 The probability of a Type I error is controlled by $\alpha$:
 
@@ -386,7 +386,7 @@ $$
 \alpha = 0.05
 $$
 
-then you are accepting a 5% false-positive risk, assuming all test assumptions are valid.
+then a 5% false-positive risk is accepted, assuming all test assumptions are valid.
 
 ---
 
@@ -396,19 +396,19 @@ A **Type II error** is a false negative.
 
 It means:
 
-> You fail to reject the null hypothesis even though there really is an effect.
+> Failing to reject the null hypothesis even though there really is an effect.
 
 In plain language:
 
-> There is a real effect, but your test does not detect it.
+> A real effect exists, but the test does not detect it.
 
 Example:
 
-A drug actually works, but your experiment says the result is not statistically significant.
+A drug actually works, but an experiment indicates the result is not statistically significant.
 
 Another example:
 
-A new website design really improves conversion, but your sample size is too small to prove it.
+A new website design really improves conversion, but the sample size is too small to prove it.
 
 Type II error is usually written as $\beta$:
 
@@ -424,7 +424,7 @@ $$
 
 Power means:
 
-> The probability that your test detects a real effect when one exists.
+> The probability that a test detects a real effect when one exists.
 
 ---
 
@@ -488,7 +488,7 @@ But it may not be worth:
 - user confusion
 - business risk
 
-So you should always ask:
+So one should always ask:
 
 > Is the effect big enough to matter?
 
@@ -496,7 +496,7 @@ So you should always ask:
 
 ## 10. Example: A/B Test Result
 
-Suppose you test a new checkout page.
+Suppose a new checkout page is tested.
 
 | Metric          | Old page | New page |
 | --------------- | -------: | -------: |
@@ -509,13 +509,13 @@ $$
 p = 0.03 < 0.05
 $$
 
-You might say:
+One might say:
 
 > The result is statistically significant at the 5% level.
 
-But you should not stop there.
+But one should not stop there.
 
-You should also ask:
+One should also ask:
 
 1. Is a 0.4 percentage point increase meaningful?
 2. How large was the sample?
@@ -543,7 +543,7 @@ With a small sample:
 With a huge sample:
 
 - even tiny effects can become statistically significant
-- you must pay more attention to practical significance
+- more attention must be paid to practical significance
 
 Example:
 
@@ -598,7 +598,7 @@ else:
 
 ## 13. Reading Experiment Results Critically
 
-When you see:
+When encountering:
 
 > “The result was significant, p < 0.05.”
 
@@ -672,11 +672,11 @@ If mobile users mostly saw version A and desktop users mostly saw version B, the
 
 ### 6. Were many tests performed?
 
-If you test many things, some will look significant by chance.
+If many things are tested, some will look significant by chance.
 
 Example:
 
-If you test 100 button colors with (\alpha = 0.05), you should expect some false positives.
+If 100 button colors are tested with (\alpha = 0.05), one should expect some false positives.
 
 ---
 
@@ -702,9 +702,9 @@ Hypothesis testing usually works like this:
 
 Core idea:
 
-> A p-value tells you how surprising your data would be if the null hypothesis were true.
+> A p-value indicates how surprising the observed data would be if the null hypothesis were true.
 
-It does **not** tell you:
+It does **not** indicate:
 
 - the probability that the null hypothesis is true
 - whether the result is important

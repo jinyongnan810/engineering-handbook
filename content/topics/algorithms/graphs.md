@@ -93,11 +93,11 @@ DFS is helpful when
 
 > Can package A eventually depend on package D?
 
-DFS is natural here because you follow one dependency chain deeply.
+DFS is natural here because it follows one dependency chain deeply.
 
 ### When BFS is better
 
-BFS is better when you need the shortest path in an unweighted graph.
+BFS is better when finding the shortest path in an unweighted graph.
 
 | Problem                           | Why BFS helps                  |
 | --------------------------------- | ------------------------------ |

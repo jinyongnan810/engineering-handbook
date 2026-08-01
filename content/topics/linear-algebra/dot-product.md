@@ -3,7 +3,7 @@
 ## Big idea
 
 The dot product takes two vectors and returns one number.
-That number tells you how much the two vectors point in **the same direction**.
+That number indicates how much the two vectors point in **the same direction**.
 
 Fomula:
 
