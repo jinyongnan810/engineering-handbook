@@ -228,6 +228,12 @@
     "tag": "Security"
   },
   {
+    "slug": "keys",
+    "title": "Keys",
+    "file": "topics/security/keys.md",
+    "tag": "Security"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",
