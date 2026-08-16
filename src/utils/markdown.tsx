@@ -732,6 +732,18 @@ function normalizeCodeLanguage(language: string) {
     return "javascript";
   }
 
+  if (["cpp", "c++", "cxx", "cc"].includes(normalizedLanguage)) {
+    return "cpp";
+  }
+
+  if (["bash", "sh", "shell", "zsh"].includes(normalizedLanguage)) {
+    return "bash";
+  }
+
+  if (["yml", "yaml"].includes(normalizedLanguage)) {
+    return "yaml";
+  }
+
   return normalizedLanguage;
 }
 
@@ -748,6 +760,30 @@ function getCodeLanguageLabel(language: string) {
 
   if (normalizedLanguage === "javascript") {
     return "JavaScript";
+  }
+
+  if (normalizedLanguage === "cpp") {
+    return "C++";
+  }
+
+  if (normalizedLanguage === "bash") {
+    return "Bash";
+  }
+
+  if (normalizedLanguage === "xml") {
+    return "XML";
+  }
+
+  if (normalizedLanguage === "yaml") {
+    return "YAML";
+  }
+
+  if (normalizedLanguage === "cmake") {
+    return "CMake";
+  }
+
+  if (normalizedLanguage === "hcl") {
+    return "HCL";
   }
 
   return language;

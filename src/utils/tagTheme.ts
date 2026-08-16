@@ -1,6 +1,14 @@
 export function getTagTheme(tag: string) {
   const normalized = tag.toLowerCase().trim();
   switch (normalized) {
+    case "robotics":
+      return {
+        bg: "bg-cyan-500/10 dark:bg-cyan-400/15",
+        text: "text-cyan-600 dark:text-cyan-400",
+        border: "border-cyan-500/20 dark:border-cyan-400/20",
+        gradient:
+          "from-cyan-500/10 to-teal-500/5 dark:from-cyan-400/15 dark:to-teal-400/10",
+      };
     case "aws":
       return {
         bg: "bg-amber-500/10 dark:bg-amber-400/15",

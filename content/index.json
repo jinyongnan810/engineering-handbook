@@ -234,6 +234,18 @@
     "tag": "Security"
   },
   {
+    "slug": "ros2-basics",
+    "title": "ROS 2 Basics",
+    "file": "topics/robotics/ros2-basics.md",
+    "tag": "Robotics"
+  },
+  {
+    "slug": "chasing-turtle",
+    "title": "Chasing turtle",
+    "file": "topics/robotics/chasing-turtle.md",
+    "tag": "Robotics"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",

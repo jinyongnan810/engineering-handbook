@@ -42,12 +42,15 @@ function renderHighlightedToken(
     /^(abstract|as|async|await|boolean|break|case|catch|class|const|continue|default|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|interface|let|new|null|number|private|protected|public|readonly|return|string|switch|this|throw|true|try|type|undefined|void|while)$/;
   const hclKeywords =
     /^(resource|variable|output|module|provider|data|locals|terraform|for|in|if|true|false|null)$/;
+  const cppKeywords =
+    /^(auto|bool|break|case|catch|char|class|const|constexpr|continue|default|delete|do|double|dynamic_cast|else|enum|explicit|export|extern|false|float|for|friend|goto|if|inline|int|long|mutable|namespace|new|noexcept|nullptr|operator|override|private|protected|public|reinterpret_cast|return|short|signed|sizeof|static|static_cast|struct|switch|template|this|thread_local|throw|true|try|typedef|typeid|typename|union|unsigned|using|virtual|void|volatile|wchar_t|while)$/;
 
   if (
     (language === "python" && pythonKeywords.test(token)) ||
     (["typescript", "javascript"].includes(language) &&
       typeScriptKeywords.test(token)) ||
-    (language === "hcl" && hclKeywords.test(token))
+    (language === "hcl" && hclKeywords.test(token)) ||
+    (language === "cpp" && cppKeywords.test(token))
   ) {
     return (
       <span key={key} className="text-violet-300">
@@ -65,7 +68,9 @@ function renderCodeLine(line: string, language: string, lineIndex: number) {
       ? /(#.*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
       : language === "hcl"
         ? /(#.*|\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
-        : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
+        : language === "cpp"
+          ? /(\/\/.*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g
+          : /(\/\/.*|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][A-Za-z0-9_$]*\b)/g;
 
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
@@ -101,7 +106,8 @@ function CodeBlock({ code, language, label, lines }: CodeBlockProps) {
     language === "python" ||
     language === "typescript" ||
     language === "javascript" ||
-    language === "hcl";
+    language === "hcl" ||
+    language === "cpp";
 
   async function copyCode() {
     await navigator.clipboard.writeText(code);
