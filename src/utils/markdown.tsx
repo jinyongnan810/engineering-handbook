@@ -47,9 +47,25 @@ type MarkdownImage = {
 function slugifyHeading(text: string) {
   return text
     .toLowerCase()
-    .replace(/`|\*|\[|\]|\(|\)/g, "")
+    .replace(/`|\*|_|~|\[|\]|\(|\)/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function stripMarkdownFormatting(text: string): string {
+  return text
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\$([^$\n]+)\$/g, "$1")
+    .replace(/\*\*\*([^*]+)\*\*\*/g, "$1")
+    .replace(/___([^_]+)___/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    .replace(/~~([^~]+)~~/g, "$1")
+    .trim();
 }
 
 function parseBlocks(markdown: string): Block[] {
@@ -635,12 +651,14 @@ function renderImage(image: MarkdownImage, key: string) {
   );
 }
 
-function renderInline(text: string): ReactNode[] {
+const INLINE_PATTERN =
+  /(`[^`]+`)|(\$[^$\n]+\$)|(!\[[^\]]*\]\([^)]+\))|(<img\s+[^>]*?\/?>)|(\[[^\]]+\]\([^)]+\))|(\*\*\*[^*]+\*\*\*)|((?<=[^\w]|^)___[^\s_](?:[\s\S]*?[^\s_])?___(?=[^\w]|$))|((?<=[^\w]|^)_\*\*[^*]+?\*\*_(?=[^\w]|$))|(\*\*_(?:[^\s_]|[\s\S]*?[^\s_])_\*\*)|(\*__(?:[^\s_]|[\s\S]*?[^\s_])__\*)|((?<=[^\w]|^)__\*[^*]+?\*__(?=[^\w]|$))|((?<=[^\w]|^)_\*[^*]+?\*_(?=[^\w]|$))|(\*_[^_]+?_\*)|(\*\*[^*]+\*\*)|((?<=[^\w]|^)__[^\s_](?:[\s\S]*?[^\s_])?__(?=[^\w]|$))|(\*[^*\s](?:[\s\S]*?[^*\s])?\*)|((?<=[^\w]|^)_[^\s_](?:[\s\S]*?[^\s_])?_(?=[^\w]|$))|(~~[^~]+~~)/g;
+
+function renderInline(text: string, keyPrefix = "inline"): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const pattern =
-    /(`[^`]+`)|(\$[^$\n]+\$)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(!\[[^\]]*\]\([^)]+\))|(<img\s+[^>]*?\/?>)|(\[[^\]]+\]\([^)]+\))/gi;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
+  const pattern = new RegExp(INLINE_PATTERN.source, "g");
 
   match = pattern.exec(text);
   while (match) {
@@ -649,42 +667,30 @@ function renderInline(text: string): ReactNode[] {
     }
 
     const token = match[0];
+    const nodeKey = `${keyPrefix}-${match.index}-${token.slice(0, 10)}`;
+
     if (token.startsWith("`")) {
       nodes.push(
         <code
-          key={`${token}-${match.index}`}
+          key={nodeKey}
           className="rounded bg-neutral-100 px-1.5 py-0.5 text-[0.92em] text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
         >
           {token.slice(1, -1)}
         </code>,
       );
     } else if (token.startsWith("$")) {
-      nodes.push(
-        renderInlineMath(token.slice(1, -1), `${token}-${match.index}`),
-      );
-    } else if (token.startsWith("**")) {
-      nodes.push(
-        <strong key={`${token}-${match.index}`} className="font-semibold">
-          {token.slice(2, -2)}
-        </strong>,
-      );
-    } else if (token.startsWith("*")) {
-      nodes.push(
-        <em key={`${token}-${match.index}`} className="italic">
-          {token.slice(1, -1)}
-        </em>,
-      );
+      nodes.push(renderInlineMath(token.slice(1, -1), nodeKey));
     } else if (
       token.startsWith("!") ||
       token.toLowerCase().startsWith("<img")
     ) {
       const image = parseImageToken(token);
       if (image) {
-        nodes.push(renderImage(image, `${token}-${match.index}`));
+        nodes.push(renderImage(image, nodeKey));
       } else {
         nodes.push(token);
       }
-    } else if (token.startsWith("[")) {
+    } else if (token.startsWith("[") && token.endsWith(")")) {
       const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (linkMatch) {
         const href = linkMatch[2];
@@ -692,18 +698,70 @@ function renderInline(text: string): ReactNode[] {
 
         nodes.push(
           <a
-            key={`${token}-${match.index}`}
+            key={nodeKey}
             href={href}
             target={opensInNewTab ? "_blank" : undefined}
             rel={opensInNewTab ? "noreferrer" : undefined}
             className="font-medium text-[#06c] underline underline-offset-4 transition hover:text-[#004a99] dark:text-[#2997ff] dark:hover:text-[#7abfff]"
           >
-            {linkMatch[1]}
+            {renderInline(linkMatch[1], `${nodeKey}-link`)}
           </a>,
         );
       } else {
         nodes.push(token);
       }
+    } else if (token.startsWith("~~") && token.endsWith("~~")) {
+      nodes.push(
+        <s key={nodeKey} className="line-through">
+          {renderInline(token.slice(2, -2), `${nodeKey}-s`)}
+        </s>,
+      );
+    } else if (
+      (token.startsWith("***") && token.endsWith("***")) ||
+      (token.startsWith("___") && token.endsWith("___")) ||
+      (token.startsWith("_**") && token.endsWith("**_")) ||
+      (token.startsWith("**_") && token.endsWith("_**")) ||
+      (token.startsWith("*__") && token.endsWith("__*")) ||
+      (token.startsWith("__*") && token.endsWith("*__"))
+    ) {
+      nodes.push(
+        <strong key={nodeKey} className="font-semibold">
+          <em className="italic">
+            {renderInline(token.slice(3, -3), `${nodeKey}-bi`)}
+          </em>
+        </strong>,
+      );
+    } else if (
+      (token.startsWith("_*") && token.endsWith("*_")) ||
+      (token.startsWith("*_") && token.endsWith("_*"))
+    ) {
+      nodes.push(
+        <strong key={nodeKey} className="font-semibold">
+          <em className="italic">
+            {renderInline(token.slice(2, -2), `${nodeKey}-bi`)}
+          </em>
+        </strong>,
+      );
+    } else if (
+      (token.startsWith("**") && token.endsWith("**")) ||
+      (token.startsWith("__") && token.endsWith("__"))
+    ) {
+      nodes.push(
+        <strong key={nodeKey} className="font-semibold">
+          {renderInline(token.slice(2, -2), `${nodeKey}-b`)}
+        </strong>,
+      );
+    } else if (
+      (token.startsWith("*") && token.endsWith("*")) ||
+      (token.startsWith("_") && token.endsWith("_"))
+    ) {
+      nodes.push(
+        <em key={nodeKey} className="italic">
+          {renderInline(token.slice(1, -1), `${nodeKey}-i`)}
+        </em>,
+      );
+    } else {
+      nodes.push(token);
     }
 
     lastIndex = pattern.lastIndex;
@@ -844,7 +902,7 @@ export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
     .map((block) => ({
       id: getHeadingId(block.text, counts),
       level: block.level,
-      text: block.text,
+      text: stripMarkdownFormatting(block.text),
     }));
 }
 
