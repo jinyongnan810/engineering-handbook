@@ -38,9 +38,7 @@ ROS 2 breaks the system down into decoupled building blocks:
 - **Communication Paradigms:**
   - **Topics (Publish / Subscribe):** Continuous, unidirectional data streams (e.g., sensor telemetry, camera feeds).
   - **Services (Request / Response):** Synchronous or asynchronous two-way remote procedure calls (e.g., trigger calibration, compute a sum, spawn an entity).
-  - **Actions (Goal / Feedback / Result):** Long-running preemptible tasks (e.g., navigate to a waypoint with progress updates).
   - **Parameters:** Configuration values set at launch or adjusted at runtime.
-- **DDS (Data Distribution Service):** The underlying peer-to-peer transport layer providing discovery, real-time Quality of Service (QoS), and network routing without requiring a centralized master node.
 
 ---
 
@@ -48,29 +46,52 @@ ROS 2 breaks the system down into decoupled building blocks:
 
 A **Node** is a process that performs a specific robotics computation. In modern ROS 2, nodes are best implemented using **Object-Oriented Programming (OOP)** by inheriting from the client library's base Node class (`rclcpp::Node` in C++ or `rclpy.node.Node` in Python).
 
-### Node Lifecycle and Timers
+Python Example
 
-Rather than running blocking `while (true)` sleep loops, ROS 2 nodes use **wall timers and callbacks** registered with the executor. When you "spin" a node (`rclcpp::spin` or `rclpy.spin`), the executor waits for timer events or incoming messages and invokes the corresponding callback methods.
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Main as Main Program
-    participant Node as Custom Node (OOP)
-    participant Exec as ROS 2 Executor
 
-    Main->>Node: Instantiate Node
-    Node->>Node: Create Wall Timer (1.0s)
-    Main->>Exec: spin(Node)
-    loop Every 1.0s
-        Exec->>Node: timer_callback()
-        Node->>Node: Process & Log (RCLCPP_INFO / get_logger)
-    end
+class HelloWorldNode(Node):
+    """A simple ROS2 node that prints "Hello World!" every second."""
+
+    def __init__(self):
+        super().__init__("hello_world_node")
+        self.get_logger().info("Hello World Node has been started!")
+
+        # Implementation 1
+        # while rclpy.ok():
+        #     self.timer_callback()
+        #     self.get_clock().sleep_for(rclpy.duration.Duration(seconds=1))
+
+        # Implementation 2
+        self.create_timer(1.0, self.timer_callback)
+
+    def timer_callback(self):
+        """Callback function that is called every second."""
+        self.get_logger().info("Hello World!")
+
+
+def main(args=None):
+    # Initialize the ROS2 Python client library
+    rclpy.init(args=args)
+
+    # Create a ROS2 node, then spin the node to keep it alive, finally destroy the node
+    node = HelloWorldNode()
+    rclpy.spin(node)
+    node.destroy_node()
+
+    # Shutdown the ROS2 Python client library
+    rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
 ```
 
-### Side-by-Side Implementation
-
-#### C++ (`rclcpp`)
+C++ Example
 
 ```cpp
 #include "rclcpp/rclcpp.hpp"
@@ -78,66 +99,59 @@ sequenceDiagram
 class HelloWorldNode : public rclcpp::Node
 {
 public:
-    HelloWorldNode() : Node("hello_world_node"), counter_(0)
+    HelloWorldNode() : Node("hello_world_node")
     {
-        RCLCPP_INFO(this->get_logger(), "Hello World Node has started!");
-
-        // Create a wall timer firing every 1.0 second
-        timer_ = this->create_wall_timer(
-            std::chrono::seconds(1),
-            [this]() { timer_callback(); }
-        );
+        // Initialize the timer
+        timer_ = nullptr;
+        log_startup_message();
+        create_periodic_timer();
     }
 
 private:
+    // Timer to periodically log a message
     rclcpp::TimerBase::SharedPtr timer_;
-    int counter_;
-
-    void timer_callback()
+    // Counter to keep track of the number of periodic messages logged
+    int counter_ = 0;
+    // Log a message to indicate that the node has started
+    void log_startup_message()
     {
-        RCLCPP_INFO(this->get_logger(), "Hello World! Tick #%d", counter_++);
+        RCLCPP_INFO(this->get_logger(), "Hello, World! Node has started.");
+    }
+
+    // Create a timer to periodically log a message
+    void create_periodic_timer()
+    {
+        timer_ = this->create_wall_timer(
+            std::chrono::seconds(1),
+            [this]()
+            {
+                log_periodic_message();
+            });
+    }
+
+    // Log a periodic message
+    void log_periodic_message()
+    {
+        RCLCPP_INFO(this->get_logger(), "Hello, World! This is a periodic message. Counter: %d", counter_++);
     }
 };
 
 int main(int argc, char *argv[])
 {
+    // Initialize the ROS 2 client library
     rclcpp::init(argc, argv);
+
+    // Create a custom node
     auto node = std::make_shared<HelloWorldNode>();
+    // Keep the node alive until it is shut down
     rclcpp::spin(node);
+    // Destroy the node
+    node.reset();
+
+    // Shutdown the ROS 2 client library
     rclcpp::shutdown();
     return 0;
 }
-```
-
-#### Python (`rclpy`)
-
-```python
-#!/usr/bin/env python3
-import rclpy
-from rclpy.node import Node
-
-class HelloWorldNode(Node):
-    def __init__(self):
-        super().__init__("hello_world_node")
-        self.counter = 0
-        self.get_logger().info("Hello World Node has started!")
-
-        # Create a timer firing every 1.0 second
-        self.timer = self.create_timer(1.0, self.timer_callback)
-
-    def timer_callback(self):
-        self.get_logger().info(f"Hello World! Tick #{self.counter}")
-        self.counter += 1
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = HelloWorldNode()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
-
-if __name__ == "__main__":
-    main()
 ```
 
 ---
@@ -398,6 +412,8 @@ colcon build --symlink-install
 # Source the newly compiled workspace environment
 source install/setup.bash
 ```
+
+In real-world projects, it's convenient to add `source install/setup.bash` to `.envrc` and use `allow direnv` to automatically source the workspace when entering the directory.
 
 ---
 

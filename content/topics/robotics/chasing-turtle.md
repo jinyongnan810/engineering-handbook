@@ -1,6 +1,6 @@
 # Chasing turtle
 
-This guide explores **The Chasing Turtle Problem**—a complete multi-agent robotics solution implemented in ROS 2 Jazzy (with parallel implementations in both **Python / `rclpy`** and **C++ / `rclcpp`**).
+This explores **The Chasing Turtle Problem**—a complete multi-agent robotics solution implemented in ROS 2 Jazzy.
 
 ---
 
@@ -130,18 +130,48 @@ $$
 d = \sqrt{\Delta x^2 + \Delta y^2}, \qquad \theta_d = \operatorname{atan2}(\Delta y, \Delta x)
 $$
 
-A direct angle difference $(\theta_d - \theta)$ causes discontinuity across the boundary $\pm \pi$. For example, if the current heading is $+179^\circ$ ($\approx +3.12\text{ rad}$) and the desired heading is $-179^\circ$ ($\approx -3.12\text{ rad}$), a naive subtraction yields $-358^\circ$, causing the robot to turn almost a complete circle instead of taking the optimal $2^\circ$ shortest turn.
+A direct angle difference $\Delta\theta = (\theta_d - \theta)$ causes discontinuity across the boundary $\pm \pi$. For example, if the current heading is $+179^\circ$ ($\approx +3.12\text{ rad}$) and the desired heading is $-179^\circ$ ($\approx -3.12\text{ rad}$), a naive subtraction yields $-358^\circ$, causing the robot to turn almost a complete circle instead of taking the optimal $2^\circ$ shortest turn.
 
-To unconditionally map heading error to the interval $[-\pi, \pi]$, we project the angle difference onto the unit circle using `atan2`:
+To unconditionally map heading error to the interval $[-\pi, \pi]$, we project the angle difference onto the unit circle:
+
+```mermaid
+flowchart TD
+    RAW["Raw Heading Difference<br/>Δθ = θ_d - θ"] --> CHK{"Is Δθ in (-π, π]?"}
+    CHK -- "Yes (|Δθ| ≤ π)" --> OK["e_θ = Δθ<br/>(Optimal shortest turn)"]
+    CHK -- "Δθ > π" --> SUB["e_θ = Δθ - 2π<br/>(Turn clockwise / negative)"]
+    CHK -- "Δθ ≤ -π" --> ADD["e_θ = Δθ + 2π<br/>(Turn counter-clockwise / positive)"]
+
+    subgraph Branchless Projection
+        RAW -.-> ATAN["e_θ = atan2(sin(Δθ), cos(Δθ))<br/>(Unit-circle projection)"]
+    end
+```
+
+#### Formulation 1: Unit-Circle Projection (`atan2`)
 
 $$
 e_\theta = \operatorname{atan2}\left(\sin(\theta_d - \theta),\ \cos(\theta_d - \theta)\right)
 $$
 
+- **Branchless:** No `if/else` branching logic.
+- **Universal:** Works for any raw difference $\Delta\theta \in (-\infty, \infty)$ (even if angles accumulated multi-turn rotations).
+
+#### Formulation 2: Conditional Range Shift (`if / else`)
+
+Because both $\theta_d \in (-\pi, \pi]$ and $\theta \in (-\pi, \pi]$, their difference $\Delta\theta \in (-2\pi, 2\pi)$. Thus at most a single addition or subtraction of $2\pi$ is ever needed:
+
+```python
+e_theta = theta_d - theta
+
+if e_theta > math.pi:
+    e_theta -= 2 * math.pi
+elif e_theta <= -math.pi:
+    e_theta += 2 * math.pi
 ```
-  Direct subtraction: (θ_d - θ)  → Can exceed [-π, π], causing 350° over-rotations
-  Unit-circle projection:        → Guarantees shortest path turn in [-π, π]
-```
+
+| Method                   | Advantages                                              | Considerations                                            |
+| :----------------------- | :------------------------------------------------------ | :-------------------------------------------------------- |
+| **`atan2(sin, cos)`**    | • Branchless<br>• Handles any angle $(-\infty, \infty)$ | • Minor trigonometric computation cost                    |
+| **`if / else` shifting** | • Extremely simple arithmetic<br>• Intuitive            | • Assumes inputs are already bounded within $(-\pi, \pi]$ |
 
 ### 4. Proportional Velocity Controller
 

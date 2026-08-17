@@ -438,15 +438,11 @@ Set-Cookie: session=abc; SameSite=Lax; Secure; HttpOnly
 
 Common values:
 
-| Value    | Meaning                                                                                   |
-| -------- | ----------------------------------------------------------------------------------------- |
-| `Strict` | Cookie rarely sent in cross-site requests                                                 |
-| `Lax`    | Cookie sent for normal top-level navigation, but restricted in many cross-site POST cases |
-| `None`   | Cookie sent cross-site; requires `Secure`                                                 |
-
-`SameSite=Lax` is a good default for many apps.
-
-For highly sensitive apps, consider `SameSite=Strict`, though it can affect user experience.
+| Value    | Meaning                                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Strict` | Cookie rarely sent in cross-site requests                                                                                                   |
+| `Lax`    | Cookie sent for normal top-level navigation(e.g. clicking a link from an external email/site), but restricted in many cross-site POST cases |
+| `None`   | Cookie sent cross-site; requires `Secure`                                                                                                   |
 
 ---
 
@@ -545,13 +541,13 @@ Access-Control-Allow-Credentials: true
 
 # 9. Limits of CSRF defenses
 
-| Defense              | Limit                                                              |
-| -------------------- | ------------------------------------------------------------------ |
-| CSRF token           | XSS can read/use the token if it exists in the page                |
-| SameSite cookie      | May not cover every case; cross-site apps may need `SameSite=None` |
-| POST instead of GET  | Good practice, but not enough alone                                |
-| Origin/Referer check | Headers may be absent or affected by privacy settings              |
-| Re-authentication    | Better UX/security tradeoff needed                                 |
+| Defense              | Limit                                                                             |
+| -------------------- | --------------------------------------------------------------------------------- |
+| CSRF token           | XSS can read/use the token if it exists in the page                               |
+| SameSite cookie      | if a sibling site is hacked and makes cross-site requests, the cookie may be sent |
+| POST instead of GET  | Good practice, but not enough alone                                               |
+| Origin/Referer check | Headers may be absent or affected by privacy settings                             |
+| Re-authentication    | Better UX/security tradeoff needed                                                |
 
 Important:
 

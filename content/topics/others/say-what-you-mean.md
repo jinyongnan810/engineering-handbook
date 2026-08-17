@@ -185,7 +185,7 @@ In practice, noticing some common signs will be helpful to us.
 When signs of reactivity appear, we **pause** and relax physical tension, remembering there are always **choices** in how to proceed, and return to **presence, curiosity, and care**.
 
 - _"What if there were something to learn here?"_
-- _"what if we figure this out and become closer?"_
+- _"What if we figure this out and become closer?"_
 - _"What might work for both of us?"_
 - _"Regardless of the outcome, how do I want to handle myself here?"_
 - _"What's most important to me? What are my needs?"_
