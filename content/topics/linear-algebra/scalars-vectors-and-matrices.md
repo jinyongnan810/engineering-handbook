@@ -96,4 +96,4 @@ $$
 
 ## References
 
-- [Vectors | Chapter 1, Essence of linear algebra](https://youtu.be/fNk_zzaMoSs?si=nPJvo50xYgvgqXCg)
+https://youtu.be/fNk_zzaMoSs?si=nPJvo50xYgvgqXCg

@@ -143,4 +143,4 @@ $$
 
 ## References
 
-- [Dot Products and Duality](https://youtu.be/LyGKycYT2v0?si=_-bE5dU4003r4gG0)
+https://youtu.be/LyGKycYT2v0?si=_-bE5dU4003r4gG0

@@ -90,4 +90,4 @@ def distance(a, b):
 
 ## References
 
-- [Vectors in Math is fun](https://www.mathsisfun.com/algebra/vectors.html)
+https://www.mathsisfun.com/algebra/vectors.html

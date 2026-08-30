@@ -8,3 +8,13 @@ export type HandbookPageMeta = {
 export type HandbookPageContent = HandbookPageMeta & {
   markdown: string;
 };
+
+export type LinkPreviewData = {
+  url: string;
+  hostname: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  siteName?: string;
+  favicon?: string;
+};

@@ -1,0 +1,56 @@
+{
+  "https://github.com/facebook/react": {
+    "url": "https://github.com/react/react",
+    "hostname": "github.com",
+    "title": "GitHub - react/react: The library for web and native user interfaces.",
+    "description": "The library for web and native user interfaces. Contribute to react/react development by creating an account on GitHub.",
+    "image": "https://opengraph.githubassets.com/cd5c220728dddbdae6253826392d07b58b8816b2de31096e9e2dcab499bca632/react/react",
+    "siteName": "GitHub",
+    "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+  },
+  "https://www.mathsisfun.com/algebra/vectors.html": {
+    "url": "https://www.mathsisfun.com/algebra/vectors.html",
+    "hostname": "mathsisfun.com",
+    "title": "Vectors",
+    "description": "This is a vector: A vector has magnitude (size) and direction: The length of the line shows its magnitude and the arrowhead points in the direction.",
+    "siteName": "Math is Fun",
+    "image": "https://www.mathsisfun.com/algebra/images/vector-hdr.png",
+    "favicon": "https://www.google.com/s2/favicons?domain=mathsisfun.com&sz=64"
+  },
+  "https://youtu.be/LyGKycYT2v0?si=_-bE5dU4003r4gG0": {
+    "url": "https://www.youtube.com/watch?si=_-bE5dU4003r4gG0&v=LyGKycYT2v0&feature=youtu.be",
+    "hostname": "youtube.com",
+    "title": "Dot products and duality | Chapter 9, Essence of linear algebra",
+    "description": "Why the formula for dot products matches their geometric intuition.Help fund future projects: https://www.patreon.com/3blue1brownAn equally valuable form of ...",
+    "siteName": "YouTube",
+    "image": "https://i.ytimg.com/vi/LyGKycYT2v0/maxresdefault.jpg",
+    "favicon": "https://www.youtube.com/s/desktop/f13793d9/img/favicon.ico"
+  },
+  "https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD": {
+    "url": "https://www.youtube.com/watch?si=Nl-OuLtd_SiYPYoD&v=XkY2DOUCWMU&feature=youtu.be",
+    "hostname": "youtube.com",
+    "title": "Matrix multiplication as composition | Chapter 4, Essence of linear algebra",
+    "description": "Multiplying two matrices represents applying one transformation after another.Help fund future projects: https://www.patreon.com/3blue1brownAn equally valuab...",
+    "siteName": "YouTube",
+    "image": "https://i.ytimg.com/vi/XkY2DOUCWMU/maxresdefault.jpg",
+    "favicon": "https://www.youtube.com/s/desktop/f13793d9/img/favicon.ico"
+  },
+  "https://youtu.be/fNk_zzaMoSs?si=nPJvo50xYgvgqXCg": {
+    "url": "https://www.youtube.com/watch?si=nPJvo50xYgvgqXCg&v=fNk_zzaMoSs&feature=youtu.be",
+    "hostname": "youtube.com",
+    "title": "Vectors | Chapter 1, Essence of linear algebra",
+    "description": "Beginning the linear algebra series with the basics.Help fund future projects: https://www.patreon.com/3blue1brownMusic: https://vincerubinetti.bandcamp.com/...",
+    "siteName": "YouTube",
+    "image": "https://i.ytimg.com/vi/fNk_zzaMoSs/maxresdefault.jpg",
+    "favicon": "https://www.youtube.com/s/desktop/f13793d9/img/favicon.ico"
+  },
+  "https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv": {
+    "url": "https://www.youtube.com/watch?si=qwomSybT6t2ydBPv&v=kYB8IZa5AuE&feature=youtu.be",
+    "hostname": "youtube.com",
+    "title": "Linear transformations and matrices | Chapter 3, Essence of linear algebra",
+    "description": "Quite possibly the most important idea for understanding linear algebra.Help fund future projects: https://www.patreon.com/3blue1brownAn equally valuable for...",
+    "siteName": "YouTube",
+    "image": "https://i.ytimg.com/vi/kYB8IZa5AuE/maxresdefault.jpg",
+    "favicon": "https://www.youtube.com/s/desktop/f13793d9/img/favicon.ico"
+  }
+}

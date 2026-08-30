@@ -3,11 +3,15 @@ import katex from "katex";
 import CodeBlock from "../components/CodeBlock";
 import MermaidDiagram from "../components/MermaidDiagram";
 import { ImageWithSkeleton } from "../components/ImageWithSkeleton";
+import LinkPreviewCard from "../components/LinkPreviewCard";
+import linkPreviewsData from "../data/linkPreviews.json";
+import type { LinkPreviewData } from "../data/types";
 
 type Block =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
   | { type: "image"; src: string; alt: string; title?: string }
+  | { type: "link-preview"; url: string }
   | {
       type: "table";
       headers: string[];
@@ -141,6 +145,12 @@ function parseBlocks(markdown: string): Block[] {
       continue;
     }
 
+    if (/^https?:\/\/[^\s]+$/.test(trimmed)) {
+      blocks.push({ type: "link-preview", url: trimmed });
+      index += 1;
+      continue;
+    }
+
     if (isTableStart(lines, index)) {
       const headers = parseTableRow(lines[index]);
       const alignments = parseTableAlignments(lines[index + 1], headers.length);
@@ -184,6 +194,7 @@ function parseBlocks(markdown: string): Block[] {
         current === "$$" ||
         current.startsWith(">") ||
         /^#{1,6}\s+/.test(current) ||
+        /^https?:\/\/[^\s]+$/.test(current) ||
         isListLine(lines[index])
       ) {
         break;
@@ -956,6 +967,19 @@ export function renderMarkdown(markdown: string): ReactNode[] {
         >
           {renderInline(block.text)}
         </p>
+      );
+    }
+
+    if (block.type === "link-preview") {
+      const meta = (linkPreviewsData as Record<string, LinkPreviewData>)[
+        block.url
+      ];
+      return (
+        <LinkPreviewCard
+          key={`link-preview-${index}`}
+          url={block.url}
+          meta={meta}
+        />
       );
     }
 

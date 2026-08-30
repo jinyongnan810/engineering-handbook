@@ -151,4 +151,4 @@ $$
 
 ## References
 
-- [Linear transformations and matrices | Chapter 3, Essence of linear algebra](https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv)
+https://youtu.be/kYB8IZa5AuE?si=qwomSybT6t2ydBPv

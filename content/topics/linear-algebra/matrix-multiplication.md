@@ -254,4 +254,4 @@ $$
 
 ## References
 
-- [Matrix multiplication as composition | Chapter 4, Essence of linear algebra](https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD)
+https://youtu.be/XkY2DOUCWMU?si=Nl-OuLtd_SiYPYoD
