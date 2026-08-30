@@ -2,6 +2,8 @@
 
 This explores **The Chasing Turtle Problem**—a complete multi-agent robotics solution implemented in ROS 2 Jazzy.
 
+https://github.com/jinyongnan810/ros-practice/tree/main/4.ex.chasing-turtle
+
 ---
 
 ## 1. Problem Statement: Autonomous Multi-Target Pursuit
@@ -51,28 +53,7 @@ The system decomposes into three distinct nodes communicating over Topics and Se
 
 ---
 
-## 3. Custom Message Interfaces
-
-To communicate the active targets between the spawner and chaser, we define two custom messages inside a `chasing_interfaces` package:
-
-### 1. Single Target Definition (`Target.msg`)
-
-```text
-# chasing_interfaces/msg/Target.msg
-string name
-geometry_msgs/Point position
-```
-
-### 2. Target Array Registry (`TargetPositions.msg`)
-
-```text
-# chasing_interfaces/msg/TargetPositions.msg
-chasing_interfaces/Target[] targets
-```
-
----
-
-## 4. Mathematical Derivation & Control Laws
+## 3. Mathematical Derivation & Control Laws
 
 Let the current chaser pose be:
 
@@ -213,234 +194,18 @@ flowchart TD
 
 ---
 
-## 5. Implementation
-
-### 1. `random_turtle_spawner` (Coordinator Node)
+## 4. Implementation & System Launch
 
 Key implementation challenges solved:
 
 - **Asynchronous Service Invocations:** Uses `call_async` / `async_send_request` with future completion callbacks to prevent thread starvation.
 - **In-flight Request Guards:** Uses `request_pending` flag and a `pending_kills` set so rapid timer ticks or high-frequency pose callbacks do not fire duplicate concurrent requests.
+- **Locked Target Pursuit:** Locks onto target name to prevent rapid oscillation between equidistant targets.
+- **Proportional Closed-Loop Steering & Speed:** Gated linear velocity and proportional angular velocity controller.
 
-#### Python (`random_turtle_spawner.py`)
+### Project Source & Launch Files
 
-```python
-#!/usr/bin/env python3
-import math
-import random
-import rclpy
-from geometry_msgs.msg import Point
-from rclpy.node import Node
-from turtlesim.msg import Pose
-from turtlesim.srv import Kill, Spawn
-from chasing_interfaces.msg import Target, TargetPositions
-
-class RandomTurtleSpawner(Node):
-    def __init__(self):
-        super().__init__("random_turtle_spawner")
-
-        duration = self.declare_parameter("duration", 2.0).value
-        self.spawn_client = self.create_client(Spawn, "/spawn")
-        self.kill_client = self.create_client(Kill, "/kill")
-        self.positions_publisher = self.create_publisher(
-            TargetPositions, "/spawned_target_positions", 10
-        )
-        self.pose_subscription = self.create_subscription(
-            Pose, "/turtle1/pose", self.handle_pose, 10
-        )
-
-        self.target_positions = TargetPositions()
-        self.pending_kills = set()
-        self.request_pending = False
-        self.timer = self.create_timer(duration, self.spawn_turtle)
-
-    def spawn_turtle(self):
-        if not self.spawn_client.service_is_ready() or self.request_pending:
-            return
-
-        request = Spawn.Request()
-        request.x = random.uniform(1.0, 10.0)
-        request.y = random.uniform(1.0, 10.0)
-        request.theta = random.uniform(0.0, 2.0 * math.pi)
-        self.request_pending = True
-
-        future = self.spawn_client.call_async(request)
-        future.add_done_callback(
-            lambda fut: self.spawn_finished(fut, request)
-        )
-
-    def spawn_finished(self, future, request):
-        self.request_pending = False
-        try:
-            response = future.result()
-        except Exception as err:
-            self.get_logger().error(f"Spawn failed: {err}")
-            return
-
-        target = Target(
-            name=response.name,
-            position=Point(x=float(request.x), y=float(request.y)),
-        )
-        self.target_positions.targets.append(target)
-        self.positions_publisher.publish(self.target_positions)
-        self.get_logger().info(f"Spawned {response.name} at ({request.x:.2f}, {request.y:.2f})")
-
-    def handle_pose(self, pose):
-        if not self.kill_client.service_is_ready():
-            return
-
-        for target in self.target_positions.targets:
-            dx = pose.x - target.position.x
-            dy = pose.y - target.position.y
-            if dx * dx + dy * dy > 0.2**2 or target.name in self.pending_kills:
-                continue
-
-            request = Kill.Request(name=target.name)
-            self.pending_kills.add(target.name)
-            future = self.kill_client.call_async(request)
-            future.add_done_callback(
-                lambda fut, name=target.name: self.kill_finished(fut, name)
-            )
-
-    def kill_finished(self, future, name):
-        self.pending_kills.discard(name)
-        try:
-            future.result()
-        except Exception as err:
-            self.get_logger().error(f"Failed to kill {name}: {err}")
-            return
-
-        self.target_positions.targets = [
-            t for t in self.target_positions.targets if t.name != name
-        ]
-        self.positions_publisher.publish(self.target_positions)
-        self.get_logger().info(f"Captured and cleared target {name}")
-```
-
----
-
-### 2. `turtle_chaser` (Controller Node)
-
-#### C++ (`turtle_chaser.cpp`)
-
-```cpp
-#include <algorithm>
-#include <cmath>
-#include <memory>
-#include <string>
-
-#include "chasing_interfaces/msg/target_positions.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "turtlesim/msg/pose.hpp"
-
-class TurtleChaser : public rclcpp::Node
-{
-public:
-    TurtleChaser() : Node("turtle_chaser")
-    {
-        target_subscription_ = create_subscription<chasing_interfaces::msg::TargetPositions>(
-            "/spawned_target_positions", 10,
-            [this](const chasing_interfaces::msg::TargetPositions::SharedPtr msg) {
-                target_positions_ = *msg;
-            });
-
-        pose_subscription_ = create_subscription<turtlesim::msg::Pose>(
-            "/turtle1/pose", 10,
-            std::bind(&TurtleChaser::handle_pose, this, std::placeholders::_1));
-
-        velocity_publisher_ = create_publisher<geometry_msgs::msg::Twist>("/turtle1/cmd_vel", 10);
-    }
-
-private:
-    void handle_pose(const turtlesim::msg::Pose::SharedPtr pose)
-    {
-        geometry_msgs::msg::Twist command;
-        if (target_positions_.targets.empty())
-        {
-            selected_target_name_.clear();
-            velocity_publisher_->publish(command);
-            return;
-        }
-
-        // Check if previously selected target is still active
-        auto selected_target = std::find_if(
-            target_positions_.targets.begin(), target_positions_.targets.end(),
-            [this](const auto &target) { return target.name == selected_target_name_; });
-
-        // If target was killed or not chosen yet, select nearest by squared distance
-        if (selected_target == target_positions_.targets.end())
-        {
-            selected_target = std::min_element(
-                target_positions_.targets.begin(), target_positions_.targets.end(),
-                [&pose](const auto &a, const auto &b) {
-                    const auto dax = a.position.x - pose->x;
-                    const auto day = a.position.y - pose->y;
-                    const auto dbx = b.position.x - pose->x;
-                    const auto dby = b.position.y - pose->y;
-                    return (dax * dax + day * day) < (dbx * dbx + dby * dby);
-                });
-            selected_target_name_ = selected_target->name;
-            RCLCPP_INFO(get_logger(), "Locked target: %s", selected_target_name_.c_str());
-        }
-
-        const auto delta_x = selected_target->position.x - pose->x;
-        const auto delta_y = selected_target->position.y - pose->y;
-        const auto distance = std::hypot(delta_x, delta_y);
-        const auto desired_heading = std::atan2(delta_y, delta_x);
-
-        // Normalize heading error to [-pi, pi]
-        const auto heading_error = std::atan2(
-            std::sin(desired_heading - pose->theta),
-            std::cos(desired_heading - pose->theta)
-        );
-
-        // Proportional angular steering
-        command.angular.z = 4.0 * heading_error;
-
-        // Proportional linear speed gated by heading alignment
-        if (std::abs(heading_error) < 0.5)
-        {
-            command.linear.x = std::min(2.0, 1.5 * distance);
-        }
-
-        velocity_publisher_->publish(command);
-    }
-
-    rclcpp::Subscription<chasing_interfaces::msg::TargetPositions>::SharedPtr target_subscription_;
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_subscription_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
-    chasing_interfaces::msg::TargetPositions target_positions_;
-    std::string selected_target_name_;
-};
-
-int main(int argc, char *argv[])
-{
-    rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<TurtleChaser>());
-    rclcpp::shutdown();
-    return 0;
-}
-```
-
----
-
-## 6. System Launch & Orchestration
-
-Using an XML launch file, we orchestrate the entire multi-node system with a single command:
-
-```xml
-<!-- chasing_py_pkg/launch/random_turtle_spawner.launch.xml -->
-<launch>
-  <arg name="duration" default="2.0"/>
-
-  <node pkg="turtlesim" exec="turtlesim_node" name="turtlesim_node"/>
-  <node pkg="chasing_py_pkg" exec="random_turtle_spawner" name="random_turtle_spawner">
-    <param name="duration" value="$(var duration)"/>
-  </node>
-  <node pkg="chasing_py_pkg" exec="turtle_chaser" name="turtle_chaser"/>
-</launch>
-```
+https://github.com/jinyongnan810/ros-practice/tree/main/4.ex.chasing-turtle
 
 ### Execution Commands
 
@@ -458,7 +223,7 @@ ros2 launch chasing_cpp_pkg random_turtle_spawner.launch.xml duration:=2.0
 
 ---
 
-## 7. Live System Introspection & Telemetry
+## 5. Live System Introspection & Telemetry
 
 While the simulation is running, inspect the live topics and computational graph:
 
