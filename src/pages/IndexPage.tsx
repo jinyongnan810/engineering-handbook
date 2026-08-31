@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router";
 import SiteHeader from "../components/SiteHeader";
 import TopicSidebar, { MobileTopicSidebar } from "../components/TopicSidebar";
+import { useLanguage } from "../context/LanguageContext";
 import { getAllPageMetas } from "../data/contentLoader";
 import { TagIcon } from "../components/TagIcon";
+import { getLocalizedTag } from "../i18n/translations";
 import { getTagTheme } from "../utils/tagTheme";
 
 export default function IndexPage() {
+  const { language, t } = useLanguage();
   const [isMobileTopicSidebarOpen, setIsMobileTopicSidebarOpen] =
     useState(false);
   const allPages = getAllPageMetas();
@@ -45,10 +48,10 @@ export default function IndexPage() {
           {/* Hero Section */}
           <section className="mb-16 max-w-3xl">
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-neutral-950 dark:text-white sm:text-6xl md:text-7xl">
-              Kinn's Engineering Handbook
+              {t("home.hero_title")}
             </h1>
-            <p className="text-xl text-neutral-500 dark:text-neutral-400 md:text-2xl leading-relaxed">
-              A Handbook for myself.
+            <p className="text-xl leading-relaxed text-neutral-500 dark:text-neutral-400 md:text-2xl">
+              {t("home.hero_subtitle")}
             </p>
           </section>
 
@@ -58,6 +61,15 @@ export default function IndexPage() {
               const firstPage = groupedPages[group][0];
               const pageCount = groupedPages[group].length;
               const theme = getTagTheme(group);
+              const localizedGroup = getLocalizedTag(group, language);
+              const countLabel =
+                language === "jp"
+                  ? `${pageCount} ${t("home.article_single")}`
+                  : `${pageCount} ${
+                      pageCount === 1
+                        ? t("home.article_single")
+                        : t("home.article_plural")
+                    }`;
 
               return (
                 <Link
@@ -74,16 +86,16 @@ export default function IndexPage() {
                       </div>
                     </div>
                     <h3 className="mb-2 text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-                      {group}
+                      {localizedGroup}
                     </h3>
                     <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                      {pageCount} {pageCount === 1 ? "article" : "articles"}
+                      {countLabel}
                     </p>
                   </div>
 
-                  {/* A subtle arrow indicator that appears on hover, similar to Apple interfaces */}
+                  {/* A subtle arrow indicator that appears on hover */}
                   <div className="mt-8 flex items-center justify-end">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black shadow-sm transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 dark:bg-neutral-800 dark:text-white">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black opacity-60 shadow-xs transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 dark:bg-neutral-800 dark:text-white">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"

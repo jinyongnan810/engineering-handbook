@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { useLanguage } from "../context/LanguageContext";
+import { getPageTitle } from "../data/contentLoader";
 import type { HandbookPageMeta } from "../data/types";
+import { getLocalizedTag } from "../i18n/translations";
 import { TagIcon } from "./TagIcon";
 
 export default function TopicGroup({
@@ -18,6 +21,7 @@ export default function TopicGroup({
   onNavigate?: () => void;
   isFiltering?: boolean;
 }) {
+  const { language } = useLanguage();
   const containsCurrentPage = pages.some((page) => page.slug === currentSlug);
   const [isOpen, setIsOpen] = useState(containsCurrentPage);
   const [prevSlug, setPrevSlug] = useState(currentSlug);
@@ -30,6 +34,7 @@ export default function TopicGroup({
   }
 
   const effectiveIsOpen = isFiltering || isOpen;
+  const localizedLabel = getLocalizedTag(label, language);
 
   return (
     <section>
@@ -47,7 +52,7 @@ export default function TopicGroup({
               variant === "mobile" ? "size-5" : "size-4"
             }`}
           />
-          <span>{label}</span>
+          <span>{localizedLabel}</span>
         </span>
         <svg
           aria-hidden="true"
@@ -74,6 +79,7 @@ export default function TopicGroup({
         >
           {pages.map((page) => {
             const isCurrent = page.slug === currentSlug;
+            const title = getPageTitle(page, language);
 
             return (
               <li key={page.slug}>
@@ -94,7 +100,7 @@ export default function TopicGroup({
                         : "font-normal text-neutral-500 dark:text-neutral-500"
                   }`}
                 >
-                  {page.title}
+                  {title}
                 </Link>
               </li>
             );

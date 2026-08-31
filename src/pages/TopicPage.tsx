@@ -2,12 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import SiteHeader from "../components/SiteHeader";
 import TopicSidebar, { MobileTopicSidebar } from "../components/TopicSidebar";
-import { getAllPageMetas, getPageBySlug } from "../data/contentLoader";
+import { useLanguage } from "../context/LanguageContext";
+import {
+  getAllPageMetas,
+  getPageBySlug,
+  getPageTitle,
+} from "../data/contentLoader";
 import type { HandbookPageContent } from "../data/types";
 import { getMarkdownHeadings, renderMarkdown } from "../utils/markdown";
 
 type LoadedTopicState = {
   slug: string | null;
+  language: string | null;
   page: HandbookPageContent | null;
 };
 
@@ -62,6 +68,7 @@ function MobilePageNavigation({
   markdown: string;
   pageTitle: string;
 }) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const { activeHeadingId, navigationHeadings } = usePageHeadings(markdown);
 
@@ -102,11 +109,11 @@ function MobilePageNavigation({
       {isOpen ? (
         <nav
           id="mobile-page-navigation"
-          aria-label="On this page"
+          aria-label={t("topic.on_this_page")}
           className="absolute inset-x-0 top-full max-h-[calc(100dvh-7.5rem)] overflow-y-auto border-b border-t border-neutral-200 bg-white px-5 py-4 shadow-lg dark:border-neutral-800 dark:bg-black"
         >
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-            On this page
+            {t("topic.on_this_page")}
           </p>
           <ul className="mobile-page-navigation-list space-y-1">
             {navigationHeadings.map((heading) => (
@@ -132,6 +139,7 @@ function MobilePageNavigation({
 }
 
 function PageTableOfContents({ markdown }: { markdown: string }) {
+  const { t } = useLanguage();
   const { activeHeadingId, navigationHeadings } = usePageHeadings(markdown);
 
   if (navigationHeadings.length === 0) {
@@ -139,12 +147,12 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
   }
 
   return (
-    <aside className="hidden xl:block sticky top-28 self-start">
+    <aside className="sticky top-28 hidden self-start xl:block">
       <div className="max-h-[calc(100vh-7rem)] w-56 overflow-y-auto overscroll-contain border-l border-neutral-200 pb-4 pl-4 pr-2 dark:border-neutral-800">
         <p className="text-xs font-semibold text-neutral-950 dark:text-neutral-100">
-          On this page
+          {t("topic.on_this_page")}
         </p>
-        <nav aria-label="On this page" className="mt-3">
+        <nav aria-label={t("topic.on_this_page")} className="mt-3">
           <ul className="space-y-2">
             {navigationHeadings.map((heading) => (
               <li
@@ -176,15 +184,22 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
 
 function TopicPage() {
   const { slug } = useParams();
+  const { language, t } = useLanguage();
   const currentPageMeta = allPages.find((pageMeta) => pageMeta.slug === slug);
   const [isMobileTopicSidebarOpen, setIsMobileTopicSidebarOpen] =
     useState(false);
   const [loadedTopic, setLoadedTopic] = useState<LoadedTopicState>({
     slug: null,
+    language: null,
     page: null,
   });
-  const isLoading = Boolean(slug) && loadedTopic.slug !== slug;
-  const page = loadedTopic.slug === slug ? loadedTopic.page : null;
+  const isLoading =
+    Boolean(slug) &&
+    (loadedTopic.slug !== slug || loadedTopic.language !== language);
+  const page =
+    loadedTopic.slug === slug && loadedTopic.language === language
+      ? loadedTopic.page
+      : null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0 });
@@ -197,18 +212,22 @@ function TopicPage() {
       return;
     }
 
-    void getPageBySlug(slug).then((loadedPage) => {
+    void getPageBySlug(slug, language).then((loadedPage) => {
       if (isCancelled) {
         return;
       }
 
-      setLoadedTopic({ slug, page: loadedPage });
+      setLoadedTopic({ slug, language, page: loadedPage });
     });
 
     return () => {
       isCancelled = true;
     };
-  }, [slug]);
+  }, [slug, language]);
+
+  const pageTitle = currentPageMeta
+    ? getPageTitle(currentPageMeta, language)
+    : (page?.title ?? "");
 
   return (
     <>
@@ -225,9 +244,9 @@ function TopicPage() {
       />
       {page ? (
         <MobilePageNavigation
-          key={slug}
+          key={`${slug}-${language}`}
           markdown={page.markdown}
-          pageTitle={currentPageMeta?.title ?? page.title}
+          pageTitle={pageTitle}
         />
       ) : null}
       <div className="mx-auto grid w-full max-w-[1440px] lg:grid-cols-[18rem_minmax(0,1fr)]">
@@ -239,7 +258,7 @@ function TopicPage() {
           {isLoading ? (
             <div
               role="status"
-              aria-label="Loading topic"
+              aria-label={t("topic.loading")}
               className="flex min-h-[50vh] items-center justify-center xl:col-span-2"
             >
               <div className="size-8 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-950 dark:border-neutral-800 dark:border-t-neutral-100" />
@@ -249,15 +268,18 @@ function TopicPage() {
               <article className="min-w-0 max-w-3xl space-y-7">
                 {renderMarkdown(page.markdown)}
               </article>
-              <PageTableOfContents markdown={page.markdown} />
+              <PageTableOfContents
+                key={`${slug}-${language}`}
+                markdown={page.markdown}
+              />
             </>
           ) : (
             <article className="space-y-4">
               <p className="text-sm font-semibold text-neutral-500 dark:text-neutral-500">
-                Topic not found
+                {t("topic.not_found")}
               </p>
               <h1 className="text-5xl font-semibold tracking-tight">
-                That handbook page does not exist.
+                {t("topic.not_found_desc")}
               </h1>
             </article>
           )}

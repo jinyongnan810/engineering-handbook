@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { SiteLogo } from "./SiteLogo";
 
 type SiteHeaderProps = {
@@ -8,6 +10,8 @@ type SiteHeaderProps = {
 };
 
 function SiteHeader({ isTopicsOpen = false, onOpenTopics }: SiteHeaderProps) {
+  const { t } = useLanguage();
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const syncSystemTheme = () => {
@@ -27,47 +31,52 @@ function SiteHeader({ isTopicsOpen = false, onOpenTopics }: SiteHeaderProps) {
       <div className="mx-auto flex h-14 w-full max-w-[1500px] items-center justify-between gap-4 px-5 sm:px-8">
         <Link
           to="/"
-          className="flex items-center gap-2.5 min-w-0 text-xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-100 group"
+          className="group flex items-center gap-2.5 min-w-0 text-xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-100"
         >
           <SiteLogo size={32} />
-          <span className="group-hover:opacity-90 transition-opacity">
-            Engineering Handbook
+          <span className="transition-opacity group-hover:opacity-90">
+            {t("site.title")}
           </span>
         </Link>
 
-        <div aria-hidden="true" />
-        {onOpenTopics ? (
-          <button
-            type="button"
-            aria-controls="mobile-topic-sidebar"
-            aria-expanded={isTopicsOpen}
-            onClick={onOpenTopics}
-            className="grid size-10 shrink-0 place-items-center rounded-full text-neutral-800 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-900 lg:hidden"
-          >
-            <span className="sr-only">
-              {isTopicsOpen ? "Close topic list" : "Open topic list"}
-            </span>
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-7">
-              {isTopicsOpen ? (
-                <path
-                  d="M6 6l12 12M18 6 6 18"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="2.1"
-                />
-              ) : (
-                <path
-                  d="M5 7h14M5 12h14M5 17h14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeWidth="1.9"
-                />
-              )}
-            </svg>
-          </button>
-        ) : null}
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+
+          {onOpenTopics ? (
+            <button
+              type="button"
+              aria-controls="mobile-topic-sidebar"
+              aria-expanded={isTopicsOpen}
+              onClick={onOpenTopics}
+              className="grid size-10 shrink-0 place-items-center rounded-full text-neutral-800 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-900 lg:hidden"
+            >
+              <span className="sr-only">
+                {isTopicsOpen
+                  ? t("header.close_topics")
+                  : t("header.open_topics")}
+              </span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-7">
+                {isTopicsOpen ? (
+                  <path
+                    d="M6 6l12 12M18 6 6 18"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth="2.1"
+                  />
+                ) : (
+                  <path
+                    d="M5 7h14M5 12h14M5 17h14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth="1.9"
+                  />
+                )}
+              </svg>
+            </button>
+          ) : null}
+        </div>
       </div>
     </header>
   );

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import { getAllPageMetas } from "../data/contentLoader";
 import type { HandbookPageMeta } from "../data/types";
+import { getLocalizedTag } from "../i18n/translations";
 import TopicGroup from "./TopicGroup";
 
 const allPages = getAllPageMetas();
@@ -25,22 +27,41 @@ export function TopicNavigation({
   onNavigate?: () => void;
   variant?: "desktop" | "mobile";
 }) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
-  const filteredPages = allPages.filter((page) =>
-    page.title.toLowerCase().includes(query.trim().toLowerCase()),
-  );
+
+  const q = query.trim().toLowerCase();
+  const filteredPages = allPages.filter((page) => {
+    if (!q) {
+      return true;
+    }
+    const titleEn = page.title.toLowerCase();
+    const titleJp = (page.title_jp ?? "").toLowerCase();
+    const tagEn = page.tag.toLowerCase();
+    const tagJp = (
+      page.tag_jp ?? getLocalizedTag(page.tag, "jp")
+    ).toLowerCase();
+
+    return (
+      titleEn.includes(q) ||
+      titleJp.includes(q) ||
+      tagEn.includes(q) ||
+      tagJp.includes(q)
+    );
+  });
+
   const groupedPages = groupPagesByPrimaryTag(filteredPages);
   const groups = Object.entries(groupedPages) as [string, HandbookPageMeta[]][];
 
-  const isFiltering = query.trim().length > 0;
+  const isFiltering = q.length > 0;
 
   return (
     <>
       <label className="block">
-        <span className="sr-only">Filter topics</span>
+        <span className="sr-only">{t("sidebar.filter_sr")}</span>
         <input
           type="search"
-          placeholder="Filter"
+          placeholder={t("sidebar.filter_placeholder")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           className={`w-full border border-neutral-300 bg-white text-neutral-950 outline-none transition placeholder:text-neutral-500 focus:border-neutral-950 dark:border-neutral-700 dark:bg-black dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-100 ${
@@ -52,7 +73,7 @@ export function TopicNavigation({
       </label>
 
       <nav
-        aria-label="Topics"
+        aria-label={t("sidebar.nav_aria")}
         className={variant === "mobile" ? "mt-7 space-y-7" : "mt-6 space-y-6"}
       >
         {groups.map(([tag, pages]) => (
@@ -72,7 +93,7 @@ export function TopicNavigation({
               variant === "mobile" ? "text-base" : "text-sm"
             }`}
           >
-            No matching topics.
+            {t("sidebar.no_matches")}
           </p>
         ) : null}
       </nav>

@@ -8,6 +8,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
 
   switch (normalized) {
     case "robotics":
+    case "ロボティクス":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +45,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
       );
 
     case "linear algebra":
+    case "線形代数":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +66,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
       );
 
     case "algorithms":
+    case "アルゴリズム":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -89,6 +92,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
       );
 
     case "statistics":
+    case "統計学":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -108,6 +112,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
       );
 
     case "security":
+    case "セキュリティ":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -125,6 +130,7 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
       );
 
     case "others":
+    case "その他":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"

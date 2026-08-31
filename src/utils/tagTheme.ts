@@ -2,6 +2,7 @@ export function getTagTheme(tag: string) {
   const normalized = tag.toLowerCase().trim();
   switch (normalized) {
     case "robotics":
+    case "ロボティクス":
       return {
         bg: "bg-cyan-500/10 dark:bg-cyan-400/15",
         text: "text-cyan-600 dark:text-cyan-400",
@@ -18,6 +19,7 @@ export function getTagTheme(tag: string) {
           "from-amber-500/10 to-orange-500/5 dark:from-amber-400/15 dark:to-orange-400/10",
       };
     case "linear algebra":
+    case "線形代数":
       return {
         bg: "bg-indigo-500/10 dark:bg-indigo-400/15",
         text: "text-indigo-600 dark:text-indigo-400",
@@ -26,6 +28,7 @@ export function getTagTheme(tag: string) {
           "from-indigo-500/10 to-purple-500/5 dark:from-indigo-400/15 dark:to-purple-400/10",
       };
     case "algorithms":
+    case "アルゴリズム":
       return {
         bg: "bg-blue-500/10 dark:bg-blue-400/15",
         text: "text-blue-600 dark:text-blue-400",
@@ -34,6 +37,7 @@ export function getTagTheme(tag: string) {
           "from-blue-500/10 to-cyan-500/5 dark:from-blue-400/15 dark:to-cyan-400/10",
       };
     case "statistics":
+    case "統計学":
       return {
         bg: "bg-emerald-500/10 dark:bg-emerald-400/15",
         text: "text-emerald-600 dark:text-emerald-400",
@@ -42,6 +46,7 @@ export function getTagTheme(tag: string) {
           "from-emerald-500/10 to-teal-500/5 dark:from-emerald-400/15 dark:to-teal-400/10",
       };
     case "security":
+    case "セキュリティ":
       return {
         bg: "bg-rose-500/10 dark:bg-rose-400/15",
         text: "text-rose-600 dark:text-rose-400",
@@ -50,6 +55,7 @@ export function getTagTheme(tag: string) {
           "from-rose-500/10 to-red-500/5 dark:from-rose-400/15 dark:to-red-400/10",
       };
     case "others":
+    case "その他":
       return {
         bg: "bg-purple-500/10 dark:bg-purple-400/15",
         text: "text-purple-600 dark:text-purple-400",

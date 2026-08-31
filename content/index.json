@@ -3,264 +3,308 @@
     "slug": "iam",
     "title": "IAM",
     "file": "topics/aws/iam.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "IAM (Identity and Access Management)"
   },
   {
     "slug": "networking",
     "title": "Networking",
     "file": "topics/aws/networking.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "AWS ネットワークの基礎（Networking）"
   },
   {
     "slug": "ec2",
     "title": "EC2",
     "file": "topics/aws/ec2.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "コンピュートとオブジェクトストレージ (EC2 & S3)"
   },
   {
     "slug": "lambda",
     "title": "Lambda",
     "file": "topics/aws/lambda.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "Lambda"
   },
   {
     "slug": "cloudwatch",
     "title": "CloudWatch",
     "file": "topics/aws/cloudwatch.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "CloudWatch"
   },
   {
     "slug": "ecs",
     "title": "ECS",
     "file": "topics/aws/ecs.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "ECS と Fargate"
   },
   {
     "slug": "loadbalancer",
     "title": "Load Balancer",
     "file": "topics/aws/loadbalancer.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "ALB (Application Load Balancer)"
   },
   {
     "slug": "waf",
     "title": "WAF",
     "file": "topics/aws/waf.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "WAF (Web Application Firewall)"
   },
   {
     "slug": "chatbot",
     "title": "Chatbot",
     "file": "topics/aws/chatbot.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "チャットボット関連（Chatbot）"
   },
   {
     "slug": "databases",
     "title": "Databases",
     "file": "topics/aws/databases.md",
-    "tag": "AWS"
+    "tag": "AWS",
+    "title_jp": "マネージドデータベース (Amazon RDS PostgreSQL & DynamoDB)"
   },
   {
     "slug": "scalars-vectors-and-matrices",
     "title": "Scalars, vectors, and matrices",
     "file": "topics/linear-algebra/scalars-vectors-and-matrices.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "スカラー、ベクトル、行列（Scalars, vectors, and matrices）"
   },
   {
     "slug": "vector-arithmetic",
     "title": "Vector arithmetic",
     "file": "topics/linear-algebra/vector-arithmetic.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "ベクトル演算（Vector arithmetic）"
   },
   {
     "slug": "dot-product",
     "title": "Dot product",
     "file": "topics/linear-algebra/dot-product.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "ドット積 / 内積（Dot product）"
   },
   {
     "slug": "linear-transformations",
     "title": "Linear transformations",
     "file": "topics/linear-algebra/linear-transformations.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "線形変換（Linear transformations）"
   },
   {
     "slug": "matrix-multiplication",
     "title": "Matrix multiplication",
     "file": "topics/linear-algebra/matrix-multiplication.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "行列の積（Matrix multiplication）"
   },
   {
     "slug": "systems-of-linear-equations",
     "title": "Systems of linear equations",
     "file": "topics/linear-algebra/systems-of-linear-equations.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "連立一次方程式（Systems of linear equations）"
   },
   {
     "slug": "transpose-inverse-and-identity-matrix",
     "title": "Transpose, inverse, and identity matrix",
     "file": "topics/linear-algebra/transpose-inverse-and-identity-matrix.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "転置行列、逆行列、単位行列（Transpose, inverse, and identity matrix）"
   },
   {
     "slug": "eigenvalues-and-eigenvectors",
     "title": "Eigenvalues and eigenvectors",
     "file": "topics/linear-algebra/eigenvalues-and-eigenvectors.md",
-    "tag": "Linear Algebra"
+    "tag": "Linear Algebra",
+    "title_jp": "固有値と固有ベクトル（Eigenvalues and eigenvectors）"
   },
   {
     "slug": "time-and-space-complexity",
     "title": "Time and space complexity",
     "file": "topics/algorithms/time-and-space-complexity.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "時間計算量と空間計算量（Time and space complexity）"
   },
   {
     "slug": "arrays-dynamic-arrays-strings",
     "title": "Arrays / dynamic arrays / strings",
     "file": "topics/algorithms/arrays-dynamic-arrays-strings.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "配列、動的配列、文字列（Arrays / dynamic arrays / strings）"
   },
   {
     "slug": "hash-maps-and-sets",
     "title": "Hash maps and sets",
     "file": "topics/algorithms/hash-maps-and-sets.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "ハッシュマップとハッシュセット（Hash maps and sets）"
   },
   {
     "slug": "stacks-and-queues",
     "title": "Stacks and queues",
     "file": "topics/algorithms/stacks-and-queues.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "スタックとキュー（Stacks and queues）"
   },
   {
     "slug": "recursion",
     "title": "Recursion",
     "file": "topics/algorithms/recursion.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "再帰（Recursion）"
   },
   {
     "slug": "trees",
     "title": "Trees",
     "file": "topics/algorithms/trees.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "木構造・ツリー（Trees）"
   },
   {
     "slug": "graphs",
     "title": "Graphs",
     "file": "topics/algorithms/graphs.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "グラフ（Graphs）"
   },
   {
     "slug": "sorting-and-binary-search",
     "title": "Sorting and binary search",
     "file": "topics/algorithms/sorting-and-binary-search.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "ソートと二分探索（Sorting and binary search）"
   },
   {
     "slug": "heaps-priority-queues",
     "title": "Heaps / priority queues",
     "file": "topics/algorithms/heaps-priority-queues.md",
-    "tag": "Algorithms"
+    "tag": "Algorithms",
+    "title_jp": "ヒープと優先度付きキュー（Heaps / priority queues）"
   },
   {
     "slug": "mean-median-variance-standard-deviation",
     "title": "Mean, median, variance, standard deviation",
     "file": "topics/statistics/mean-median-variance-standard-deviation.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "平均値、中央値、分散、標準偏差（Mean, median, variance, standard deviation）"
   },
   {
     "slug": "probability-basics",
     "title": "Probability basics",
     "file": "topics/statistics/probability-basics.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "確率の基礎（Probability basics）"
   },
   {
     "slug": "conditional-probability-and-bayes-rule",
     "title": "Conditional probability and Bayes’ rule",
     "file": "topics/statistics/conditional-probability-and-bayes-rule.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "条件付き確率とベイズの定理（Conditional probability and Bayes’ rule）"
   },
   {
     "slug": "distributions",
     "title": "Distributions",
     "file": "topics/statistics/distributions.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "確率分布（Distributions）"
   },
   {
     "slug": "sampling-and-bias",
     "title": "Sampling and bias",
     "file": "topics/statistics/sampling-and-bias.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "サンプリングとバイアス（Sampling and Bias）"
   },
   {
     "slug": "correlation-vs-causation",
     "title": "Correlation vs causation",
     "file": "topics/statistics/correlation-vs-causation.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "相関と因果（Correlation vs causation）"
   },
   {
     "slug": "regression-basics",
     "title": "Regression basics",
     "file": "topics/statistics/regression-basics.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "回帰分析の基礎（Regression basics）"
   },
   {
     "slug": "hypothesis-testing-and-p-values",
     "title": "Hypothesis testing and p-values",
     "file": "topics/statistics/hypothesis-testing-and-p-values.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "仮説検定と p 値（Hypothesis Testing and p-values）"
   },
   {
     "slug": "confidence-intervals",
     "title": "Confidence intervals",
     "file": "topics/statistics/confidence-intervals.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "信頼区間（Confidence intervals）"
   },
   {
     "slug": "expected-value",
     "title": "Expected value",
     "file": "topics/statistics/expected-value.md",
-    "tag": "Statistics"
+    "tag": "Statistics",
+    "title_jp": "期待値（Expected value）"
   },
   {
     "slug": "xss-and-csrf",
     "title": "XSS and CSRF",
     "file": "topics/security/xss-and-csrf.md",
-    "tag": "Security"
+    "tag": "Security",
+    "title_jp": "XSSとCSRFガイド"
   },
   {
     "slug": "keys",
     "title": "Keys",
     "file": "topics/security/keys.md",
-    "tag": "Security"
+    "tag": "Security",
+    "title_jp": "鍵と暗号化（Keys）"
   },
   {
     "slug": "ros2-basics",
     "title": "ROS 2 Basics",
     "file": "topics/robotics/ros2-basics.md",
-    "tag": "Robotics"
+    "tag": "Robotics",
+    "title_jp": "ROS 2 の基礎（ROS 2 Basics）"
   },
   {
     "slug": "chasing-turtle",
     "title": "Chasing turtle",
     "file": "topics/robotics/chasing-turtle.md",
-    "tag": "Robotics"
+    "tag": "Robotics",
+    "title_jp": "カメ追いかけ問題（Chasing Turtle）"
   },
   {
     "slug": "urdf-and-gazebo",
     "title": "URDF and Gazebo",
     "file": "topics/robotics/urdf-and-gazebo.md",
-    "tag": "Robotics"
+    "tag": "Robotics",
+    "title_jp": "URDF と Gazebo"
   },
   {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",
-    "tag": "Others"
+    "tag": "Others",
+    "title_jp": "Say What You Mean"
   },
   {
     "slug": "music-theory",
     "title": "Basic Music theory",
     "file": "topics/others/music-theory.md",
-    "tag": "Others"
+    "tag": "Others",
+    "title_jp": "音楽理論ノート"
   }
 ]
