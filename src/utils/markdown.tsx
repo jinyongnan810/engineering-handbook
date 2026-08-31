@@ -48,6 +48,52 @@ type MarkdownImage = {
   title?: string;
 };
 
+const ALERT_CONFIG: Record<
+  string,
+  {
+    emoji: string;
+    label: string;
+    containerClass: string;
+    titleClass: string;
+  }
+> = {
+  note: {
+    emoji: "ℹ️",
+    label: "Note",
+    containerClass:
+      "border-l-4 border-blue-500 bg-blue-50/70 dark:bg-blue-950/30 text-neutral-800 dark:text-neutral-200",
+    titleClass: "text-blue-700 dark:text-blue-300 font-semibold",
+  },
+  tip: {
+    emoji: "💡",
+    label: "Tip",
+    containerClass:
+      "border-l-4 border-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/30 text-neutral-800 dark:text-neutral-200",
+    titleClass: "text-emerald-700 dark:text-emerald-300 font-semibold",
+  },
+  important: {
+    emoji: "📌",
+    label: "Important",
+    containerClass:
+      "border-l-4 border-purple-500 bg-purple-50/70 dark:bg-purple-950/30 text-neutral-800 dark:text-neutral-200",
+    titleClass: "text-purple-700 dark:text-purple-300 font-semibold",
+  },
+  warning: {
+    emoji: "⚠️",
+    label: "Warning",
+    containerClass:
+      "border-l-4 border-amber-500 bg-amber-50/70 dark:bg-amber-950/30 text-neutral-800 dark:text-neutral-200",
+    titleClass: "text-amber-700 dark:text-amber-300 font-semibold",
+  },
+  caution: {
+    emoji: "🛑",
+    label: "Caution",
+    containerClass:
+      "border-l-4 border-red-500 bg-red-50/70 dark:bg-red-950/30 text-neutral-800 dark:text-neutral-200",
+    titleClass: "text-red-700 dark:text-red-300 font-semibold",
+  },
+};
+
 function slugifyHeading(text: string) {
   return text
     .toLowerCase()
@@ -195,7 +241,8 @@ function parseBlocks(markdown: string): Block[] {
         current.startsWith(">") ||
         /^#{1,6}\s+/.test(current) ||
         /^https?:\/\/[^\s]+$/.test(current) ||
-        isListLine(lines[index])
+        isListLine(lines[index]) ||
+        isTableStart(lines, index)
       ) {
         break;
       }
@@ -311,7 +358,7 @@ function isTableSeparator(line: string) {
 
   return (
     cells.length > 0 &&
-    cells.every((cell) => /^:?-{3,}:?$/.test(cell.replace(/\s+/g, "")))
+    cells.every((cell) => /^:?-+:?$/.test(cell.replace(/\s+/g, "")))
   );
 }
 
@@ -1044,6 +1091,50 @@ export function renderMarkdown(markdown: string): ReactNode[] {
     }
 
     if (block.type === "blockquote") {
+      const firstLine = block.lines[0]?.trim() ?? "";
+      const alertMatch = firstLine.match(
+        /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\](?:\s+(.*))?$/i,
+      );
+
+      if (alertMatch) {
+        const typeKey = alertMatch[1].toLowerCase();
+        const config = ALERT_CONFIG[typeKey];
+        if (config) {
+          const inlineFirstLine = alertMatch[2]?.trim();
+          const contentLines = [
+            ...(inlineFirstLine ? [inlineFirstLine] : []),
+            ...block.lines.slice(1),
+          ];
+
+          return (
+            <div
+              key={`alert-${index}`}
+              className={`my-4 max-w-3xl rounded-r-lg px-4 py-3 text-[15px] leading-7 shadow-xs ${config.containerClass}`}
+            >
+              <div
+                className={`mb-1.5 flex items-center gap-2 text-[14px] ${config.titleClass}`}
+              >
+                <span
+                  className="text-[16px] leading-none"
+                  role="img"
+                  aria-label={config.label}
+                >
+                  {config.emoji}
+                </span>
+                <span>{config.label}</span>
+              </div>
+              <div className="space-y-1 text-neutral-800 dark:text-neutral-200">
+                {contentLines.map((line, lineIndex) => (
+                  <p key={`alert-${index}-${lineIndex}`}>
+                    {renderInline(line)}
+                  </p>
+                ))}
+              </div>
+            </div>
+          );
+        }
+      }
+
       return (
         <blockquote
           key={`blockquote-${index}`}
