@@ -246,6 +246,12 @@
     "tag": "Robotics"
   },
   {
+    "slug": "urdf-and-gazebo",
+    "title": "URDF and Gazebo",
+    "file": "topics/robotics/urdf-and-gazebo.md",
+    "tag": "Robotics"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",
