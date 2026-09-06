@@ -7,6 +7,29 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
   const normalized = tag.toLowerCase().trim();
 
   switch (normalized) {
+    case "published work":
+    case "公開作品":
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+        >
+          <rect width="20" height="14" x="2" y="3" rx="2" />
+          <path d="M2 7h20" />
+          <circle cx="5" cy="5" r="0.5" fill="currentColor" />
+          <circle cx="7" cy="5" r="0.5" fill="currentColor" />
+          <circle cx="9" cy="5" r="0.5" fill="currentColor" />
+          <line x1="8" x2="16" y1="21" y2="21" />
+          <line x1="12" x2="12" y1="17" y2="21" />
+        </svg>
+      );
+
     case "robotics":
     case "ロボティクス":
       return (

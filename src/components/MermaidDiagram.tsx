@@ -10,6 +10,12 @@ type RenderState = {
   svg: string;
 };
 
+function sanitizeMermaidChart(chart: string): string {
+  // Mermaid parses unquoted link labels starting with '@' as LINK_ID, causing syntax errors.
+  // Wrap unquoted labels starting with '@' in quotes.
+  return chart.replace(/(\|)\s*(@[^"|\r\n]+?)\s*(\|)/g, '$1"$2"$3');
+}
+
 function MermaidDiagram({ chart }: MermaidDiagramProps) {
   const reactId = useId();
   const diagramId = `mermaid-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
@@ -21,6 +27,7 @@ function MermaidDiagram({ chart }: MermaidDiagramProps) {
   useEffect(() => {
     let isCurrent = true;
     const isDark = document.documentElement.classList.contains("dark");
+    const normalizedChart = sanitizeMermaidChart(chart);
 
     import("mermaid")
       .then(({ default: mermaid }) => {
@@ -30,7 +37,7 @@ function MermaidDiagram({ chart }: MermaidDiagramProps) {
           theme: isDark ? "dark" : "default",
         });
 
-        return mermaid.render(diagramId, chart);
+        return mermaid.render(diagramId, normalizedChart);
       })
       .then((result) => {
         if (isCurrent) {

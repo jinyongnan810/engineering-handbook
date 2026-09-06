@@ -1,6 +1,15 @@
 export function getTagTheme(tag: string) {
   const normalized = tag.toLowerCase().trim();
   switch (normalized) {
+    case "published work":
+    case "公開作品":
+      return {
+        bg: "bg-violet-500/10 dark:bg-violet-400/15",
+        text: "text-violet-600 dark:text-violet-400",
+        border: "border-violet-500/20 dark:border-violet-400/20",
+        gradient:
+          "from-violet-500/10 to-purple-500/5 dark:from-violet-400/15 dark:to-purple-400/10",
+      };
     case "robotics":
     case "ロボティクス":
       return {

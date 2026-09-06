@@ -102,8 +102,20 @@ function slugifyHeading(text: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function stripMarkdownFormatting(text: string): string {
+function decodeHtmlEntities(text: string): string {
   return text
+    .replace(/&rarr;/g, "→")
+    .replace(/&larr;/g, "←")
+    .replace(/&uarr;/g, "↑")
+    .replace(/&darr;/g, "↓")
+    .replace(/&harr;/g, "↔")
+    .replace(/&rArr;/g, "⇒")
+    .replace(/&lArr;/g, "⇐")
+    .replace(/&hArr;/g, "⇔");
+}
+
+function stripMarkdownFormatting(text: string): string {
+  return decodeHtmlEntities(text)
     .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
     .replace(/`([^`]+)`/g, "$1")
@@ -721,7 +733,7 @@ function renderInline(text: string, keyPrefix = "inline"): ReactNode[] {
   match = pattern.exec(text);
   while (match) {
     if (match.index > lastIndex) {
-      nodes.push(text.slice(lastIndex, match.index));
+      nodes.push(decodeHtmlEntities(text.slice(lastIndex, match.index)));
     }
 
     const token = match[0];
@@ -827,7 +839,7 @@ function renderInline(text: string, keyPrefix = "inline"): ReactNode[] {
   }
 
   if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex));
+    nodes.push(decodeHtmlEntities(text.slice(lastIndex)));
   }
 
   return nodes;
@@ -850,6 +862,10 @@ function normalizeCodeLanguage(language: string) {
 
   if (["cpp", "c++", "cxx", "cc"].includes(normalizedLanguage)) {
     return "cpp";
+  }
+
+  if (["swift"].includes(normalizedLanguage)) {
+    return "swift";
   }
 
   if (["bash", "sh", "shell", "zsh"].includes(normalizedLanguage)) {
@@ -880,6 +896,10 @@ function getCodeLanguageLabel(language: string) {
 
   if (normalizedLanguage === "cpp") {
     return "C++";
+  }
+
+  if (normalizedLanguage === "swift") {
+    return "Swift";
   }
 
   if (normalizedLanguage === "bash") {

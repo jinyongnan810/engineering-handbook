@@ -1,5 +1,12 @@
 [
   {
+    "slug": "c2v-macos-status-bar-app",
+    "title": "C2V: MacOS status bar app",
+    "file": "topics/published-work/c2v-macos-status-bar-app.md",
+    "tag": "Published Work",
+    "title_jp": "C2V: macOS ステータスバーアプリ"
+  },
+  {
     "slug": "iam",
     "title": "IAM",
     "file": "topics/aws/iam.md",

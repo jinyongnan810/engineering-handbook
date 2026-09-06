@@ -1,6 +1,7 @@
 export type Language = "en" | "jp";
 
 export const tagTranslations: Record<string, { en: string; jp: string }> = {
+  "Published Work": { en: "Published Work", jp: "公開作品" },
   AWS: { en: "AWS", jp: "AWS" },
   "Linear Algebra": { en: "Linear Algebra", jp: "線形代数" },
   Algorithms: { en: "Algorithms", jp: "アルゴリズム" },

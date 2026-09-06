@@ -1,10 +1,27 @@
 {
+  "https://apps.apple.com/jp/app/c2v-%E3%82%B3%E3%83%94%E3%83%9A%E8%A8%98%E9%8C%B2%E3%82%A2%E3%83%97%E3%83%AA/id6798622919?mt=12": {
+    "url": "https://apps.apple.com/jp/app/c2v-%E3%82%B3%E3%83%94%E3%83%9A%E8%A8%98%E9%8C%B2%E3%82%A2%E3%83%97%E3%83%AA/id6798622919?mt=12",
+    "hostname": "apps.apple.com",
+    "title": "C2V - コピペ記録アプリ on the Mac App Store",
+    "description": "Download C2V - コピペ記録アプリ for Mac - A lightweight, modern, and privacy-focused menu bar clipboard manager.",
+    "siteName": "Mac App Store",
+    "favicon": "https://www.apple.com/favicon.ico"
+  },
   "https://github.com/facebook/react": {
     "url": "https://github.com/react/react",
     "hostname": "github.com",
     "title": "GitHub - react/react: The library for web and native user interfaces.",
     "description": "The library for web and native user interfaces. Contribute to react/react development by creating an account on GitHub.",
     "image": "https://opengraph.githubassets.com/cd5c220728dddbdae6253826392d07b58b8816b2de31096e9e2dcab499bca632/react/react",
+    "siteName": "GitHub",
+    "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+  },
+  "https://github.com/jinyongnan810/C2V": {
+    "url": "https://github.com/jinyongnan810/C2V",
+    "hostname": "github.com",
+    "title": "GitHub - jinyongnan810/C2V: Lightweight, modern macOS menu bar clipboard manager built with SwiftUI and SwiftData.",
+    "description": "Lightweight, modern macOS menu bar clipboard manager built with SwiftUI and SwiftData.",
+    "image": "https://opengraph.githubassets.com/c2v/jinyongnan810/C2V",
     "siteName": "GitHub",
     "favicon": "https://github.githubassets.com/favicons/favicon.svg"
   },
