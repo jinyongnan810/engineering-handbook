@@ -40,6 +40,7 @@ ROS 2 breaks the system down into decoupled building blocks:
 - **Communication Paradigms:**
   - **Topics (Publish / Subscribe):** Continuous, unidirectional data streams (e.g., sensor telemetry, camera feeds).
   - **Services (Request / Response):** Synchronous or asynchronous two-way remote procedure calls (e.g., trigger calibration, compute a sum, spawn an entity).
+  - **Actions (Goal / Feedback / Result):** Asynchronous, long-running, preemptible tasks with continuous progress updates (e.g., navigating to coordinates, trajectory tracking).
   - **Parameters:** Configuration values set at launch or adjusted at runtime.
 
 ---
@@ -116,7 +117,93 @@ https://github.com/jinyongnan810/ros-practice/tree/main/3.services
 
 ---
 
-## 5. Parameters and Launch Orchestration
+## 5. Actions: Goal / Feedback / Result Pattern
+
+While topics handle continuous streams and services handle quick request/response calls, **Actions** are designed for **long-running, goal-oriented, and preemptible tasks** (e.g., navigating a robot to a coordinate, moving a robotic arm, or docking).
+
+Under the hood, ROS 2 actions are a higher-level composite communication paradigm built on top of topics and services:
+
+- **Goal (Service):** The client requests the server to execute a goal; the server responds immediately whether it accepts or rejects the goal.
+- **Feedback (Topic):** During execution, the server publishes periodic progress updates back to the client.
+- **Result (Service):** When the task terminates (succeeded, canceled, or aborted), the server sends the final outcome and metrics to the client.
+- **Cancel (Service):** The client can request goal cancellation at any time during execution.
+
+### Action Interface Definition (`.action`)
+
+Actions are defined in `.action` files located in the `action/` directory of an interface package, separated into three distinct sections by `---`:
+
+```action
+# 1. Goal: Target coordinates and desired linear velocity
+float32 target_x
+float32 target_y
+float32 linear_velocity
+---
+# 2. Result: Final status and journey statistics
+bool success
+float32 total_distance
+float32 elapsed_time
+---
+# 3. Feedback: Current position and remaining distance to target
+float32 current_distance
+float32 current_x
+float32 current_y
+```
+
+### Communication Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as User / Application
+    participant Client as turtle_action_client
+    participant Server as turtle_action_server
+
+    User->>Client: Send Goal (target_x: 8.5, target_y: 8.5)
+    Client->>Server: 1. Send Goal Request (/move_to_goal/_action/send_goal)
+    Server-->>Client: Goal Accepted (GoalResponse.ACCEPT)
+    Client->>Server: 2. Request Result (/move_to_goal/_action/get_result)
+
+    loop Control Loop (10 Hz)
+        Server-->>Client: 3. Periodic Feedback (current_dist, current_x, current_y)
+        opt Client requests cancel or server preempts
+            Client->>Server: Cancel Request (/move_to_goal/_action/cancel_goal)
+            Server-->>Client: Cancel Accepted
+        end
+    end
+
+    Server-->>Client: 4. Final Result (success, total_distance, elapsed_time)
+    Client->>User: Goal Completed / Status Callback
+```
+
+### Topics vs. Services vs. Actions
+
+| Feature                 | Topics                                             | Services                                              | Actions                                                |
+| :---------------------- | :------------------------------------------------- | :---------------------------------------------------- | :----------------------------------------------------- |
+| **Pattern**             | Many-to-many publish / subscribe                   | 1-to-1 request / response                             | 1-to-1 goal-driven client / server                     |
+| **Data Flow**           | Continuous unidirectional stream                   | Two-way synchronous / asynchronous RPC                | Asynchronous multi-stage transaction                   |
+| **Duration**            | Continuous / indefinite                            | Short / immediate (< seconds)                         | Long-running (seconds to minutes)                      |
+| **Feedback**            | Continuous stream of messages                      | None (only final reply)                               | Periodic execution updates                             |
+| **Preemption / Cancel** | Not applicable                                     | Cannot cancel in flight                               | Fully cancellable & preemptible                        |
+| **Typical Use Cases**   | LiDAR scans, IMU data, motor velocity (`/cmd_vel`) | Calibration, querying map origin, setting reset flags | Waypoint navigation, arm trajectory execution, docking |
+
+### Key Architectural Insights & Best Practices
+
+1. **Rate-Regulated Loops vs. Fixed `sleep()`:**
+   Control loops inside action execution callbacks should always use ROS 2 `Rate` objects (`self.create_rate(10)` in Python or `rclcpp::Rate(10)` in C++) rather than naive `sleep()`:
+   - **Clock Drift Compensation:** `Rate.sleep()` dynamically subtracts computation time (coordinate transforms, feedback publishing) to maintain steady loop frequencies.
+   - **Simulation Time (`use_sim_time`):** `Rate` synchronizes with ROS clock (`/clock`), speeding up, slowing down, or pausing automatically with Gazebo.
+2. **Goal Preemption Policy:**
+   ROS 2 actions do not enforce concurrency rules out of the box. Servers managing physical hardware should track `active_goal_handle` protected by a mutex/lock. When a new goal arrives while another is executing, abort the prior goal (`goal_handle.abort()`) and smoothly hand control over to the incoming goal.
+3. **Concurrency with MultiThreadedExecutor:**
+   Because an action server's `execute_callback` runs a sustained control loop, a single-threaded executor would starve other callbacks (such as incoming odometry/pose subscriptions or cancellation requests). Action servers must use a `ReentrantCallbackGroup` and spin inside a `MultiThreadedExecutor`.
+
+### Example Implementations
+
+https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
+
+---
+
+## 6. Parameters and Launch Orchestration
 
 ### Dynamic Parameters
 
@@ -137,7 +224,7 @@ Real-world robots require launching dozens of nodes, remapping topic names, and 
 
 ---
 
-## 6. Workspace Setup & Build Workflow
+## 7. Workspace Setup & Build Workflow
 
 A ROS 2 workspace follows a standard directory structure:
 
@@ -171,7 +258,7 @@ In real-world projects, it's convenient to add `source install/setup.bash` to `.
 
 ---
 
-## 7. Essential ROS 2 CLI Cheat Sheet
+## 8. Essential ROS 2 CLI Cheat Sheet
 
 ### Node Introspection
 
@@ -197,6 +284,16 @@ ros2 topic pub -r 5 /news custom_interfaces/msg/News "{datetime: '2026-08-16', t
 ros2 service list -t               # List active services with types
 ros2 interface show custom_interfaces/srv/Acc # Display .srv definition
 ros2 service call /accumulate custom_interfaces/srv/Acc "{a: 5, b: 10, c: 15}"
+```
+
+### Action Operations
+
+```bash
+ros2 action list                   # List active actions
+ros2 action list -t                # List active actions with action types
+ros2 action info /move_to_goal     # Inspect action servers and clients
+ros2 interface show custom_interfaces/action/MoveToGoal # Inspect action definition (.action)
+ros2 action send_goal /move_to_goal custom_interfaces/action/MoveToGoal "{target_x: 8.0, target_y: 8.0, linear_velocity: 2.0}" --feedback # Send goal with live feedback stream
 ```
 
 ### Parameter Management

@@ -40,6 +40,7 @@ ROS 2 はシステムを疎結合な構成要素に分解します:
 - **通信パラダイム:**
   - **トピック (Topics / Publish-Subscribe):** 連続的で単方向のデータストリーム（例: センサーテレメトリ、カメラ映像）。
   - **サービス (Services / Request-Response):** 同期または非同期の双方向リモートプロシージャコール（例: キャリブレーションの実行、計算結果の取得、オブジェクトの生成）。
+  - **アクション (Actions / Goal-Feedback-Result):** 継続的な進捗フィードバックを伴う、非同期かつ長時間実行・中断（キャンセル）可能なタスク（例: 指定座標へのナビゲーション、ロボットアームの軌道制御）。
   - **パラメータ (Parameters):** 起動時に設定するか実行時に調整可能な設定値。
 
 ---
@@ -116,7 +117,93 @@ https://github.com/jinyongnan810/ros-practice/tree/main/3.services
 
 ---
 
-## 5. パラメータと起動管理（Launch）
+## 5. アクション: ゴール / フィードバック / リザルト パターン
+
+トピックが連続的なデータストリームを扱い、サービスが即時的なリクエスト／レスポンスを処理するのに対し、**アクション (Actions)** は **長時間実行され、進捗フィードバックを返し、中断（プリエンプション／キャンセル）可能なタスク**（例: 目標座標へのロボットの自律移動、アームによる把持、自動充電ドッキングなど）のために設計されています。
+
+ROS 2 のアクションは、内部的にはトピックとサービスを組み合わせた上位の複合通信パラダイムです:
+
+- **ゴール (Goal / Service):** クライアントがサーバーにタスクを要求し、サーバーは即座にゴールを受け入れる（Accept）か拒否する（Reject）かを返します。
+- **フィードバック (Feedback / Topic):** 実行中、サーバーは進捗状況をクライアントへ定期的にパブリッシュします。
+- **リザルト (Result / Service):** タスクが完了または終了した際（成功、キャンセル、中止）、サーバーは最終結果と統計データをクライアントに送信します。
+- **キャンセル (Cancel / Service):** クライアントは実行中の任意のタイミングでゴールのキャンセルを要求できます。
+
+### アクションインターフェース定義 (`.action`)
+
+アクションはインターフェースパッケージの `action/` ディレクトリ内の `.action` ファイルで定義され、`---` によって3つのセクション（ゴール、リザルト、フィードバック）に分割されます:
+
+```action
+# 1. ゴール: 目標座標と希望直進速度
+float32 target_x
+float32 target_y
+float32 linear_velocity
+---
+# 2. リザルト: 最終ステータスと移動統計
+bool success
+float32 total_distance
+float32 elapsed_time
+---
+# 3. フィードバック: 現在位置と目標までの残り距離
+float32 current_distance
+float32 current_x
+float32 current_y
+```
+
+### 通信の流れ
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as ユーザー / アプリケーション
+    participant Client as turtle_action_client (クライアント)
+    participant Server as turtle_action_server (サーバー)
+
+    User->>Client: ゴール送信 (target_x: 8.5, target_y: 8.5)
+    Client->>Server: 1. ゴール送信リクエスト (/move_to_goal/_action/send_goal)
+    Server-->>Client: ゴール受領 (GoalResponse.ACCEPT)
+    Client->>Server: 2. 結果取得リクエスト (/move_to_goal/_action/get_result)
+
+    loop 制御ループ (10 Hz)
+        Server-->>Client: 3. 定期的なフィードバック (current_dist, current_x, current_y)
+        opt クライアントからのキャンセル要求またはプリエンプション
+            Client->>Server: キャンセルリクエスト (/move_to_goal/_action/cancel_goal)
+            Server-->>Client: キャンセル受理
+        end
+    end
+
+    Server-->>Client: 4. 最終結果送信 (success, total_distance, elapsed_time)
+    Client->>User: ゴール完了 / 結果コールバック通知
+```
+
+### トピック vs サービス vs アクション の比較
+
+| 項目                   | トピック (Topics)                        | サービス (Services)                          | アクション (Actions)                                 |
+| :--------------------- | :--------------------------------------- | :------------------------------------------- | :--------------------------------------------------- |
+| **通信方式**           | 多対多 パブリッシュ／サブスクライブ      | 1対1 リクエスト／レスポンス                  | 1対1（または1対多）ゴール駆動型                      |
+| **データフロー**       | 連続的な単方向ストリーム                 | 双方向の同期／非同期 RPC                     | 非同期マルチステージトランザクション                 |
+| **実行時間**           | 継続的／常時                             | 瞬間的・短時間（秒未満〜数秒）               | 長時間実行（数秒〜数分）                             |
+| **進捗フィードバック** | なし（生データのみ）                     | なし（最終応答のみ）                         | 定期的な進捗状況の通知                               |
+| **中断・キャンセル**   | 不可                                     | 原則不可（完了まで待機）                     | 任意時点でキャンセル・プリエンプション可能           |
+| **代表的な用途**       | LiDAR、オドメトリ、速度指令 (`/cmd_vel`) | 原点復帰、キャリブレーション、パラメータ取得 | 目的地へのナビゲーション、アーム軌道制御、ドッキング |
+
+### アーキテクチャの要点とベストプラクティス
+
+1. **周期制御ループ（`Rate.sleep()` vs `time.sleep()`）:**
+   アクションの実行コールバック内の制御ループでは、固定の `sleep()` ではなく ROS 2 の `Rate` オブジェクト（Python: `self.create_rate(10)`、C++: `rclcpp::Rate(10)`）を使用します。
+   - **クロックドリフト補償:** 距離計算やフィードバック送信にかかった時間を差し引いてスリープするため、正確な周期（例: 10 Hz）を維持できます。
+   - **シミュレーション時刻への追従 (`use_sim_time`):** ROS クロック (`/clock`) と連動するため、Gazebo の一時停止や倍速再生にも自動的に同期します。
+2. **ゴールプリエンプション（横取り）方針:**
+   単一のロボット／アクチュエータを制御する場合、`active_goal_handle` をミューテックス／ロックで保護して追跡します。実行中に新しいゴールを受信した際は、直前のゴールを中止 (`goal_handle.abort()`) して新しいゴールへ滑らかに操舵を引き継ぎます。
+3. **MultiThreadedExecutor による並行処理:**
+   アクションサーバーの `execute_callback` で継続的な制御ループを回す場合、シングルスレッド実行ではセンサ受信コールバック（`/turtle1/pose` 等）やキャンセル要求がブロックされてしまいます。`ReentrantCallbackGroup` と `MultiThreadedExecutor` を利用して並行処理を保証します。
+
+### 実装例
+
+https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
+
+---
+
+## 6. パラメータと起動管理（Launch）
 
 ### 動的パラメータ
 
@@ -137,7 +224,7 @@ https://github.com/jinyongnan810/ros-practice/tree/main/3.services
 
 ---
 
-## 6. ワークスペースのセットアップとビルド手順
+## 7. ワークスペースのセットアップとビルド手順
 
 ROS 2 ワークスペースは標準的なディレクトリ構造に従います:
 
@@ -171,7 +258,7 @@ source install/setup.bash
 
 ---
 
-## 7. 必須 ROS 2 CLI チートシート
+## 8. 必須 ROS 2 CLI チートシート
 
 ### ノードの診断
 
@@ -197,6 +284,16 @@ ros2 topic pub -r 5 /news custom_interfaces/msg/News "{datetime: '2026-08-16', t
 ros2 service list -t               # アクティブなサービス一覧を型付きで表示
 ros2 interface show custom_interfaces/srv/Acc # .srv 定義を表示
 ros2 service call /accumulate custom_interfaces/srv/Acc "{a: 5, b: 10, c: 15}"
+```
+
+### アクションの操作
+
+```bash
+ros2 action list                   # 稼働中のアクション一覧を表示
+ros2 action list -t                # アクション型付きで一覧表示
+ros2 action info /move_to_goal     # アクションのサーバーとクライアント詳細を確認
+ros2 interface show custom_interfaces/action/MoveToGoal # .action 定義を表示
+ros2 action send_goal /move_to_goal custom_interfaces/action/MoveToGoal "{target_x: 8.0, target_y: 8.0, linear_velocity: 2.0}" --feedback # フィードバック付きでゴールを送信
 ```
 
 ### パラメータの管理
