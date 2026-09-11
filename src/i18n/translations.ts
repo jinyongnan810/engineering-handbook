@@ -8,6 +8,10 @@ export const tagTranslations: Record<string, { en: string; jp: string }> = {
   Statistics: { en: "Statistics", jp: "統計学" },
   Security: { en: "Security", jp: "セキュリティ" },
   Robotics: { en: "Robotics", jp: "ロボティクス" },
+  "Artificial Intelligence": {
+    en: "Artificial Intelligence",
+    jp: "人工知能",
+  },
   Others: { en: "Others", jp: "その他" },
 };
 

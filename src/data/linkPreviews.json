@@ -25,6 +25,15 @@
     "siteName": "GitHub",
     "favicon": "https://github.githubassets.com/favicons/favicon.svg"
   },
+  "https://github.com/jinyongnan810/RNN-practices": {
+    "url": "https://github.com/jinyongnan810/RNN-practices",
+    "hostname": "github.com",
+    "title": "GitHub - jinyongnan810/RNN-practices: Time series forecasting practices covering Exponential Smoothing, ARIMA/SARIMA/SARIMAX, Prophet, NeuralProphet, LSTM, and Temporal Fusion Transformers (TFT).",
+    "description": "Time series forecasting practices covering Exponential Smoothing, ARIMA/SARIMA/SARIMAX, Prophet, NeuralProphet, LSTM, and Temporal Fusion Transformers (TFT).",
+    "image": "https://opengraph.githubassets.com/rnn-practices/jinyongnan810/RNN-practices",
+    "siteName": "GitHub",
+    "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+  },
   "https://github.com/jinyongnan810/ros-practice": {
     "url": "https://github.com/jinyongnan810/ros-practice",
     "hostname": "github.com",

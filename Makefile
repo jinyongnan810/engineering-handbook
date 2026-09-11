@@ -3,3 +3,6 @@ lint:
 
 preview:
 	pnpm run fetch:previews
+
+up:
+	pnpm run dev

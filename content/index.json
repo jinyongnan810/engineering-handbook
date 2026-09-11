@@ -270,7 +270,7 @@
     "title": "XSS and CSRF",
     "file": "topics/security/xss-and-csrf.md",
     "tag": "Security",
-    "title_jp": "XSSとCSRFガイド"
+    "title_jp": "XSSとCSRF"
   },
   {
     "slug": "keys",
@@ -299,6 +299,13 @@
     "file": "topics/robotics/urdf-and-gazebo.md",
     "tag": "Robotics",
     "title_jp": "URDF と Gazebo"
+  },
+  {
+    "slug": "time-series-forecasting",
+    "title": "Time series forecasting",
+    "file": "topics/artificial-intelligence/time-series-forecasting.md",
+    "tag": "Artificial Intelligence",
+    "title_jp": "時系列予測（Time Series Forecasting）"
   },
   {
     "slug": "say-what-you-mean",

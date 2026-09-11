@@ -1,4 +1,4 @@
-# XSSとCSRFガイド
+# XSSとCSRF
 
 ## 1. 全体像
 

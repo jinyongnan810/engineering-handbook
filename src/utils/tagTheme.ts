@@ -63,6 +63,15 @@ export function getTagTheme(tag: string) {
         gradient:
           "from-rose-500/10 to-red-500/5 dark:from-rose-400/15 dark:to-red-400/10",
       };
+    case "artificial intelligence":
+    case "人工知能":
+      return {
+        bg: "bg-fuchsia-500/10 dark:bg-fuchsia-400/15",
+        text: "text-fuchsia-600 dark:text-fuchsia-400",
+        border: "border-fuchsia-500/20 dark:border-fuchsia-400/20",
+        gradient:
+          "from-fuchsia-500/10 to-pink-500/5 dark:from-fuchsia-400/15 dark:to-pink-400/10",
+      };
     case "others":
     case "その他":
       return {

@@ -152,6 +152,31 @@ export function TagIcon({ tag, className = "size-6" }: TagIconProps) {
         </svg>
       );
 
+    case "artificial intelligence":
+    case "人工知能":
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+        >
+          <circle cx="6" cy="6" r="2.5" />
+          <circle cx="6" cy="18" r="2.5" />
+          <circle cx="18" cy="6" r="2.5" />
+          <circle cx="18" cy="18" r="2.5" />
+          <circle cx="12" cy="12" r="2.5" />
+          <line x1="8.2" y1="7.5" x2="9.8" y2="10.5" />
+          <line x1="8.2" y1="16.5" x2="9.8" y2="13.5" />
+          <line x1="14.2" y1="10.5" x2="15.8" y2="7.5" />
+          <line x1="14.2" y1="13.5" x2="15.8" y2="16.5" />
+        </svg>
+      );
+
     case "others":
     case "その他":
       return (

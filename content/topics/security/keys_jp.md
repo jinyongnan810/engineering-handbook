@@ -371,7 +371,7 @@ function verifyHS256Token(jwtString, secret) {
 
 ---
 
-## 9. まとめ・選定ガイド
+## 9. まとめ・選定基準
 
 ```text
 ファイルの完全性検証や一意のデータIDを作成したい場合
