@@ -72,6 +72,15 @@ export function getTagTheme(tag: string) {
         gradient:
           "from-fuchsia-500/10 to-pink-500/5 dark:from-fuchsia-400/15 dark:to-pink-400/10",
       };
+    case "physics":
+    case "物理":
+      return {
+        bg: "bg-teal-500/10 dark:bg-teal-400/15",
+        text: "text-teal-600 dark:text-teal-400",
+        border: "border-teal-500/20 dark:border-teal-400/20",
+        gradient:
+          "from-teal-500/10 to-cyan-500/5 dark:from-teal-400/15 dark:to-cyan-400/10",
+      };
     case "others":
     case "その他":
       return {

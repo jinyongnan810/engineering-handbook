@@ -308,6 +308,13 @@
     "title_jp": "時系列予測（Time Series Forecasting）"
   },
   {
+    "slug": "basic-physics",
+    "title": "Basic Physics",
+    "file": "topics/physics/basic-physics.md",
+    "tag": "Physics",
+    "title_jp": "物理の基礎（Basic Physics）"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",

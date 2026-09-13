@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="960" height="560">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-ray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+    </marker>
+    <marker id="arrow-reflected" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6" />
+    </marker>
+    <marker id="arrow-arc" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-arc-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+
+    <!-- Filters for subtle card shadow -->
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.06" />
+    </filter>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 20px; fill: #0f172a; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+    .col-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 16px; fill: #1e293b; }
+    .col-condition { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 600; font-size: 13px; fill: #0284c7; }
+    .medium-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 600; }
+    .normal-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; fill: #64748b; font-style: italic; }
+    .angle-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 14px; }
+    .angle-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 500; }
+    .footer-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #334155; font-weight: 500; }
+    .highlight-badge { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 700; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="960" height="560" fill="#ffffff" rx="12" />
+  <rect width="958" height="558" x="1" y="1" fill="none" stroke="#e2e8f0" stroke-width="2" rx="11" />
+
+  <!-- Header Section -->
+  <text x="480" y="38" text-anchor="middle" class="title">スネルの屈折の法則・臨界角・全反射のメカニズム</text>
+  <text x="480" y="58" text-anchor="middle" class="subtitle">Snell's Law of Refraction, Critical Angle (θc), and Total Internal Reflection (TIR)</text>
+
+  <!-- Three Columns Layout (x: 20..310, 325..635, 650..940) -->
+  
+  <!-- ==================== COLUMN 1: 屈折 (Refraction) ==================== -->
+  <g transform="translate(25, 75)">
+    <!-- Card Frame -->
+    <rect width="290" height="405" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <!-- Medium Backgrounds: Top (Air) & Bottom (Water/Glass) -->
+    <path d="M 1 35 L 289 35 L 289 200 L 1 200 Z" fill="#f8fafc" />
+    <path d="M 1 200 L 289 200 L 289 370 L 1 370 Z" fill="#f0f9ff" />
+    
+    <!-- Column Title -->
+    <text x="145" y="24" text-anchor="middle" class="col-title">① 通常の屈折 (Refraction)</text>
+    <rect x="85" y="42" width="120" height="20" rx="10" fill="#e0f2fe" />
+    <text x="145" y="56" text-anchor="middle" class="col-condition">θ₁ &lt; θc (入射角が小)</text>
+
+    <!-- Medium Labels -->
+    <text x="12" y="80" class="medium-label" fill="#64748b">疎媒質 (空気 n₂)</text>
+    <text x="12" y="355" class="medium-label" fill="#0284c7">密媒質 (水・ガラス n₁)</text>
+
+    <!-- Boundary Line -->
+    <line x1="0" y1="200" x2="290" y2="200" stroke="#0284c7" stroke-width="2" />
+    <text x="282" y="194" text-anchor="end" font-size="10" fill="#0284c7" font-weight="600" font-family="sans-serif">境界面 (Boundary)</text>
+
+    <!-- Normal Line (法線) -->
+    <line x1="145" y1="80" x2="145" y2="330" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="150" y="95" class="normal-label">法線 (Normal)</text>
+
+    <!-- Incident Ray: Angle 30 deg from normal in dense medium -->
+    <!-- Point of incidence at (145, 200). Length 110. x = 145 - 110*sin(30) = 90, y = 200 + 110*cos(30) = 295 -->
+    <line x1="90" y1="295" x2="145" y2="200" stroke="#ef4444" stroke-width="2.5" marker-mid="url(#arrow-ray)" />
+    <line x1="90" y1="295" x2="120" y2="243" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-ray)" />
+
+    <!-- Incident Angle Arc: from (145, 255) to (145-55*sin(30), 200+55*cos(30)) = (117.5, 247.6) -->
+    <path d="M 145 255 A 55 55 0 0 1 117.5 247.6" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-arc-amber)" />
+    <!-- Angle Text -->
+    <text x="110" y="270" class="angle-label" fill="#d97706">θ₁</text>
+    <text x="65" y="325" font-size="11" fill="#ef4444" font-family="sans-serif" font-weight="600">入射光 (Incident)</text>
+
+    <!-- Refracted Ray: Angle 48 deg from normal in rare medium -->
+    <!-- Point of incidence at (145, 200). Length 110. x = 145 + 110*sin(48) = 227, y = 200 - 110*cos(48) = 126 -->
+    <line x1="145" y1="200" x2="227" y2="126" stroke="#ef4444" stroke-width="2.5" />
+    <line x1="145" y1="200" x2="190" y2="159" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-ray)" />
+
+    <!-- Refraction Angle Arc: from (145, 150) to (145+50*sin(48), 200-50*cos(48)) = (182.2, 166.5) -->
+    <path d="M 145 150 A 50 50 0 0 1 182.2 166.5" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow-arc)" />
+    <text x="175" y="150" class="angle-label" fill="#0284c7">θ₂</text>
+    <text x="195" y="115" font-size="11" fill="#ef4444" font-family="sans-serif" font-weight="600">屈折光 (Refracted)</text>
+
+    <!-- Explanation Box at Bottom -->
+    <rect x="15" y="375" width="260" height="22" rx="4" fill="#f1f5f9" />
+    <text x="145" y="390" text-anchor="middle" font-size="11" fill="#475569" font-family="sans-serif">
+      光が法線から遠ざかる（θ₂ &gt; θ₁）
+    </text>
+  </g>
+
+  <!-- ==================== COLUMN 2: 臨界角 (Critical Angle) ==================== -->
+  <g transform="translate(335, 75)">
+    <!-- Highlighted Card Frame -->
+    <rect width="290" height="405" rx="8" fill="#ffffff" stroke="#f59e0b" stroke-width="2" filter="url(#card-shadow)" />
+    
+    <!-- Medium Backgrounds -->
+    <path d="M 2 35 L 288 35 L 288 200 L 2 200 Z" fill="#f8fafc" />
+    <path d="M 2 200 L 288 200 L 288 370 L 2 370 Z" fill="#fef3c7" fill-opacity="0.2" />
+    
+    <!-- Column Title -->
+    <text x="145" y="24" text-anchor="middle" class="col-title" fill="#b45309">② 臨界角 (Critical Angle)</text>
+    <rect x="75" y="42" width="140" height="20" rx="10" fill="#fef3c7" />
+    <text x="145" y="56" text-anchor="middle" class="col-condition" fill="#d97706">θ₁ = θc (屈折角 θ₂ = 90°)</text>
+
+    <!-- Medium Labels -->
+    <text x="12" y="80" class="medium-label" fill="#64748b">疎媒質 (空気 n₂)</text>
+    <text x="12" y="355" class="medium-label" fill="#b45309">密媒質 (水・ガラス n₁)</text>
+
+    <!-- Boundary Line -->
+    <line x1="0" y1="200" x2="290" y2="200" stroke="#d97706" stroke-width="2" />
+    <text x="282" y="194" text-anchor="end" font-size="10" fill="#d97706" font-weight="600" font-family="sans-serif">境界面 (Boundary)</text>
+
+    <!-- Normal Line (法線) -->
+    <line x1="145" y1="80" x2="145" y2="330" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="150" y="95" class="normal-label">法線 (Normal)</text>
+
+    <!-- Incident Ray at Critical Angle: approx 42 deg from normal -->
+    <!-- Point of incidence at (145, 200). Length 110. x = 145 - 110*sin(42) = 71.4, y = 200 + 110*cos(42) = 281.7 -->
+    <line x1="72" y1="282" x2="145" y2="200" stroke="#ef4444" stroke-width="2.5" />
+    <line x1="72" y1="282" x2="112" y2="237" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-ray)" />
+
+    <!-- CLEAR ANGLE ARC FOR THETA_C: Starts at NORMAL line (145, 260) and sweeps to INCIDENT RAY -->
+    <!-- Radius 60. End point: 145 - 60*sin(42) = 104.9, 200 + 60*cos(42) = 244.6 -->
+    <path d="M 145 260 A 60 60 0 0 1 104.9 244.6" fill="none" stroke="#d97706" stroke-width="2.5" marker-end="url(#arrow-arc-amber)" />
+    
+    <!-- Explicit start/end pointer indicators for theta_c -->
+    <line x1="145" y1="260" x2="153" y2="260" stroke="#d97706" stroke-width="1" />
+    <text x="96" y="278" class="angle-label" fill="#d97706" font-size="16">θc</text>
+    <text x="50" y="325" font-size="11" fill="#d97706" font-family="sans-serif" font-weight="700">臨界角 θc (約42°〜49°)</text>
+
+    <!-- Refracted Ray along boundary: from (145, 200) to (270, 200) -->
+    <line x1="145" y1="199" x2="275" y2="199" stroke="#dc2626" stroke-width="3.5" />
+    <line x1="145" y1="199" x2="225" y2="199" stroke="#dc2626" stroke-width="3.5" marker-end="url(#arrow-ray)" />
+
+    <!-- Clear 90 DEGREE Right Angle Square Symbol between Normal and Surface -->
+    <path d="M 145 175 L 170 175 L 170 200" fill="none" stroke="#0284c7" stroke-width="2" />
+    <circle cx="157" cy="187" r="2" fill="#0284c7" />
+    
+    <!-- Explanatory Callout pointing to 90 degree -->
+    <rect x="165" y="130" width="115" height="38" rx="4" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1" />
+    <text x="222" y="146" text-anchor="middle" font-size="11" font-weight="700" fill="#0369a1" font-family="sans-serif">屈折角 θ₂ = 90°</text>
+    <text x="222" y="160" text-anchor="middle" font-size="10" fill="#0284c7" font-family="sans-serif">（光が境界面スレスレを進む）</text>
+
+    <!-- Clarification Note at Bottom -->
+    <rect x="15" y="372" width="260" height="26" rx="4" fill="#fef3c7" stroke="#fcd34d" stroke-width="1" />
+    <text x="145" y="389" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e" font-family="sans-serif">
+      θc は「法線と入射光の間」の角度！
+    </text>
+  </g>
+
+  <!-- ==================== COLUMN 3: 全反射 (Total Internal Reflection) ==================== -->
+  <g transform="translate(645, 75)">
+    <!-- Card Frame -->
+    <rect width="290" height="405" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#card-shadow)" />
+    
+    <!-- Medium Backgrounds -->
+    <path d="M 1 35 L 289 35 L 289 200 L 1 200 Z" fill="#f8fafc" />
+    <path d="M 1 200 L 289 200 L 289 370 L 1 370 Z" fill="#eff6ff" />
+    
+    <!-- Column Title -->
+    <text x="145" y="24" text-anchor="middle" class="col-title">③ 全反射 (Total Internal Refl.)</text>
+    <rect x="75" y="42" width="140" height="20" rx="10" fill="#dbeafe" />
+    <text x="145" y="56" text-anchor="middle" class="col-condition" fill="#1d4ed8">θ₁ &gt; θc (光が全て反射)</text>
+
+    <!-- Medium Labels -->
+    <text x="12" y="80" class="medium-label" fill="#64748b">疎媒質 (空気 n₂)</text>
+    <text x="12" y="355" class="medium-label" fill="#1d4ed8">密媒質 (水・ガラス n₁)</text>
+
+    <!-- Boundary Line -->
+    <line x1="0" y1="200" x2="290" y2="200" stroke="#1d4ed8" stroke-width="2" />
+    <text x="282" y="194" text-anchor="end" font-size="10" fill="#1d4ed8" font-weight="600" font-family="sans-serif">境界面 (Boundary)</text>
+
+    <!-- Normal Line (法線) -->
+    <line x1="145" y1="80" x2="145" y2="330" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="150" y="95" class="normal-label">法線 (Normal)</text>
+
+    <!-- Incident Ray: Angle 55 deg from normal -->
+    <!-- Point of incidence at (145, 200). Length 110. x = 145 - 110*sin(55) = 54.9, y = 200 + 110*cos(55) = 263.1 -->
+    <line x1="55" y1="263" x2="145" y2="200" stroke="#ef4444" stroke-width="2.5" />
+    <line x1="55" y1="263" x2="105" y2="228" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrow-ray)" />
+
+    <!-- Incident Angle Arc: Radius 55. from (145, 255) to (145-55*sin(55), 200+55*cos(55)) = (100, 231.5) -->
+    <path d="M 145 255 A 55 55 0 0 1 100 231.5" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-arc-amber)" />
+    <text x="96" y="258" class="angle-label" fill="#d97706">θ₁</text>
+    <text x="40" y="325" font-size="11" fill="#ef4444" font-family="sans-serif" font-weight="600">入射光 (θ₁ &gt; θc)</text>
+
+    <!-- Totally Reflected Ray: Angle 55 deg on right side (100% reflection) -->
+    <!-- x = 145 + 110*sin(55) = 235.1, y = 200 + 110*cos(55) = 263.1 -->
+    <line x1="145" y1="200" x2="235" y2="263" stroke="#2563eb" stroke-width="2.5" />
+    <line x1="145" y1="200" x2="195" y2="235" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-reflected)" />
+
+    <!-- Reflected Angle Arc: Radius 55. from (145, 255) to (145+55*sin(55), 200+55*cos(55)) = (190, 231.5) -->
+    <path d="M 145 255 A 55 55 0 0 0 190 231.5" fill="none" stroke="#2563eb" stroke-width="2" />
+    <text x="180" y="258" class="angle-label" fill="#2563eb">θ₁</text>
+    <text x="185" y="325" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600">全反射光 (100%)</text>
+
+    <!-- No light into upper medium label -->
+    <rect x="75" y="135" width="140" height="26" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="1" />
+    <text x="145" y="152" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c" font-family="sans-serif">外への透過光は 0%！</text>
+
+    <!-- Explanation Box at Bottom -->
+    <rect x="15" y="375" width="260" height="22" rx="4" fill="#eff6ff" />
+    <text x="145" y="390" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8" font-family="sans-serif">
+      境界面が理想的な鏡として振る舞う
+    </text>
+  </g>
+
+  <!-- ==================== FOOTER FORMULA BAR ==================== -->
+  <g transform="translate(25, 495)">
+    <rect width="910" height="50" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+    
+    <text x="30" y="30" class="footer-text" font-weight="700" fill="#0f172a">
+      【公式の対応】
+    </text>
+    
+    <text x="130" y="30" class="footer-text">
+      スネルの法則: <tspan font-weight="700" fill="#0284c7">n₁ sin θ₁ = n₂ sin θ₂</tspan>
+    </text>
+    
+    <text x="440" y="30" class="footer-text">
+      臨界角の条件 (θ₂ = 90°): <tspan font-weight="700" fill="#d97706">sin θc = n₂ / n₁</tspan>
+    </text>
+    
+    <text x="760" y="30" class="footer-text" fill="#b45309" font-weight="700">
+      全反射の条件: θ₁ &gt; θc (n₁ &gt; n₂)
+    </text>
+  </g>
+</svg>

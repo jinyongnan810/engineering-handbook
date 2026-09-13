@@ -1,0 +1,277 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-f" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+    <marker id="arrow-b" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-i" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+    <marker id="arrow-v" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626" />
+    </marker>
+    <marker id="arrow-ind" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed" />
+    </marker>
+    <marker id="arrow-axis" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+    </marker>
+    
+    <!-- Linear gradients for magnet poles -->
+    <linearGradient id="grad-n-pole" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </linearGradient>
+    <linearGradient id="grad-s-pole" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 20px; fill: #0f172a; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 13px; fill: #64748b; }
+    .panel-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 15px; }
+    .section-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 13px; }
+    .body-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 12px; fill: #334155; }
+    .bold-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 12px; font-weight: 700; }
+    .formula-math { font-family: "KaTeX_Main", "Times New Roman", Cambria, Georgia, serif; font-size: 16px; font-weight: 700; }
+    .graph-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 11px; fill: #475569; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="960" height="600" fill="#ffffff" rx="12" />
+  <rect width="958" height="598" x="1" y="1" fill="none" stroke="#e2e8f0" stroke-width="2" rx="11" />
+
+  <!-- Header Section -->
+  <text x="480" y="32" text-anchor="middle" class="title">磁場と電磁誘導の基本原理 (Principles of Magnetism &amp; Induction)</text>
+  <text x="480" y="52" text-anchor="middle" class="subtitle">電流・荷電粒子が磁場から受ける力（フレミングの法則）と ファラデーの電磁誘導・レンツの法則</text>
+
+  <!-- ==================== LEFT PANEL: MAGNETIC & LORENTZ FORCE ==================== -->
+  <g transform="translate(24, 68)">
+    <!-- Panel Container -->
+    <rect width="446" height="512" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="446" height="38" rx="10" fill="#f0fdf4" />
+    <text x="18" y="24" class="panel-title" fill="#166534">1. 磁場から受ける力（モーターの原理）</text>
+
+    <!-- 3D Vector Diagram Area -->
+    <g transform="translate(0, 42)">
+      <!-- Background grid/ground -->
+      <path d="M 60 145 L 220 185 L 390 145 L 230 105 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+
+      <!-- Magnet N Pole (Left) -->
+      <rect x="40" y="70" width="36" height="70" rx="4" fill="url(#grad-n-pole)" />
+      <text x="58" y="112" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="20">N</text>
+      <text x="58" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">磁極 (N)</text>
+
+      <!-- Magnet S Pole (Right) -->
+      <rect x="370" y="70" width="36" height="70" rx="4" fill="url(#grad-s-pole)" />
+      <text x="388" y="112" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="20">S</text>
+      <text x="388" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#2563eb">磁極 (S)</text>
+
+      <!-- Magnetic Field Lines B (N -> S) -->
+      <line x1="82" y1="88" x2="362" y2="88" stroke="#0284c7" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-b)" />
+      <line x1="82" y1="108" x2="362" y2="108" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-b)" />
+      <line x1="82" y1="128" x2="362" y2="128" stroke="#0284c7" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-b)" />
+      <text x="310" y="80" class="bold-text" fill="#0284c7">磁場 B (N → S)</text>
+
+      <!-- Conductor wire carrying Current I -->
+      <!-- Back wire -->
+      <line x1="280" y1="65" x2="225" y2="108" stroke="#f97316" stroke-width="4" stroke-linecap="round" />
+      <!-- Wire center point -->
+      <circle cx="225" cy="108" r="5" fill="#d97706" />
+      <!-- Front wire with current arrow -->
+      <line x1="225" y1="108" x2="160" y2="158" stroke="#ea580c" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow-i)" />
+      <text x="135" y="172" class="bold-text" fill="#d97706">電流 I (手前向き)</text>
+      <text x="135" y="186" font-size="10" fill="#64748b">（または正電荷の速度 v）</text>
+
+      <!-- Upward Force Vector F -->
+      <line x1="225" y1="108" x2="225" y2="24" stroke="#059669" stroke-width="4" marker-end="url(#arrow-f)" />
+      <text x="236" y="32" class="bold-text" font-size="15" fill="#047857">力 F (電磁力)</text>
+
+      <!-- Right Angle Indicators -->
+      <!-- Between B and F -->
+      <path d="M 225 94 L 239 94 L 239 108" fill="none" stroke="#047857" stroke-width="1.5" />
+      <!-- Between I and F -->
+      <path d="M 225 94 L 216 101 L 216 115" fill="none" stroke="#047857" stroke-width="1.5" />
+    </g>
+
+    <!-- Fleming's Left Hand Card -->
+    <g transform="translate(18, 240)">
+      <rect width="410" height="110" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="14" y="22" class="section-label" fill="#1e293b">フレミングの左手の法則 (Fleming's Left-Hand Rule)</text>
+      
+      <!-- Badges for Thumb, Forefinger, Middle finger -->
+      <g transform="translate(14, 34)">
+        <!-- Thumb -->
+        <rect width="118" height="40" rx="6" fill="#ecfdf5" stroke="#a7f3d0" />
+        <text x="59" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">親指 (Thumb)</text>
+        <text x="59" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="#047857">力 F (Force)</text>
+      </g>
+      <g transform="translate(146, 34)">
+        <!-- Forefinger -->
+        <rect width="118" height="40" rx="6" fill="#f0f9ff" stroke="#bae6fd" />
+        <text x="59" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#075985">人差し指 (Field)</text>
+        <text x="59" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="#0284c7">磁場 B (Field)</text>
+      </g>
+      <g transform="translate(278, 34)">
+        <!-- Middle finger -->
+        <rect width="118" height="40" rx="6" fill="#fffbeb" stroke="#fde68a" />
+        <text x="59" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">中指 (Current)</text>
+        <text x="59" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="#d97706">電流 I (Current)</text>
+      </g>
+
+      <text x="14" y="94" font-size="11" font-weight="700" fill="#475569">覚え方: <tspan fill="#d97706">電(中)</tspan>・<tspan fill="#0284c7">磁(人)</tspan>・<tspan fill="#047857">力(親)</tspan> ＝ 英語の頭文字 <tspan fill="#0f172a">FBI</tspan></text>
+      <text x="235" y="94" font-size="11" fill="#64748b">3者が直交するとき力は最大</text>
+    </g>
+
+    <!-- Formula & Key Points Box -->
+    <g transform="translate(18, 362)">
+      <rect width="410" height="136" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text x="14" y="22" class="section-label" fill="#166534">公式と物理的意味</text>
+      
+      <!-- Formulas -->
+      <text x="14" y="46" class="formula-math" fill="#0f172a">導線: F = I L B sinθ</text>
+      <text x="215" y="46" class="formula-math" fill="#0f172a">電荷: f = q v B sinθ</text>
+
+      <!-- Explanatory bullet points -->
+      <circle cx="20" cy="68" r="2.5" fill="#16a34a" />
+      <text x="30" y="72" class="body-text"><tspan font-weight="700">θ = 90° (直交):</tspan> sin 90° = 1 で受ける力は<tspan font-weight="700" fill="#047857">最大</tspan></text>
+
+      <circle cx="20" cy="88" r="2.5" fill="#16a34a" />
+      <text x="30" y="92" class="body-text"><tspan font-weight="700">θ = 0° (平行):</tspan> sin 0° = 0 で磁場と同じ向きには<tspan font-weight="700" fill="#dc2626">力ゼロ (F = 0)</tspan></text>
+
+      <circle cx="20" cy="108" r="2.5" fill="#16a34a" />
+      <text x="30" y="112" class="body-text"><tspan font-weight="700">主な実用例:</tspan> EV・電気モーター、スピーカー、粒子加速器</text>
+    </g>
+  </g>
+
+  <!-- ==================== RIGHT PANEL: INDUCTION & LENZ'S LAW ==================== -->
+  <g transform="translate(490, 68)">
+    <!-- Panel Container -->
+    <rect width="446" height="512" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="446" height="38" rx="10" fill="#eff6ff" />
+    <text x="18" y="24" class="panel-title" fill="#1e40af">2. 電磁誘導とレンツの法則（発電機の原理）</text>
+
+    <!-- Induction Mechanism Illustration -->
+    <g transform="translate(18, 46)">
+      <!-- Magnet approaching coil -->
+      <g transform="translate(45, 0)">
+        <!-- S-pole -->
+        <rect x="0" y="0" width="34" height="26" rx="3" fill="url(#grad-s-pole)" />
+        <text x="17" y="18" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="14">S</text>
+        <!-- N-pole -->
+        <rect x="0" y="26" width="34" height="26" rx="3" fill="url(#grad-n-pole)" />
+        <text x="17" y="44" text-anchor="middle" fill="#ffffff" font-weight="800" font-size="14">N</text>
+        <!-- Motion arrow v -->
+        <line x1="17" y1="56" x2="17" y2="82" stroke="#dc2626" stroke-width="3" marker-end="url(#arrow-v)" />
+        <text x="24" y="74" font-size="11" font-weight="700" fill="#dc2626">接近 (v)</text>
+      </g>
+
+      <!-- Opposing Induced Field Arrow B_ind -->
+      <g transform="translate(110, 10)">
+        <line x1="0" y1="75" x2="0" y2="20" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrow-ind)" />
+        <text x="10" y="32" class="bold-text" fill="#7c3aed">B<tspan font-size="9" dy="3">ind</tspan></text>
+        <text x="10" y="48" font-size="10" font-weight="700" fill="#6d28d9">反発磁界</text>
+        <text x="10" y="62" font-size="9" fill="#64748b">（上がN極化）</text>
+      </g>
+
+      <!-- Coil Loops -->
+      <g transform="translate(18, 90)">
+        <!-- Solenoid Cylindrical Core outline -->
+        <rect x="15" y="0" width="85" height="52" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" />
+        
+        <!-- Loop 1 -->
+        <ellipse cx="57" cy="10" rx="38" ry="8" fill="none" stroke="#d97706" stroke-width="2.5" />
+        <!-- Loop 2 -->
+        <ellipse cx="57" cy="26" rx="38" ry="8" fill="none" stroke="#d97706" stroke-width="2.5" />
+        <!-- Loop 3 -->
+        <ellipse cx="57" cy="42" rx="38" ry="8" fill="none" stroke="#d97706" stroke-width="2.5" />
+        
+        <!-- Current Arrow on Loop -->
+        <path d="M 88 26 A 38 8 0 0 1 65 34" fill="none" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arrow-i)" />
+        <text x="102" y="38" class="bold-text" fill="#d97706" font-size="11">誘導電流 I<tspan font-size="9" dy="2">ind</tspan></text>
+      </g>
+
+      <!-- Voltmeter connected to coil -->
+      <g transform="translate(245, 45)">
+        <rect width="145" height="85" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+        <text x="72" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">検流計 / 電圧計</text>
+        <!-- Meter Dial -->
+        <circle cx="72" cy="52" r="22" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" />
+        <!-- Dial ticks -->
+        <line x1="57" y1="42" x2="61" y2="45" stroke="#64748b" stroke-width="1.5" />
+        <line x1="72" y1="36" x2="72" y2="40" stroke="#64748b" stroke-width="1.5" />
+        <line x1="87" y1="42" x2="83" y2="45" stroke="#64748b" stroke-width="1.5" />
+        <!-- Deflected needle -->
+        <line x1="72" y1="52" x2="85" y2="39" stroke="#dc2626" stroke-width="2" />
+        <circle cx="72" cy="52" r="3" fill="#0f172a" />
+        <text x="72" y="80" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">誘導起電力 V 発生！</text>
+      </g>
+    </g>
+
+    <!-- Waveform Graph Area: Flux Phi(t) & Induced EMF V(t) -->
+    <g transform="translate(18, 202)">
+      <rect width="410" height="175" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+      <text x="14" y="20" class="section-label" fill="#0f172a">【波形グラフ】磁石通過時の磁束 Φ(t) と誘導起電力 V(t)</text>
+      <text x="14" y="35" font-size="10" fill="#64748b">電圧は「磁束の変化率（傾き）」に比例し、変化を妨げる向き（−符号）に生じる</text>
+
+      <!-- Graph Axes -->
+      <!-- Center Zero Line (Horizontal Time axis) -->
+      <line x1="45" y1="102" x2="385" y2="102" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-axis)" />
+      <text x="392" y="106" class="graph-label">時間 t</text>
+
+      <!-- Vertical Voltage/Flux axis -->
+      <line x1="50" y1="155" x2="50" y2="48" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-axis)" />
+      <text x="50" y="44" text-anchor="middle" class="graph-label">値</text>
+
+      <!-- Time reference vertical dashed lines -->
+      <!-- Magnet entering (t1) -->
+      <line x1="140" y1="52" x2="140" y2="152" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3" />
+      <text x="140" y="165" text-anchor="middle" class="graph-label">進入</text>
+      <!-- Center alignment (t0) -->
+      <line x1="215" y1="52" x2="215" y2="152" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 3" />
+      <text x="215" y="165" text-anchor="middle" class="graph-label" font-weight="700">中央 (Φ最大)</text>
+      <!-- Magnet leaving (t2) -->
+      <line x1="290" y1="52" x2="290" y2="152" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3" />
+      <text x="290" y="165" text-anchor="middle" class="graph-label">脱出</text>
+
+      <!-- Curve 1: Magnetic Flux Phi(t) [Blue] -->
+      <!-- Bell curve peaking at (215, 60) from baseline y=102 -->
+      <path d="M 65 102 C 120 102 165 60 215 60 C 265 60 310 102 365 102" fill="none" stroke="#0284c7" stroke-width="2.5" />
+      <circle cx="215" cy="60" r="3.5" fill="#0284c7" />
+      <text x="222" y="58" font-size="11" font-weight="700" fill="#0284c7">Φ(t) (磁束)</text>
+
+      <!-- Curve 2: Induced Voltage V(t) = -dPhi/dt [Red] -->
+      <!-- Dips to minimum around x=155, crosses zero at x=215, peaks at x=275 -->
+      <path d="M 65 102 C 105 102 125 138 155 138 C 185 138 195 102 215 102 C 235 102 245 66 275 66 C 305 66 325 102 365 102" fill="none" stroke="#dc2626" stroke-width="2.5" />
+      <circle cx="215" cy="102" r="3.5" fill="#dc2626" />
+      <text x="315" y="78" font-size="11" font-weight="700" fill="#dc2626">V(t) (起電力)</text>
+
+      <!-- Point of Interest annotations -->
+      <text x="220" y="118" font-size="10" font-weight="700" fill="#dc2626">中央で V = 0</text>
+      <text x="155" y="150" text-anchor="middle" font-size="9" fill="#dc2626">接近時: 逆起電力 (負)</text>
+      <text x="280" y="55" text-anchor="middle" font-size="9" fill="#dc2626">遠ざかる時: 正電圧</text>
+    </g>
+
+    <!-- Formula & Lenz's Law Principle Card -->
+    <g transform="translate(18, 386)">
+      <rect width="410" height="112" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+      <text x="14" y="22" class="section-label" fill="#1e40af">ファラデーの電磁誘導の法則とレンツの法則</text>
+      
+      <text x="14" y="48" class="formula-math" fill="#0f172a">V = -N (ΔΦ / Δt)</text>
+      
+      <circle cx="20" cy="68" r="2.5" fill="#2563eb" />
+      <text x="30" y="72" class="body-text"><tspan font-weight="700" fill="#dc2626">「−」符号の意味（レンツの法則）:</tspan> 磁束の<tspan font-weight="700">変化を妨げる向き</tspan>に電圧が生じる</text>
+
+      <circle cx="20" cy="86" r="2.5" fill="#2563eb" />
+      <text x="30" y="90" class="body-text"><tspan font-weight="700">エネルギー保存則:</tspan> 変化に逆らう仕事を外から与えることで電気に変換される</text>
+
+      <circle cx="20" cy="104" r="2.5" fill="#2563eb" />
+      <text x="30" y="108" class="body-text"><tspan font-weight="700">主な実用例:</tspan> 発電機、IH調理器、Suica/交通系ICカード、渦電流ブレーキ</text>
+    </g>
+  </g>
+</svg>

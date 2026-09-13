@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-ray-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626" />
+    </marker>
+    <marker id="arrow-ray-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-ray-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+    <marker id="arrow-dim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#64748b" />
+    </marker>
+    <marker id="arrow-dim-rev" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#64748b" />
+    </marker>
+    <marker id="arrow-obj" viewBox="0 0 10 10" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 5 8 L 10 0 z" fill="#16a34a" />
+    </marker>
+    <marker id="arrow-img" viewBox="0 0 10 10" refX="5" refY="7" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 10 L 5 2 L 10 10 z" fill="#9333ea" />
+    </marker>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 20px; fill: #0f172a; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; fill: #64748b; }
+    .axis-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; fill: #64748b; font-weight: 600; }
+    .point-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 700; fill: #1e293b; }
+    .dim-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 700; fill: #334155; }
+    .entity-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 700; }
+    .legend-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; fill: #334155; font-weight: 600; }
+    .formula-badge { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 15px; font-weight: 700; fill: #0f172a; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="960" height="520" fill="#ffffff" rx="12" />
+  <rect width="958" height="518" x="1" y="1" fill="none" stroke="#e2e8f0" stroke-width="2" rx="11" />
+
+  <!-- Header Section -->
+  <text x="480" y="34" text-anchor="middle" class="title">凸レンズの結像とレンズの公式 (Thin Lens Equation)</text>
+  <text x="480" y="54" text-anchor="middle" class="subtitle">3本の代表的な光線の作図と距離 a, b, f の幾何学的関係</text>
+
+  <!-- Formula Banner -->
+  <g transform="translate(180, 68)">
+    <rect width="600" height="36" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+    <text x="300" y="23" text-anchor="middle" class="formula-badge">
+      レンズの公式: <tspan fill="#0284c7">1/a + 1/b = 1/f</tspan>　　倍率: <tspan fill="#d97706">m = b/a = h'/h</tspan>
+    </text>
+  </g>
+
+  <!-- ==================== OPTICAL AXIS & LENS ==================== -->
+  
+  <!-- Principal Axis (光軸) -->
+  <line x1="40" y1="250" x2="920" y2="250" stroke="#94a3b8" stroke-width="1.5" />
+  <text x="915" y="242" text-anchor="end" class="axis-label">光軸 (Principal Axis)</text>
+
+  <!-- Focal points F and F' -->
+  <circle cx="290" cy="250" r="4" fill="#0284c7" />
+  <text x="290" y="272" text-anchor="middle" class="point-label" fill="#0284c7">F</text>
+  <text x="290" y="286" text-anchor="middle" font-size="10" fill="#64748b" font-family="sans-serif">前方焦点</text>
+
+  <circle cx="590" cy="250" r="4" fill="#0284c7" />
+  <text x="590" y="272" text-anchor="middle" class="point-label" fill="#0284c7">F'</text>
+  <text x="590" y="286" text-anchor="middle" font-size="10" fill="#64748b" font-family="sans-serif">後方焦点</text>
+
+  <!-- Lens Center O -->
+  <circle cx="440" cy="250" r="4" fill="#0f172a" />
+  <text x="440" y="272" text-anchor="middle" class="point-label">O</text>
+  <text x="440" y="286" text-anchor="middle" font-size="10" fill="#64748b" font-family="sans-serif">レンズ中心</text>
+
+  <!-- Convex Lens Body (Biconvex) -->
+  <path d="M 440 90 Q 460 250 440 410 Q 420 250 440 90 Z" fill="#e0f2fe" fill-opacity="0.55" stroke="#0284c7" stroke-width="2.5" />
+  <!-- Vertical centerline through lens -->
+  <line x1="440" y1="80" x2="440" y2="420" stroke="#0284c7" stroke-width="1" stroke-dasharray="3 3" opacity="0.7" />
+  <text x="440" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="#0369a1" font-family="sans-serif">凸レンズ (Convex Lens)</text>
+
+  <!-- ==================== 3 PRINCIPAL RAYS ==================== -->
+
+  <!-- Ray 1: Parallel to axis, then through right focus F' -->
+  <!-- Segment 1: from (190, 170) to (440, 170) -->
+  <line x1="190" y1="170" x2="440" y2="170" stroke="#dc2626" stroke-width="2" marker-mid="url(#arrow-ray-red)" />
+  <line x1="190" y1="170" x2="325" y2="170" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-ray-red)" />
+  <!-- Segment 2: from (440, 170) through (590, 250) to (815, 370) -->
+  <line x1="440" y1="170" x2="815" y2="370" stroke="#dc2626" stroke-width="2" />
+  <line x1="440" y1="170" x2="650" y2="282" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-ray-red)" />
+
+  <!-- Ray 2: Through optical center O straight -->
+  <!-- Line from (190, 170) through (440, 250) to (815, 370) -->
+  <line x1="190" y1="170" x2="815" y2="370" stroke="#2563eb" stroke-width="2" />
+  <line x1="190" y1="170" x2="330" y2="215" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-ray-blue)" />
+  <line x1="440" y1="250" x2="640" y2="314" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-ray-blue)" />
+
+  <!-- Ray 3: Through left focus F, then parallel to axis -->
+  <!-- Segment 1: from (190, 170) through (290, 250) to (440, 370) -->
+  <line x1="190" y1="170" x2="440" y2="370" stroke="#d97706" stroke-width="2" />
+  <line x1="190" y1="170" x2="340" y2="290" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-ray-amber)" />
+  <!-- Segment 2: from (440, 370) horizontally to (815, 370) -->
+  <line x1="440" y1="370" x2="815" y2="370" stroke="#d97706" stroke-width="2" />
+  <line x1="440" y1="370" x2="640" y2="370" stroke="#d97706" stroke-width="2" marker-end="url(#arrow-ray-amber)" />
+
+  <!-- ==================== OBJECT AND IMAGE ==================== -->
+
+  <!-- Object (Green Arrow pointing Up) at x=190, y=250 to 170 (height 80) -->
+  <line x1="190" y1="250" x2="190" y2="173" stroke="#16a34a" stroke-width="5" />
+  <!-- Arrowhead manually drawn for precision -->
+  <polygon points="183,176 190,162 197,176" fill="#16a34a" />
+  <text x="190" y="145" text-anchor="middle" class="entity-title" fill="#15803d">物体 (Object)</text>
+  <text x="165" y="215" text-anchor="end" class="dim-label" fill="#15803d">h (高さ)</text>
+
+  <!-- Inverted Real Image (Purple Arrow pointing Down) at x=815, y=250 to 370 (height 120) -->
+  <line x1="815" y1="250" x2="815" y2="367" stroke="#9333ea" stroke-width="5" />
+  <polygon points="808,364 815,378 822,364" fill="#9333ea" />
+  <text x="815" y="402" text-anchor="middle" class="entity-title" fill="#7e22ce">倒立実像 (Real Image)</text>
+  <text x="840" y="315" text-anchor="start" class="dim-label" fill="#7e22ce">h' (像の高さ)</text>
+
+  <!-- ==================== DIMENSIONS (a, b, f) ==================== -->
+
+  <!-- Dimension a: from x=190 to x=440 at y=450 -->
+  <line x1="190" y1="445" x2="440" y2="445" stroke="#64748b" stroke-width="1.5" marker-start="url(#arrow-dim-rev)" marker-end="url(#arrow-dim)" />
+  <line x1="190" y1="255" x2="190" y2="455" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2" />
+  <rect x="290" y="433" width="50" height="22" rx="4" fill="#ffffff" />
+  <text x="315" y="449" text-anchor="middle" class="dim-label" fill="#0284c7">a</text>
+  <text x="315" y="470" text-anchor="middle" font-size="11" fill="#64748b" font-family="sans-serif">物体距離 (Object Distance)</text>
+
+  <!-- Dimension b: from x=440 to x=815 at y=450 -->
+  <line x1="440" y1="445" x2="815" y2="445" stroke="#64748b" stroke-width="1.5" marker-start="url(#arrow-dim-rev)" marker-end="url(#arrow-dim)" />
+  <line x1="815" y1="255" x2="815" y2="455" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2" />
+  <rect x="605" y="433" width="50" height="22" rx="4" fill="#ffffff" />
+  <text x="630" y="449" text-anchor="middle" class="dim-label" fill="#9333ea">b</text>
+  <text x="630" y="470" text-anchor="middle" font-size="11" fill="#64748b" font-family="sans-serif">像距離 (Image Distance)</text>
+
+  <!-- Dimension f (Left): from x=290 to x=440 at y=310 -->
+  <line x1="290" y1="310" x2="440" y2="310" stroke="#64748b" stroke-width="1.5" marker-start="url(#arrow-dim-rev)" marker-end="url(#arrow-dim)" />
+  <rect x="345" y="300" width="40" height="20" rx="3" fill="#ffffff" />
+  <text x="365" y="315" text-anchor="middle" class="dim-label" fill="#0284c7">f</text>
+
+  <!-- Dimension f (Right): from x=440 to x=590 at y=310 -->
+  <line x1="440" y1="310" x2="590" y2="310" stroke="#64748b" stroke-width="1.5" marker-start="url(#arrow-dim-rev)" marker-end="url(#arrow-dim)" />
+  <rect x="495" y="300" width="40" height="20" rx="3" fill="#ffffff" />
+  <text x="515" y="315" text-anchor="middle" class="dim-label" fill="#0284c7">f</text>
+
+  <!-- Center vertical extension line -->
+  <line x1="440" y1="410" x2="440" y2="455" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2" />
+
+  <!-- ==================== RAY LEGEND BOX ==================== -->
+  <g transform="translate(45, 475)">
+    <rect width="870" height="34" rx="6" fill="#f1f5f9" stroke="#e2e8f0" />
+    <!-- Ray 1 Legend -->
+    <line x1="20" y1="17" x2="45" y2="17" stroke="#dc2626" stroke-width="2.5" />
+    <text x="52" y="21" class="legend-text"><tspan fill="#dc2626">①</tspan> 光軸に平行な光 → 屈折後、後方焦点 F' を通る</text>
+
+    <!-- Ray 2 Legend -->
+    <line x1="315" y1="17" x2="340" y2="17" stroke="#2563eb" stroke-width="2.5" />
+    <text x="347" y="21" class="legend-text"><tspan fill="#2563eb">②</tspan> レンズ中心 O を通る光 → 直進する</text>
+
+    <!-- Ray 3 Legend -->
+    <line x1="590" y1="17" x2="615" y2="17" stroke="#d97706" stroke-width="2.5" />
+    <text x="622" y="21" class="legend-text"><tspan fill="#d97706">③</tspan> 前方焦点 F を通る光 → 屈折後、光軸に平行に進む</text>
+  </g>
+</svg>

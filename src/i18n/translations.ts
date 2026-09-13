@@ -12,6 +12,7 @@ export const tagTranslations: Record<string, { en: string; jp: string }> = {
     en: "Artificial Intelligence",
     jp: "人工知能",
   },
+  Physics: { en: "Physics", jp: "物理" },
   Others: { en: "Others", jp: "その他" },
 };
 
