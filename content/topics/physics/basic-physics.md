@@ -216,6 +216,114 @@ where $G \approx 6.674 \times 10^{-11}\,\text{N}\cdot\text{m}^2/\text{kg}^2$.
 
 ---
 
+### 1.7 Fluid Mechanics
+
+Fluid mechanics governs the behavior of liquids and gases in both static (hydrostatic pressure and buoyancy) and dynamic (continuity and Bernoulli's equation) states.
+
+#### 1. Fluid Statics
+
+- **Pressure Definition**: Normal force exerted per unit area:
+
+$$
+P = \frac{F}{A} \quad (\text{Pascal, } 1\text{ Pa} = 1\text{ N/m}^2)
+$$
+
+- **Hydrostatic Pressure**: Absolute pressure at depth $h$ beneath the surface of a static fluid with density $\rho$:
+
+$$
+P = P_0 + \rho g h
+$$
+
+where $P_0$ is atmospheric pressure at the surface ($\approx 1.013 \times 10^5\text{ Pa}$). Hydrostatic pressure increases by approximately $1\text{ atm}$ for every $10\text{ m}$ of water depth.
+
+- **Pascal's Principle**: A pressure change applied to an enclosed, incompressible static fluid is transmitted undiminished to every portion of the fluid and container walls:
+
+$$
+\frac{F_1}{A_1} = \frac{F_2}{A_2} \implies F_2 = F_1 \left(\frac{A_2}{A_1}\right)
+$$
+
+(Hydraulic systems amplify an input force $F_1$ by the piston surface area ratio $\frac{A_2}{A_1}$).
+
+- **Archimedes' Principle & Buoyancy**: Any object submerged in a fluid experiences an upward buoyant force $F_b$ equal to the weight of the fluid displaced:
+
+$$
+F_b = \rho_{\text{fluid}} V g
+$$
+
+where $V$ is the submerged volume of the body. Buoyancy arises from the hydrostatic pressure differential between bottom and top surfaces ($F_b = (P_2 - P_1)A$).
+
+- **Sink or Float Condition**:
+  - Average density $\bar{\rho}_{\text{obj}} < \rho_{\text{fluid}}$: Buoyant force $>$ Gravity $\implies$ **Floats**
+  - Average density $\bar{\rho}_{\text{obj}} > \rho_{\text{fluid}}$: Buoyant force $<$ Gravity $\implies$ **Sinks**
+
+#### 2. Fluid Dynamics
+
+Considering steady, incompressible ($\rho = \text{const}$), non-viscous ideal fluid flow along a streamline:
+
+- **Equation of Continuity (Conservation of Mass)**: For an incompressible fluid, the volume flow rate $Q$ remains constant throughout a conduit:
+
+$$
+Q = A_1 v_1 = A_2 v_2 = \text{constant} \quad (\text{m}^3/\text{s})
+$$
+
+(As the cross-sectional area narrows, fluid speed increases inversely: $v \propto 1/A$).
+
+- **Bernoulli's Principle (Conservation of Energy in Fluids)**: Along any streamline, the total mechanical energy per unit volume is constant:
+
+$$
+P + \frac{1}{2}\rho v^2 + \rho g h = \text{constant}
+$$
+
+For a horizontal pipe ($h_1 = h_2$):
+
+$$
+P_1 + \frac{1}{2}\rho v_1^2 = P_2 + \frac{1}{2}\rho v_2^2
+$$
+
+> **Key Takeaway (Venturi Effect)**: **Regions of higher fluid speed exhibit lower static pressure! ($v \uparrow \implies P \downarrow$)**
+
+- **Torricelli's Law**: Efflux speed of liquid draining from a small orifice at depth $h$ below an open tank surface:
+
+$$
+v = \sqrt{2gh}
+$$
+
+(Derived directly from Bernoulli's principle; identical to free-fall velocity from height $h$).
+
+#### Symbol Reference
+
+| Symbol        | Physical Quantity                     | SI Unit                               | Meaning & Relationship                                                               |
+| :------------ | :------------------------------------ | :------------------------------------ | :----------------------------------------------------------------------------------- |
+| $P, P_0$      | Fluid Pressure / Atmospheric Pressure | $\text{Pa}$ (Pascal) $= \text{N/m}^2$ | Compressive force per unit area ($1\text{ atm} \approx 1.013 \times 10^5\text{ Pa}$) |
+| $\rho$        | Fluid Density                         | $\text{kg/m}^3$                       | Mass per unit volume (water: $1.0 \times 10^3\text{ kg/m}^3$)                        |
+| $h$           | Depth or Elevation Head               | $\text{m}$ (meter)                    | Depth beneath surface in statics, or elevation along a streamline in Bernoulli       |
+| $g$           | Gravitational Acceleration            | $\text{m/s}^2$                        | Acceleration due to gravity ($\approx 9.8\text{ m/s}^2$ on Earth's surface)          |
+| $F_b$         | Buoyant Force                         | $\text{N}$ (Newton)                   | Net upward hydrostatic force equal to displaced fluid weight ($F_b = \rho V g$)      |
+| $V$           | Submerged Volume                      | $\text{m}^3$                          | Volume of the portion of the body immersed in fluid                                  |
+| $A, A_1, A_2$ | Cross-Sectional Area                  | $\text{m}^2$                          | Area through which fluid flows or over which pressure acts                           |
+| $v, v_1, v_2$ | Flow Velocity                         | $\text{m/s}$                          | Mean velocity of fluid particles                                                     |
+| $Q$           | Volume Flow Rate                      | $\text{m}^3/\text{s}$                 | Volume of fluid crossing a section per second ($Q = Av$)                             |
+
+![Principles of Fluid Mechanics (Pascal's Principle, Buoyancy, Continuity, and Bernoulli's Principle)](/images/fluid_mechanics_principles.svg)
+
+> [!TIP]
+> **Engineering & Real-Life Usages of Fluid Mechanics:**
+>
+> - **Hydraulic Brakes & Heavy Excavators (Pascal's Principle)**:
+>   Stepping lightly on a car's brake pedal (applying tens of Newtons) pressurizes hydraulic brake fluid. Transmitted through rigid tubing to wheel slave cylinders with 10–20× larger piston areas, the force scales proportionally to generate thousands of Newtons of clamping force against brake discs.
+> - **Steel Aircraft Carriers & Submarine Ballast (Archimedes' Principle)**:
+>   Although steel has a density ~8× that of water ($7.87\text{ g/cm}^3$), ships are built as hollow shells so that the _average density_ of the ship and contained air is far below $1.0\text{ g/cm}^3$. Submarines submerge by flooding ballast tanks with seawater, and surface by blowing out the water with compressed air.
+> - **Garden Hose Nozzles & River Rapids (Equation of Continuity)**:
+>   Constricting a garden hose outlet with your thumb reduces cross-sectional area $A$, forcing velocity $v$ to double or triple ($A_1 v_1 = A_2 v_2$) so the water stream shoots far across the lawn. The same principle turns wide, gentle rivers into roaring white-water rapids when funnelled through narrow rock canyons.
+> - **Aerodynamic Lift & Pitot Tubes (Bernoulli's Principle)**:
+>   Airplane wings (airfoils) are shaped so airflow travels faster over the curved upper surface than underneath ($v_{\text{top}} > v_{\text{bottom}}$). By Bernoulli's equation, faster airflow generates lower static pressure on top ($P_{\text{top}} < P_{\text{bottom}}$), producing upward aerodynamic lift. Aircraft Pitot tubes determine airspeed by measuring dynamic pressure difference ($\Delta P = \frac{1}{2}\rho v^2$).
+> - **Perfume Atomizers & Carburetors (Venturi Effect)**:
+>   Blowing air rapidly through a narrow constriction creates a localized pressure drop below atmospheric pressure ($P < P_0$). This vacuum siphons liquid perfume or fuel up a straw into the high-speed air stream, atomizing it into a fine mist.
+> - **Curveballs & Banana Kicks (Magnus Effect)**:
+>   A spinning ball in flight drags an air boundary layer with it. Air moves faster on the side spinning in the direction of flight (lower pressure) and slower on the opposite side (higher pressure). The resulting lateral net force curves the ball's trajectory dramatically in mid-air.
+
+---
+
 ## 2. Thermodynamics
 
 Thermodynamics examines heat, temperature, and their conversion to work and energy.
@@ -620,24 +728,26 @@ $$
 
 ## 6. Key Formulas Cheat Sheet
 
-| Branch               | Concept                    | Formula                                       | Key Units                               |
-| :------------------- | :------------------------- | :-------------------------------------------- | :-------------------------------------- |
-| **Mechanics**        | Velocity & Acceleration    | $v = v_0 + at$, $x = v_0 t + \frac{1}{2}at^2$ | $\text{m/s}$, $\text{m/s}^2$            |
-| **Mechanics**        | Newton's Second Law        | $F = ma$                                      | $\text{N} = \text{kg}\cdot\text{m/s}^2$ |
-| **Mechanics**        | Kinetic & Potential Energy | $K = \frac{1}{2}mv^2$, $U_g = mgh$            | $\text{J} = \text{N}\cdot\text{m}$      |
-| **Mechanics**        | Momentum & Impulse         | $p = mv$, $I = F\Delta t = \Delta p$          | $\text{kg}\cdot\text{m/s}$              |
-| **Mechanics**        | Centripetal Force          | $F_c = m\frac{v^2}{r} = mr\omega^2$           | $\text{N}$                              |
-| **Mechanics**        | Universal Gravitation      | $F = G\frac{Mm}{r^2}$                         | $\text{N}$                              |
-| **Thermodynamics**   | Specific Heat              | $Q = mc\Delta T$                              | $\text{J}$                              |
-| **Thermodynamics**   | Ideal Gas Law              | $PV = nRT$                                    | $\text{Pa}$, $\text{m}^3$, $\text{K}$   |
-| **Thermodynamics**   | First Law                  | $\Delta U = Q - W_{\text{by}}$                | $\text{J}$                              |
-| **Waves**            | Wave Speed                 | $v = f\lambda$                                | $\text{m/s}$, $\text{Hz}$, $\text{m}$   |
-| **Waves**            | Doppler Effect             | $f' = f\frac{V \pm v_o}{V \mp v_s}$           | $\text{Hz}$                             |
-| **Optics**           | Snell's Law                | $n_1 \sin\theta_1 = n_2 \sin\theta_2$         | dimensionless                           |
-| **Optics**           | Thin Lens Equation         | $\frac{1}{a} + \frac{1}{b} = \frac{1}{f}$     | $\text{m}$                              |
-| **Electromagnetism** | Coulomb's Law              | $F = k_e \frac{\|q_1 q_2\|}{r^2}$             | $\text{N}$, $\text{C}$                  |
-| **Electromagnetism** | Ohm's Law & Power          | $V = IR$, $P = VI = I^2 R$                    | $\text{V}$, $\text{A}$, $\text{W}$      |
-| **Electromagnetism** | Lorentz Force              | $F = qvB\sin\theta$                           | $\text{N}$, $\text{T}$                  |
-| **Electromagnetism** | Faraday's Law              | $V = -N\frac{\Delta\Phi}{\Delta t}$           | $\text{V}$, $\text{Wb}$                 |
-| **Modern Physics**   | Photon Energy              | $E = hf = \frac{hc}{\lambda}$                 | $\text{J}$ or $\text{eV}$               |
-| **Modern Physics**   | Mass-Energy Equivalence    | $E = mc^2$                                    | $\text{J}$                              |
+| Branch               | Concept                    | Formula                                                                 | Key Units                               |
+| :------------------- | :------------------------- | :---------------------------------------------------------------------- | :-------------------------------------- |
+| **Mechanics**        | Velocity & Acceleration    | $v = v_0 + at$, $x = v_0 t + \frac{1}{2}at^2$                           | $\text{m/s}$, $\text{m/s}^2$            |
+| **Mechanics**        | Newton's Second Law        | $F = ma$                                                                | $\text{N} = \text{kg}\cdot\text{m/s}^2$ |
+| **Mechanics**        | Kinetic & Potential Energy | $K = \frac{1}{2}mv^2$, $U_g = mgh$                                      | $\text{J} = \text{N}\cdot\text{m}$      |
+| **Mechanics**        | Momentum & Impulse         | $p = mv$, $I = F\Delta t = \Delta p$                                    | $\text{kg}\cdot\text{m/s}$              |
+| **Mechanics**        | Centripetal Force          | $F_c = m\frac{v^2}{r} = mr\omega^2$                                     | $\text{N}$                              |
+| **Mechanics**        | Universal Gravitation      | $F = G\frac{Mm}{r^2}$                                                   | $\text{N}$                              |
+| **Fluids**           | Hydrostatics & Buoyancy    | $P = P_0 + \rho gh$, $F_b = \rho V g$                                   | $\text{Pa}$, $\text{N}$                 |
+| **Fluids**           | Continuity & Bernoulli     | $A_1 v_1 = A_2 v_2$, $P + \frac{1}{2}\rho v^2 + \rho gh = \text{const}$ | $\text{m}^3/\text{s}$, $\text{Pa}$      |
+| **Thermodynamics**   | Specific Heat              | $Q = mc\Delta T$                                                        | $\text{J}$                              |
+| **Thermodynamics**   | Ideal Gas Law              | $PV = nRT$                                                              | $\text{Pa}$, $\text{m}^3$, $\text{K}$   |
+| **Thermodynamics**   | First Law                  | $\Delta U = Q - W_{\text{by}}$                                          | $\text{J}$                              |
+| **Waves**            | Wave Speed                 | $v = f\lambda$                                                          | $\text{m/s}$, $\text{Hz}$, $\text{m}$   |
+| **Waves**            | Doppler Effect             | $f' = f\frac{V \pm v_o}{V \mp v_s}$                                     | $\text{Hz}$                             |
+| **Optics**           | Snell's Law                | $n_1 \sin\theta_1 = n_2 \sin\theta_2$                                   | dimensionless                           |
+| **Optics**           | Thin Lens Equation         | $\frac{1}{a} + \frac{1}{b} = \frac{1}{f}$                               | $\text{m}$                              |
+| **Electromagnetism** | Coulomb's Law              | $F = k_e \frac{\|q_1 q_2\|}{r^2}$                                       | $\text{N}$, $\text{C}$                  |
+| **Electromagnetism** | Ohm's Law & Power          | $V = IR$, $P = VI = I^2 R$                                              | $\text{V}$, $\text{A}$, $\text{W}$      |
+| **Electromagnetism** | Lorentz Force              | $f = qvB\sin\theta$                                                     | $\text{N}$, $\text{T}$                  |
+| **Electromagnetism** | Faraday's Law              | $V = -N\frac{\Delta\Phi}{\Delta t}$                                     | $\text{V}$, $\text{Wb}$                 |
+| **Modern Physics**   | Photon Energy              | $E = hf = \frac{hc}{\lambda}$                                           | $\text{J}$ or $\text{eV}$               |
+| **Modern Physics**   | Mass-Energy Equivalence    | $E = mc^2$                                                              | $\text{J}$                              |

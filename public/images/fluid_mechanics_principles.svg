@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-force" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+    <marker id="arrow-down" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ea580c" />
+    </marker>
+    <marker id="arrow-vel" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+    <marker id="arrow-press" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-stream" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="dim-tick" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#64748b" />
+    </marker>
+
+    <!-- Liquid gradients -->
+    <linearGradient id="grad-water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.2" />
+    </linearGradient>
+    <linearGradient id="grad-oil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#eab308" stop-opacity="0.3" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 20px; fill: #0f172a; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 13px; fill: #64748b; }
+    .panel-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 15px; }
+    .sub-heading { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-weight: 700; font-size: 12px; }
+    .body-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 11px; fill: #334155; }
+    .bold-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 11px; font-weight: 700; }
+    .formula-math { font-family: "KaTeX_Main", "Times New Roman", Cambria, Georgia, serif; font-size: 14px; font-weight: 700; }
+    .badge-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; font-size: 10px; font-weight: 700; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="960" height="580" fill="#ffffff" rx="12" />
+  <rect width="958" height="578" x="1" y="1" fill="none" stroke="#e2e8f0" stroke-width="2" rx="11" />
+
+  <!-- Header Section -->
+  <text x="480" y="32" text-anchor="middle" class="title">流体の力学の基本原理 (Principles of Fluid Mechanics)</text>
+  <text x="480" y="52" text-anchor="middle" class="subtitle">静止流体（パスカルの原理・浮力）と 流動流体（連続の式・ベルヌーイの定理・ベンチュリ管）</text>
+
+  <!-- ==================== LEFT PANEL: FLUID STATICS ==================== -->
+  <g transform="translate(24, 68)">
+    <rect width="446" height="495" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="446" height="36" rx="10" fill="#eff6ff" />
+    <text x="18" y="23" class="panel-title" fill="#1e40af">1. 静止流体（パスカルの原理と浮力）</text>
+
+    <!-- Sub-diagram A: Pascal's Principle (Hydraulic Lift) -->
+    <g transform="translate(16, 46)">
+      <rect width="414" height="150" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="12" y="18" class="sub-heading" fill="#0f172a">■ パスカルの原理 (Pascal's Principle / 油圧器)</text>
+      <text x="12" y="32" font-size="10" fill="#64748b">密閉流体の圧力は全方向へ等しく伝達される</text>
+
+      <!-- U-Tube Chamber with Hydraulic Fluid (Narrow left, Wide right) -->
+      <path d="M 24 70 L 24 130 Q 24 138 32 138 L 196 138 Q 204 138 204 130 L 204 70 L 124 70 L 124 120 L 50 120 L 50 70 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+      
+      <!-- Small Piston (Left: Area A1) -->
+      <rect x="25" y="92" width="24" height="10" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1" />
+      <line x1="37" y1="64" x2="37" y2="90" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arrow-down)" />
+      <text x="37" y="56" text-anchor="middle" class="bold-text" fill="#ea580c">F₁ (小)</text>
+      <text x="37" y="112" text-anchor="middle" font-size="9" fill="#475569">A₁ (小)</text>
+
+      <!-- Pressure transfer arrow -->
+      <path d="M 54 129 L 118 129" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-press)" />
+      <text x="87" y="115" text-anchor="middle" class="bold-text" fill="#0284c7" font-size="9">等圧 P 伝達</text>
+
+      <!-- Large Piston (Right: Area A2) -->
+      <rect x="125" y="84" width="78" height="12" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1" />
+      <line x1="164" y1="84" x2="164" y2="58" stroke="#059669" stroke-width="3" marker-end="url(#arrow-force)" />
+      <text x="164" y="50" text-anchor="middle" class="bold-text" fill="#047857" font-size="12">F₂ (大)</text>
+      <text x="164" y="106" text-anchor="middle" font-size="10" fill="#475569">A₂ (大)</text>
+
+      <!-- Magnification Formula Box -->
+      <g transform="translate(225, 36)">
+        <rect width="175" height="102" rx="6" fill="#eff6ff" stroke="#bfdbfe" />
+        <text x="87.5" y="18" text-anchor="middle" class="bold-text" fill="#1e40af">力の倍率（てこの原理）</text>
+        <text x="87.5" y="38" text-anchor="middle" class="formula-math" fill="#0f172a">F₂ = F₁ × (A₂ / A₁)</text>
+        <text x="87.5" y="58" text-anchor="middle" font-size="10" font-weight="700" fill="#0284c7">P = F₁/A₁ = F₂/A₂（等圧）</text>
+        <text x="87.5" y="76" text-anchor="middle" font-size="9" fill="#475569">面積比だけ力が拡大！</text>
+        <text x="87.5" y="90" text-anchor="middle" font-size="9" fill="#64748b">（車のブレーキ・油圧ジャッキ）</text>
+      </g>
+    </g>
+
+    <!-- Sub-diagram B: Archimedes' Principle & Buoyant Force Mechanism -->
+    <g transform="translate(16, 204)">
+      <rect width="414" height="155" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="12" y="18" class="sub-heading" fill="#0f172a">■ アルキメデスの原理と浮力 (Archimedes' Principle)</text>
+      <text x="12" y="32" font-size="10" fill="#64748b">浮力の本質は「水圧の上下差」： Fb = (P₂ - P₁)·S = ρVg</text>
+
+      <!-- Water Tank with submerged object -->
+      <g transform="translate(18, 40)">
+        <!-- Tank -->
+        <rect x="0" y="5" width="170" height="98" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+        <!-- Water surface wavy line -->
+        <path d="M 0 16 Q 20 13 40 16 T 80 16 T 120 16 T 160 16 T 170 16" fill="none" stroke="#0284c7" stroke-width="1.5" />
+        <text x="165" y="12" text-anchor="end" font-size="9" fill="#0369a1">水面 (大気圧 P₀)</text>
+
+        <!-- Submerged Cube -->
+        <rect x="50" y="32" width="60" height="50" rx="3" fill="#fde047" stroke="#ca8a04" stroke-width="1.5" />
+        <text x="80" y="60" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e">体積 V</text>
+
+        <!-- Downward pressure at top P1 -->
+        <line x1="62" y1="20" x2="62" y2="30" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow-press)" />
+        <line x1="80" y1="20" x2="80" y2="30" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow-press)" />
+        <line x1="98" y1="20" x2="98" y2="30" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow-press)" />
+        <text x="80" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#0284c7">P₁ (深さ h₁)</text>
+
+        <!-- Upward pressure at bottom P2 (larger) -->
+        <line x1="62" y1="94" x2="62" y2="84" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-press)" />
+        <line x1="80" y1="98" x2="80" y2="84" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-press)" />
+        <line x1="98" y1="94" x2="98" y2="84" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-press)" />
+        <text x="80" y="108" text-anchor="middle" font-size="9" font-weight="700" fill="#0284c7">P₂ (深さ h₂ &gt; h₁)</text>
+
+        <!-- Resultant Net Buoyant Force Arrow -->
+        <line x1="130" y1="75" x2="130" y2="35" stroke="#059669" stroke-width="3.5" marker-end="url(#arrow-force)" />
+        <text x="136" y="55" font-size="12" font-weight="800" fill="#047857">浮力 Fb</text>
+      </g>
+
+      <!-- Buoyancy Formula & Condition Box -->
+      <g transform="translate(205, 42)">
+        <rect width="195" height="98" rx="6" fill="#f0fdf4" stroke="#bbf7d0" />
+        <text x="97.5" y="18" text-anchor="middle" class="bold-text" fill="#166534">浮力の公式と浮沈条件</text>
+        <text x="97.5" y="40" text-anchor="middle" class="formula-math" fill="#0f172a">Fb = ρ_fluid · V · g</text>
+        <text x="14" y="60" font-size="10" fill="#334155"><tspan font-weight="700">ρ_obj &lt; ρ_fluid:</tspan> 浮力 &gt; 重力 ⇒ <tspan fill="#16a34a" font-weight="700">浮上</tspan></text>
+        <text x="14" y="75" font-size="10" fill="#334155"><tspan font-weight="700">ρ_obj &gt; ρ_fluid:</tspan> 浮力 &lt; 重力 ⇒ <tspan fill="#dc2626" font-weight="700">沈降</tspan></text>
+        <text x="97.5" y="90" text-anchor="middle" font-size="9" fill="#64748b">（船が鉄でも浮くのは中空で平均密度が小さいため）</text>
+      </g>
+    </g>
+
+    <!-- Formula Summary Box -->
+    <g transform="translate(16, 368)">
+      <rect width="414" height="115" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+      <text x="12" y="20" class="sub-heading" fill="#1e40af">公式まとめ（静水圧・パスカル・浮力）</text>
+      <text x="14" y="44" class="formula-math" fill="#0f172a">水圧: P = P₀ + ρgh</text>
+      <text x="210" y="44" class="formula-math" fill="#0f172a">浮力: Fb = ρVg</text>
+      <text x="14" y="68" font-size="10" fill="#334155">• <tspan font-weight="700">水深 10m ごと</tspan>に水圧は約 1気圧（約 1.013 × 10⁵ Pa）ずつ増加</text>
+      <text x="14" y="84" font-size="10" fill="#334155">• <tspan font-weight="700">パスカルの原理:</tspan> ピストン断面積を 10倍にすれば 10倍の荷物を持ち上げ可能</text>
+      <text x="14" y="100" font-size="10" fill="#334155">• <tspan font-weight="700">応用例:</tspan> 油圧ショベル、自動車ブレーキ、潜水艦、熱気球</text>
+    </g>
+  </g>
+
+  <!-- ==================== RIGHT PANEL: FLUID DYNAMICS ==================== -->
+  <g transform="translate(490, 68)">
+    <rect width="446" height="495" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect width="446" height="36" rx="10" fill="#f0fdf4" />
+    <text x="18" y="23" class="panel-title" fill="#166534">2. 流動流体（連続の式とベルヌーイの定理）</text>
+
+    <!-- Venturi Tube Diagram Area -->
+    <g transform="translate(16, 46)">
+      <rect width="414" height="235" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+      <text x="12" y="18" class="sub-heading" fill="#0f172a">■ ベンチュリ管 (Venturi Tube) による可視化</text>
+      <text x="12" y="32" font-size="10" fill="#64748b">流路が狭まると流速が上がり（連続の式）、静圧が低下する（ベルヌーイの定理）</text>
+
+      <!-- Main Venturi Pipe Shape -->
+      <!-- Top contour -->
+      <path d="M 20 85 L 120 85 L 180 105 L 240 105 L 300 85 L 395 85" fill="none" stroke="#64748b" stroke-width="2" />
+      <!-- Bottom contour -->
+      <path d="M 20 165 L 120 165 L 180 145 L 240 145 L 300 165 L 395 165" fill="none" stroke="#64748b" stroke-width="2" />
+      <!-- Water fill inside pipe -->
+      <path d="M 20 85 L 120 85 L 180 105 L 240 105 L 300 85 L 395 85 L 395 165 L 300 165 L 240 145 L 180 145 L 120 165 L 20 165 Z" fill="#e0f2fe" opacity="0.6" />
+
+      <!-- Vertical Manometer Pipe 1 (Wide Section) -->
+      <rect x="65" y="38" width="16" height="47" fill="none" stroke="#64748b" stroke-width="1.5" />
+      <rect x="66" y="52" width="14" height="33" fill="#38bdf8" />
+      <line x1="60" y1="52" x2="86" y2="52" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="2 2" />
+      <text x="73" y="47" text-anchor="middle" font-size="10" font-weight="700" fill="#0369a1">h₁ (高)</text>
+
+      <!-- Vertical Manometer Pipe 2 (Narrow Constriction) -->
+      <rect x="202" y="38" width="16" height="67" fill="none" stroke="#64748b" stroke-width="1.5" />
+      <rect x="203" y="80" width="14" height="25" fill="#38bdf8" />
+      <line x1="197" y1="80" x2="223" y2="80" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="2 2" />
+      <text x="210" y="75" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">h₂ (低)</text>
+
+      <!-- Streamlines -->
+      <!-- Upper stream -->
+      <path d="M 25 105 L 120 105 Q 180 115 210 115 Q 240 115 300 105 L 390 105" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-stream)" />
+      <!-- Center stream -->
+      <path d="M 25 125 L 390 125" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow-stream)" />
+      <!-- Lower stream -->
+      <path d="M 25 145 L 120 145 Q 180 135 210 135 Q 240 135 300 145 L 390 145" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-stream)" />
+
+      <!-- Section 1 Labels -->
+      <line x1="45" y1="125" x2="80" y2="125" stroke="#d97706" stroke-width="3" marker-end="url(#arrow-vel)" />
+      <text x="62" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#d97706">流速 v₁ (低)</text>
+      <text x="62" y="182" text-anchor="middle" class="bold-text" fill="#0f172a">断面積 A₁ (大)</text>
+      <text x="62" y="196" text-anchor="middle" class="bold-text" fill="#0284c7">高静圧 P₁</text>
+
+      <!-- Section 2 Labels -->
+      <line x1="195" y1="125" x2="245" y2="125" stroke="#d97706" stroke-width="3.5" marker-end="url(#arrow-vel)" />
+      <text x="220" y="142" text-anchor="middle" font-size="11" font-weight="800" fill="#d97706">流速 v₂ (高!)</text>
+      <text x="210" y="182" text-anchor="middle" class="bold-text" fill="#0f172a">断面積 A₂ (小)</text>
+      <text x="210" y="196" text-anchor="middle" class="bold-text" fill="#dc2626">低静圧 P₂ ↓</text>
+
+      <!-- Core Law Callout on Right of Tube -->
+      <g transform="translate(295, 172)">
+        <rect width="105" height="52" rx="4" fill="#eff6ff" stroke="#bfdbfe" />
+        <text x="52.5" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#1e40af">ベンチュリ効果</text>
+        <text x="52.5" y="32" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">v↑ ⇒ P↓</text>
+        <text x="52.5" y="45" text-anchor="middle" font-size="8" fill="#64748b">速い場所は低圧</text>
+      </g>
+    </g>
+
+    <!-- Formula & Principle Card -->
+    <g transform="translate(16, 290)">
+      <rect width="414" height="193" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1" />
+      <text x="12" y="20" class="sub-heading" fill="#166534">公式と物理的意味（連続の式とベルヌーイの定理）</text>
+
+      <!-- Continuity Equation -->
+      <text x="14" y="44" class="formula-math" fill="#0f172a">連続の式: A₁ v₁ = A₂ v₂ = Q（体積流量一定）</text>
+      <text x="14" y="60" font-size="10" fill="#334155">• <tspan font-weight="700">質量保存則:</tspan> 流路が狭い（A↓）ほど、流速は反比例して高速（v↑）になる</text>
+      <text x="14" y="74" font-size="9" fill="#64748b">（ホースの先端をつまむと水が遠くまで勢いよく飛ぶ原理）</text>
+
+      <!-- Bernoulli's Equation -->
+      <text x="14" y="100" class="formula-math" fill="#0f172a">ベルヌーイ: P + ½ρv² + ρgh = 一定</text>
+      <text x="14" y="116" font-size="10" fill="#334155">• <tspan font-weight="700">流体のエネルギー保存則:</tspan> 静圧 P ＋ 動圧 ½ρv² ＋ 位置圧 ρgh ＝ 一定</text>
+      <text x="14" y="132" font-size="10" fill="#334155">• <tspan font-weight="700" fill="#dc2626">流速 v が速い場所ほど静圧 P は下がる！</tspan></text>
+
+      <!-- Torricelli's Law & Usages -->
+      <line x1="14" y1="144" x2="400" y2="144" stroke="#bbf7d0" stroke-width="1" />
+      <text x="14" y="160" font-size="10" fill="#334155"><tspan font-weight="700">トリチェリの定理:</tspan> 水深 h の穴からの流出速度 v = √(2gh)</text>
+      <text x="14" y="176" font-size="10" fill="#334155"><tspan font-weight="700">主な実用例:</tspan> 飛行機の翼（揚力）、ピトー管、霧吹き、カーブボール（マグヌス効果）</text>
+    </g>
+  </g>
+</svg>
