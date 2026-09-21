@@ -37,10 +37,11 @@ flowchart LR
 ROS 2 はシステムを疎結合な構成要素に分解します:
 
 - **ノード (Nodes):** 単一の目的を持つプログラム（例: LiDARセンサーの読み取り、経路計算など）。
-- **通信パラダイム:**
+- **通信パラダイムとノード管理:**
   - **トピック (Topics / Publish-Subscribe):** 連続的で単方向のデータストリーム（例: センサーテレメトリ、カメラ映像）。
   - **サービス (Services / Request-Response):** 同期または非同期の双方向リモートプロシージャコール（例: キャリブレーションの実行、計算結果の取得、オブジェクトの生成）。
   - **アクション (Actions / Goal-Feedback-Result):** 継続的な進捗フィードバックを伴う、非同期かつ長時間実行・中断（キャンセル）可能なタスク（例: 指定座標へのナビゲーション、ロボットアームの軌道制御）。
+  - **ライフサイクルノード (Lifecycle Nodes / Managed Nodes):** 状態マシン（Unconfigured, Inactive, Active, Finalized）によって制御され、決定論的な起動順序、複数センサーの同期アクティベーション、安全な終了を実現するマネージドノード。
   - **パラメータ (Parameters):** 起動時に設定するか実行時に調整可能な設定値。
 
 ---
@@ -203,7 +204,153 @@ https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
 
 ---
 
-## 6. パラメータと起動管理（Launch）
+## 6. ライフサイクルノード: 状態マシン駆動のノード管理
+
+標準の ROS 2 ノード（`rclcpp::Node` / `rclpy.node.Node`）では、パブリッシャーの生成、ハードウェア接続、タイマーの開始など、すべての初期化処理がコンストラクタ内で直接実行されます。インスタンス化された瞬間からノードは即座に稼働し、メッセージを配信し始めます。
+
+しかし、実世界のロボットシステムでは、この制御されない起動シーケンスが深刻な問題を引き起こします:
+
+- **起動順序の不確定性:** センサーハードウェアの自己診断やキャリブレーション、ウォームアップが完了する前に、後段のナビゲーションやセンサーフュージョンノードが不完全なデータを受信して処理してしまう。
+- **一時停止やミュートの仕組みの欠如:** 設定変更や一時停止のためにデータ配信を止めたい場合、標準ノードではプロセスを強制終了して再起動するしかありません。
+- **複数センサーの非同期起動:** カメラ、LiDAR、IMU などを同時に立ち上げる際、配信開始タイミングがバラバラになり、初期フレームの脱落やタイムスタンプのズレが発生する。
+
+**ライフサイクルノード (Lifecycle Nodes / Managed Nodes)** は、ノード内に決定論的な状態マシン（State Machine）を組み込むことでこれらの問題を解決します。ノードは作成時にいきなり稼働するのではなく、CLI や中央コーディネーターからの指示に応じて明示的な状態遷移を順を追って実行します。
+
+### ライフサイクルの状態マシン
+
+ライフサイクルノードは、**遷移状態 (Transition States)** を経由して **4つの主要状態 (Primary States)** の間を遷移します:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unconfigured: ノード生成
+
+    Unconfigured --> Configuring: configure()
+    Configuring --> Inactive: on_configure() -> SUCCESS
+    Configuring --> Unconfigured: on_configure() -> FAILURE
+    Configuring --> ErrorProcessing: 例外 / ERROR
+
+    Inactive --> Activating: activate()
+    Activating --> Active: on_activate() -> SUCCESS
+    Activating --> Inactive: on_activate() -> FAILURE
+    Activating --> ErrorProcessing: 例外 / ERROR
+
+    Active --> Deactivating: deactivate()
+    Deactivating --> Inactive: on_deactivate() -> SUCCESS
+    Deactivating --> Active: on_deactivate() -> FAILURE
+    Deactivating --> ErrorProcessing: 例外 / ERROR
+
+    Inactive --> CleaningUp: cleanup()
+    CleaningUp --> Unconfigured: on_cleanup() -> SUCCESS
+    CleaningUp --> ErrorProcessing: 例外 / ERROR
+
+    Inactive --> ShuttingDown: shutdown()
+    Active --> ShuttingDown: shutdown()
+    Unconfigured --> ShuttingDown: shutdown()
+    ShuttingDown --> Finalized: on_shutdown() -> SUCCESS
+
+    ErrorProcessing --> Unconfigured: on_error() -> SUCCESS
+    ErrorProcessing --> Finalized: on_error() -> FAILURE / ERROR
+    Finalized --> [*]: ノード破棄
+```
+
+| 主要状態 (Primary State)     | 状態 ID | 説明                                                                                                                         | 可能な遷移                        |
+| :--------------------------- | :-----: | :--------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |
+| **Unconfigured**（未設定）   |   `1`   | ノードがインスタンス化された状態。パラメータの宣言のみ行われ、動的リソースやタイマー、ハードウェア接続は未確保。             | `configure`, `shutdown`           |
+| **Inactive**（非アクティブ） |   `2`   | リソース確保、パブリッシャー・タイマーの初期化、ハードウェア接続が完了した状態。**メッセージ配信は抑制（ミュート）される**。 | `activate`, `cleanup`, `shutdown` |
+| **Active**（アクティブ）     |   `3`   | ノードが完全稼働している状態。**ライフサイクルパブリッシャーが DDS / ROS 2 ネットワーク上へデータを実際に送信する**。        | `deactivate`, `shutdown`          |
+| **Finalized**（終了）        |   `4`   | ノード破棄直前の終端状態。全リソースとメモリが解放済み。                                                                     | なし（ノード破棄待ち）            |
+
+### 遷移コールバックと戻り値
+
+各状態遷移が発生すると、対応するコールバック関数が呼び出されます。コールバックは以下のステータスコードのいずれかを返す必要があります:
+
+- **`SUCCESS`**: 遷移が成功。ターゲットの主要状態へ遷移します。
+- **`FAILURE`**: 遷移が正常に失敗。直前の主要状態（または `Unconfigured`）へ安全に戻ります。
+- **`ERROR`**: 予期せぬ例外や重大なエラーが発生。`ErrorProcessing` 状態へ遷移し、`on_error()` による復旧を試みます。
+
+| コールバック           | 対象の遷移                                            | 主な役割                                                                                         |
+| :--------------------- | :---------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| `on_configure(state)`  | `Unconfigured` $\rightarrow$ `Inactive`               | パラメータの読み込み、メモリ確保、パブリッシャー・サブスクライバーの生成、ハードウェアへの接続。 |
+| `on_activate(state)`   | `Inactive` $\rightarrow$ `Active`                     | ライフサイクルパブリッシャーのアクティベーション、アクチュエーターの動作許可、制御ループの開始。 |
+| `on_deactivate(state)` | `Active` $\rightarrow$ `Inactive`                     | ライフサイクルパブリッシャーの非アクティブ化、モーター等の安全停止、配信の一時停止。             |
+| `on_cleanup(state)`    | `Inactive` $\rightarrow$ `Unconfigured`               | タイマーのリセット、パブリッシャー・サブスクライバーの破棄、動的リソースや通信切断。             |
+| `on_shutdown(state)`   | 任意の状態 $\rightarrow$ `Finalized`                  | 残余リソースの完全解放、プロセスの終了準備。                                                     |
+| `on_error(state)`      | エラー発生 $\rightarrow$ `Unconfigured` / `Finalized` | 緊急クリーンアップの実施と復旧、復旧不能時の Finalized への移行。                                |
+
+### ライフサイクルパブリッシャー (LifecyclePublisher)
+
+通常のパブリッシャー（`rclcpp::Publisher` / `Publisher`）は生成直後から DDS レイヤーへのメッセージ送信が有効です。これに対し、**`LifecyclePublisher`**（C++ では `rclcpp_lifecycle::LifecyclePublisher`、Python では `LifecyclePublisher`）はノードの状態に連動します:
+
+1. **非アクティブ時の安全な配信抑制:** ノードが `Unconfigured` または `Inactive` 状態のとき、`publish()` を呼び出しても **安全な no-op（何もしない処理）** となり、DDS バッファを汚さず破棄されます。
+2. **アクティベーションの手順:**
+   - C++: `on_activate()` 内で `pub_->on_activate()` を明示的に呼び出し、`on_deactivate()` 内で `pub_->on_deactivate()` を呼び出します。
+   - Python: `on_activate()` および `on_deactivate()` 内で `super().on_activate(state)` / `super().on_deactivate(state)` を呼ぶことで、登録済みの全ライフサイクルパブリッシャーが一括で切り替わります。
+3. **メッセージ生成処理のガード:** `publish()` 自体は安全にドロップしてくれますが、大きな画像や点群のシリアライズ・前処理には CPU コストがかかります。`pub->is_activated()` で判定して処理自体をスキップするのがベストプラクティスです:
+
+```cpp
+void timer_callback() {
+  // パブリッシャーが ACTIVE 状態の場合のみメッセージ生成と配信を実行
+  if (pub_ && pub_->is_activated()) {
+    std_msgs::msg::String msg;
+    msg.data = "Sensor reading #" + std::to_string(count_++);
+    pub_->publish(msg);
+  }
+}
+```
+
+### ライフサイクルマネージャーによる協調起動オーケストレーション
+
+ライフサイクルノードの真価は、分散システム全体の協調制御で発揮されます。各ノードが勝手に状態を変えるのではなく、中央の **ライフサイクルマネージャー (Lifecycle Manager)** が標準サービス（`lifecycle_msgs/srv/ChangeState` および `GetState`）経由でロボットのサブシステム群を一元管理します。
+
+```mermaid
+flowchart TD
+    subgraph Managed_Nodes["管理対象のライフサイクルノード"]
+        SS1["<b>sensor_station_1</b> (Alpha)<br/><i>LifecyclePublisher: /sensor_data</i>"]
+        SS2["<b>sensor_station_2</b> (Beta)<br/><i>LifecyclePublisher: /sensor_data</i>"]
+    end
+
+    subgraph Standard_Observer["通常の観測ノード"]
+        SM["<b>sensor_monitor</b><br/><i>/sensor_data を購読</i>"]
+    end
+
+    subgraph Management["管理・オーケストレーション"]
+        CLI["<b>ros2 lifecycle CLI</b><br/><i>対話的な手動状態管理</i>"]
+        LM["<b>lifecycle_manager</b><br/><i>一括サービスクライアント</i>"]
+    end
+
+    SS1 -- "ACTIVE 時のみ配信" --> SM
+    SS2 -- "ACTIVE 時のみ配信" --> SM
+
+    CLI -. "ros2 lifecycle set ..." .-> SS1
+    CLI -. "ros2 lifecycle set ..." .-> SS2
+
+    LM == "1. 一括 Configure (-> INACTIVE)" ==> SS1
+    LM == "1. 一括 Configure (-> INACTIVE)" ==> SS2
+    LM == "2. 同時 Activate (-> ACTIVE)" ==> SS1
+    LM == "2. 同時 Activate (-> ACTIVE)" ==> SS2
+    LM == "3. 同時 Deactivate (-> INACTIVE)" ==> SS1
+    LM == "3. 同時 Deactivate (-> INACTIVE)" ==> SS2
+```
+
+#### 同期起動シーケンス
+
+1. **一括設定（Configure フェーズ）:** マネージャーが全センサーノードに `configure` を要求。各センサーが接続・初期化・キャリブレーションを行い、全ノードが `INACTIVE` 状態に到達します。
+2. **準備完了確認:** マネージャーが全ノードの `INACTIVE` を確認。もし1台でも初期化に失敗 (`FAILURE`) した場合、ロボットの起動を中断してエラー処理に移れます。
+3. **完全同期アクティベーション:** 全ノードの準備が整った瞬間、マネージャーが同時に `activate` を発行。時間 $t_0$ から全センサーがズレなく同期してデータ配信を開始します。
+
+### アーキテクチャ上の重要ポイントとベストプラクティス
+
+1. **コンストラクタでの重い処理を避ける:** パラメータの宣言やデフォルト値の設定のみにとどめ、ソケット接続、シリアルポートのオープン、メモリの大量確保などはすべて `on_configure()` に委ねます。
+2. **`pub->is_activated()` によるガード:** `INACTIVE` 時に無駄な画像処理や計算負荷をかけないよう、コールバック内でパブリッシャーのアクティブ状態を確認します。
+3. **ノードの独立性を保つ:** マネージドノード側は「誰が自身を管理しているか」を知る必要はありません。標準の `lifecycle_msgs` サービスインターフェースを介して外から制御可能に設計することで、CLI、カスタムマネージャー、Nav2 のライフサイクルマネージャー等と柔軟に連携できます。
+
+### 実装例
+
+https://github.com/jinyongnan810/ros-practice/tree/main/7.lifecycle
+
+---
+
+## 7. パラメータと起動管理（Launch）
 
 ### 動的パラメータ
 
@@ -224,7 +371,7 @@ https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
 
 ---
 
-## 7. ワークスペースのセットアップとビルド手順
+## 8. ワークスペースのセットアップとビルド手順
 
 ROS 2 ワークスペースは標準的なディレクトリ構造に従います:
 
@@ -258,7 +405,7 @@ source install/setup.bash
 
 ---
 
-## 8. 必須 ROS 2 CLI チートシート
+## 9. 必須 ROS 2 CLI チートシート
 
 ### ノードの診断
 
@@ -294,6 +441,18 @@ ros2 action list -t                # アクション型付きで一覧表示
 ros2 action info /move_to_goal     # アクションのサーバーとクライアント詳細を確認
 ros2 interface show custom_interfaces/action/MoveToGoal # .action 定義を表示
 ros2 action send_goal /move_to_goal custom_interfaces/action/MoveToGoal "{target_x: 8.0, target_y: 8.0, linear_velocity: 2.0}" --feedback # フィードバック付きでゴールを送信
+```
+
+### ライフサイクルノードの管理
+
+```bash
+ros2 lifecycle get /sensor_station_1       # 現在のライフサイクル状態を確認
+ros2 lifecycle list /sensor_station_1      # 現在の状態から遷移可能なアクション一覧を表示
+ros2 lifecycle set /sensor_station_1 configure  # 遷移: Unconfigured -> Inactive
+ros2 lifecycle set /sensor_station_1 activate   # 遷移: Inactive -> Active (データ配信開始)
+ros2 lifecycle set /sensor_station_1 deactivate # 遷移: Active -> Inactive (データ配信一時停止)
+ros2 lifecycle set /sensor_station_1 cleanup    # 遷移: Inactive -> Unconfigured
+ros2 lifecycle set /sensor_station_1 shutdown   # 遷移: 任意の状態 -> Finalized
 ```
 
 ### パラメータの管理
