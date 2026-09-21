@@ -33,6 +33,11 @@ export const translations = {
     "topic.not_found": "Topic not found",
     "topic.not_found_desc": "That handbook page does not exist.",
     "topic.loading": "Loading topic",
+    "image.zoom_in": "Zoom in",
+    "image.zoom_out": "Zoom out",
+    "image.reset_zoom": "Reset zoom",
+    "image.close": "Close image",
+    "image.expand": "Click to expand",
   },
   jp: {
     "site.title": "Engineering Handbook",
@@ -50,6 +55,11 @@ export const translations = {
     "topic.not_found": "トピックが見つかりません",
     "topic.not_found_desc": "お探しのハンドブックページは存在しません。",
     "topic.loading": "トピックを読み込み中",
+    "image.zoom_in": "拡大",
+    "image.zoom_out": "縮小",
+    "image.reset_zoom": "リセット",
+    "image.close": "閉じる",
+    "image.expand": "クリックして拡大",
   },
 } as const;
 
