@@ -43,6 +43,9 @@ ROS 2 breaks the system down into decoupled building blocks:
   - **Actions (Goal / Feedback / Result):** Asynchronous, long-running, preemptible tasks with continuous progress updates (e.g., navigating to coordinates, trajectory tracking).
   - **Lifecycle Nodes (Managed Nodes):** State-machine driven nodes (Unconfigured, Inactive, Active, Finalized) that provide deterministic startup, synchronized multi-sensor activation, and controlled shutdown.
   - **Parameters:** Configuration values set at launch or adjusted at runtime.
+- **Execution & Concurrency:**
+  - **Executors:** Scheduling engines (SingleThreaded, MultiThreaded) that coordinate with the middleware and dispatch callbacks onto execution threads.
+  - **Callback Groups:** Concurrency control policies (MutuallyExclusive, Reentrant) defining whether callbacks can execute in parallel.
 
 ---
 
@@ -350,7 +353,191 @@ https://github.com/jinyongnan810/ros-practice/tree/main/7.lifecycle
 
 ---
 
-## 7. Parameters and Launch Orchestration
+## 7. Executors & Callback Groups: Concurrency & Threading
+
+In ROS 2, nodes register **callbacks** for events such as timer alarms, incoming topic messages, service requests, and action goals. However, a node object does not execute its own callbacks. Instead, execution is driven by an **Executor**.
+
+### Executors: The Scheduling Runtime
+
+An **Executor** coordinates with the underlying DDS middleware using a wait-set (or event loop), pulls incoming work, and dispatches callbacks onto one or more execution threads when you invoke `spin()`:
+
+- **`SingleThreadedExecutor` (Default):**
+  - Executes all callbacks sequentially on a single thread.
+  - **Pros:** Inherently thread-safe without mutexes; predictable execution order and minimal memory/CPU overhead.
+  - **Cons:** A long-running or blocking callback starves all other callbacks in that node or executor.
+- **`MultiThreadedExecutor`:**
+  - Manages a pool of worker threads (defaulting to the number of CPU cores).
+  - Enables callbacks to run in parallel across threads, preventing blocking operations from stalling the entire node.
+- **`StaticSingleThreadedExecutor` (C++):**
+  - Precomputes the static graph structure at initialization instead of rebuilding wait-sets dynamically on every iteration, reducing CPU usage and latency for fixed node topologies.
+
+### Callback Groups: Concurrency Rules
+
+While an Executor controls _how many threads_ are available, **Callback Groups** control _concurrency rules_—specifying which callbacks are permitted to run at the same time:
+
+- **`MutuallyExclusiveCallbackGroup` (Default):**
+  - Callbacks in this group **never run simultaneously**, even if idle threads are available in a `MultiThreadedExecutor`.
+  - Only one callback in this group executes at any given moment. This allows safe modification of shared class member variables without explicit mutex locks.
+- **`ReentrantCallbackGroup`:**
+  - Callbacks in this group **can execute in parallel** across multiple threads.
+  - Different callbacks—or even multiple instances of the _same_ callback—can run concurrently. Thread safety (e.g., `std::mutex` in C++ or `threading.Lock` in Python) must be managed manually.
+
+```mermaid
+flowchart TD
+    subgraph Node["ROS 2 Node"]
+        subgraph MutEx["MutuallyExclusiveCallbackGroup (Default)"]
+            CB1["Callback A (Timer)"]
+            CB2["Callback B (Subscriber)"]
+        end
+        subgraph Reent["ReentrantCallbackGroup"]
+            CB3["Callback C (Action Loop)"]
+            CB4["Callback D (Service Server)"]
+        end
+    end
+
+    subgraph Executor["MultiThreadedExecutor (Thread Pool)"]
+        T1["Worker Thread 1"]
+        T2["Worker Thread 2"]
+        T3["Worker Thread 3"]
+    end
+
+    MutEx -->|"Strictly 1 callback at a time"| Executor
+    Reent -->|"Concurrent / Parallel execution"| Executor
+```
+
+### Concurrency Matrix
+
+| Executor                     | Callback Group Type                  | Concurrency Behavior                  | State Thread Safety                   |
+| :--------------------------- | :----------------------------------- | :------------------------------------ | :------------------------------------ |
+| **`SingleThreadedExecutor`** | Any Group                            | Strictly sequential                   | Safe by default (single thread)       |
+| **`MultiThreadedExecutor`**  | Same `MutuallyExclusive`             | Strictly sequential within that group | Safe within the group                 |
+| **`MultiThreadedExecutor`**  | Different `MutuallyExclusive` groups | Parallel across different groups      | Protect shared state with mutex       |
+| **`MultiThreadedExecutor`**  | `ReentrantCallbackGroup`             | Fully parallel across all threads     | Requires manual mutex/lock protection |
+
+### The Classic Pitfall: Synchronous Service Call Deadlock
+
+A common trap in ROS 2 is calling a service synchronously inside a callback:
+
+```python
+# DEADLOCK TRAP in SingleThreadedExecutor or within the same MutuallyExclusiveCallbackGroup:
+def timer_callback(self):
+    # This blocks the thread waiting for the service response...
+    # BUT the service response callback cannot execute because the thread/group is blocked!
+    response = self.cli.call(request)
+```
+
+**How to avoid deadlocks:**
+
+1. **Asynchronous Calls:** Use `call_async()` (Python) or `async_send_request()` (C++) and attach a future completion callback instead of blocking.
+2. **MultiThreadedExecutor + Separate Callback Groups:** Place the caller callback and the service client in different `MutuallyExclusiveCallbackGroup`s (or a `ReentrantCallbackGroup`), and spin with a `MultiThreadedExecutor`.
+
+### Minimal Implementations
+
+#### Python (`rclpy`)
+
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
+from rclpy.executors import MultiThreadedExecutor
+from std_msgs.msg import String
+
+class ConcurrencyDemo(Node):
+    def __init__(self):
+        super().__init__('concurrency_demo')
+
+        # 1. Mutually exclusive group for state-sensitive operations
+        self.state_group = MutuallyExclusiveCallbackGroup()
+        # 2. Reentrant group for non-blocking / parallel operations
+        self.worker_group = ReentrantCallbackGroup()
+
+        self.sub = self.create_subscription(
+            String, '/input', self.sub_cb, 10,
+            callback_group=self.state_group
+        )
+        self.timer = self.create_timer(
+            0.1, self.timer_cb,
+            callback_group=self.worker_group
+        )
+
+    def sub_cb(self, msg: String):
+        self.get_logger().info(f"Received: {msg.data}")
+
+    def timer_cb(self):
+        pass
+
+def main():
+    rclpy.init()
+    node = ConcurrencyDemo()
+    executor = MultiThreadedExecutor(num_threads=4)
+    executor.add_node(node)
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node.destroy_node()
+        rclpy.shutdown()
+```
+
+#### C++ (`rclcpp`)
+
+```cpp
+#include <chrono>
+#include <memory>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+
+class ConcurrencyDemo : public rclcpp::Node {
+public:
+  ConcurrencyDemo() : Node("concurrency_demo") {
+    // 1. Mutually exclusive group for state-sensitive operations
+    state_group_ = this->create_callback_group(
+        rclcpp::CallbackGroupType::MutuallyExclusive);
+    // 2. Reentrant group for parallel operations
+    worker_group_ = this->create_callback_group(
+        rclcpp::CallbackGroupType::Reentrant);
+
+    rclcpp::SubscriptionOptions sub_options;
+    sub_options.callback_group = state_group_;
+
+    sub_ = this->create_subscription<std_msgs::msg::String>(
+        "/input", 10,
+        std::bind(&ConcurrencyDemo::sub_cb, this, std::placeholders::_1),
+        sub_options);
+
+    timer_ = this->create_wall_timer(
+        std::chrono::milliseconds(100),
+        std::bind(&ConcurrencyDemo::timer_cb, this),
+        worker_group_);
+  }
+
+private:
+  void sub_cb(const std_msgs::msg::String::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(), "Received: %s", msg->data.c_str());
+  }
+  void timer_cb() {}
+
+  rclcpp::CallbackGroup::SharedPtr state_group_;
+  rclcpp::CallbackGroup::SharedPtr worker_group_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char **argv) {
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<ConcurrencyDemo>();
+  rclcpp::executors::MultiThreadedExecutor executor(
+      rclcpp::ExecutorOptions(), 4);
+  executor.add_node(node);
+  executor.spin();
+  rclcpp::shutdown();
+  return 0;
+}
+```
+
+---
+
+## 8. Parameters and Launch Orchestration
 
 ### Dynamic Parameters
 
@@ -371,7 +558,7 @@ Real-world robots require launching dozens of nodes, remapping topic names, and 
 
 ---
 
-## 8. Workspace Setup & Build Workflow
+## 9. Workspace Setup & Build Workflow
 
 A ROS 2 workspace follows a standard directory structure:
 
@@ -405,7 +592,7 @@ In real-world projects, it's convenient to add `source install/setup.bash` to `.
 
 ---
 
-## 9. Essential ROS 2 CLI Cheat Sheet
+## 10. Essential ROS 2 CLI Cheat Sheet
 
 ### Node Introspection
 

@@ -43,6 +43,9 @@ ROS 2 はシステムを疎結合な構成要素に分解します:
   - **アクション (Actions / Goal-Feedback-Result):** 継続的な進捗フィードバックを伴う、非同期かつ長時間実行・中断（キャンセル）可能なタスク（例: 指定座標へのナビゲーション、ロボットアームの軌道制御）。
   - **ライフサイクルノード (Lifecycle Nodes / Managed Nodes):** 状態マシン（Unconfigured, Inactive, Active, Finalized）によって制御され、決定論的な起動順序、複数センサーの同期アクティベーション、安全な終了を実現するマネージドノード。
   - **パラメータ (Parameters):** 起動時に設定するか実行時に調整可能な設定値。
+- **実行と並行処理 (Execution & Concurrency):**
+  - **Executor:** ミドルウェアと協調してコールバックを単一または複数スレッドにスケジューリング・ディスパッチする実行エンジン。
+  - **Callback Group:** どのコールバックを並行（同時）実行可能かを定義する並行処理制御ポリシー（MutuallyExclusive, Reentrant）。
 
 ---
 
@@ -350,7 +353,191 @@ https://github.com/jinyongnan810/ros-practice/tree/main/7.lifecycle
 
 ---
 
-## 7. パラメータと起動管理（Launch）
+## 7. Executor と Callback Group: 並行処理とスレッドモデル
+
+ROS 2 では、ノードはタイマー周期処理、トピック受信、サービスリクエスト、アクションのゴール受付などのイベントに対して **コールバック (Callback)** を登録します。しかし、ノードオブジェクト自身が直接コールバックを実行するわけではありません。実行のスケジューリングとディスパッチは **Executor** が担っています。
+
+### Executor: コールバックの実行スケジューラ
+
+**Executor** は、DDS ミドルウェアの Wait-set（またはイベントループ）を監視して処理可能なイベントを検知し、`spin()` の呼び出しに応じてコールバックを実行スレッドに割り振ります:
+
+- **`SingleThreadedExecutor`（デフォルト）:**
+  - 単一スレッドですべてのコールバックを順次（シーケンシャルに）実行します。
+  - **メリット:** 明示的なミューテックス（排他ロック）なしでスレッドセーフが保たれ、予測可能性が高く低オーバーヘッドです。
+  - **デメリット:** ひとつのコールバックが長時間ブロックまたは待機すると、ノード内の他のすべてのコールバックが実行待ち（Starvation）に陥ります。
+- **`MultiThreadedExecutor`:**
+  - ワーカースレッドプール（デフォルトは利用可能な CPU コア数）を管理します。
+  - 複数スレッド上で複数のコールバックを並行・並列に実行でき、重い処理によるコールバックの遅延を防止します。
+- **`StaticSingleThreadedExecutor` (C++):**
+  - ノード初期化時に静的なグラフ構造をあらかじめ解析・最適化しておくことで、ループごとの Wait-set 再構築オーバーヘッドを削減する低レイテンシ向け単一スレッド Executor です。
+
+### Callback Group: 並行実行のルール制御
+
+Executor が「いくつのスレッドで処理可能か」を決めるのに対し、**Callback Group** は「どのコールバック同士が同時に実行されてよいか」という**並行処理のルール**を定義します:
+
+- **`MutuallyExclusiveCallbackGroup`（デフォルト）:**
+  - このグループに属するコールバックは、たとえ `MultiThreadedExecutor` に空きスレッドがあっても**同時に実行されることはありません（排他実行）**。
+  - グループ内のコールバックは常に最大1つしか実行されないため、クラスメンバ変数の競合をロックなしで安全に防ぐことができます。
+- **`ReentrantCallbackGroup`:**
+  - このグループに属するコールバックは、複数スレッドで**同時に並行実行（再入可能）**できます。
+  - 異なるコールバック同士だけでなく、同一コールバックが同時に複数スレッドで発火することも許可されます。共有リソースの変更には明示的な排他制御（C++ の `std::mutex`、Python の `threading.Lock`）が必要です。
+
+```mermaid
+flowchart TD
+    subgraph Node["ROS 2 ノード"]
+        subgraph MutEx["MutuallyExclusiveCallbackGroup (デフォルト・排他)"]
+            CB1["コールバック A (タイマー)"]
+            CB2["コールバック B (サブスクライバー)"]
+        end
+        subgraph Reent["ReentrantCallbackGroup (再入可能)"]
+            CB3["コールバック C (アクション制御ループ)"]
+            CB4["コールバック D (サービスサーバー)"]
+        end
+    end
+
+    subgraph Executor["MultiThreadedExecutor (スレッドプール)"]
+        T1["ワーカースレッド 1"]
+        T2["ワーカースレッド 2"]
+        T3["ワーカースレッド 3"]
+    end
+
+    MutEx -->|"同時に最大1つのみ実行"| Executor
+    Reent -->|"複数スレッドで並行・並列実行"| Executor
+```
+
+### 並行実行マトリクス
+
+| Executor                     | Callback Group の種類           | 並行実行の動作                 | 状態のスレッドセーフ性           |
+| :--------------------------- | :------------------------------ | :----------------------------- | :------------------------------- |
+| **`SingleThreadedExecutor`** | 任意のグループ                  | 完全にシーケンシャル実行       | 単一スレッドのため安全           |
+| **`MultiThreadedExecutor`**  | 同一の `MutuallyExclusive`      | グループ内はシーケンシャル実行 | グループ内では安全               |
+| **`MultiThreadedExecutor`**  | 異なる `MutuallyExclusive` 同士 | 別グループ同士は並行実行       | 共有状態がある場合はロックが必要 |
+| **`MultiThreadedExecutor`**  | `ReentrantCallbackGroup`        | 全スレッドで完全に並行実行     | 手動の排他制御（Mutex）が必須    |
+
+### 典型的な落とし穴: 同期サービス呼び出しによるデッドロック
+
+初心者が最も陥りやすいバグが、コールバック内での**サービスの同期的呼び出し**です:
+
+```python
+# SingleThreadedExecutor または同一 MutuallyExclusiveCallbackGroup 内でのデッドロック罠:
+def timer_callback(self):
+    # この呼び出しはサービスの返答が来るまでスレッドをブロックする...
+    # しかし返答を処理するためのコールバックも同じスレッド/グループでしか動けないため永遠に停止する！
+    response = self.cli.call(request)
+```
+
+**デッドロックを防ぐ方法:**
+
+1. **非同期呼び出しの利用:** `call_async()` (Python) や `async_send_request()` (C++) を使い、ブロッキングせずに Future の完了コールバックで結果を受け取る。
+2. **`MultiThreadedExecutor` + 別 Callback Group の指定:** 呼び出し元のコールバックとサービスクライアントを別の `MutuallyExclusiveCallbackGroup`（または `ReentrantCallbackGroup`）に所属させ、`MultiThreadedExecutor` でスピンさせる。
+
+### 最小実装例
+
+#### Python (`rclpy`)
+
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
+from rclpy.executors import MultiThreadedExecutor
+from std_msgs.msg import String
+
+class ConcurrencyDemo(Node):
+    def __init__(self):
+        super().__init__('concurrency_demo')
+
+        # 1. 状態保護用の相互排他グループ
+        self.state_group = MutuallyExclusiveCallbackGroup()
+        # 2. 並行処理用の再入可能グループ
+        self.worker_group = ReentrantCallbackGroup()
+
+        self.sub = self.create_subscription(
+            String, '/input', self.sub_cb, 10,
+            callback_group=self.state_group
+        )
+        self.timer = self.create_timer(
+            0.1, self.timer_cb,
+            callback_group=self.worker_group
+        )
+
+    def sub_cb(self, msg: String):
+        self.get_logger().info(f"受信: {msg.data}")
+
+    def timer_cb(self):
+        pass
+
+def main():
+    rclpy.init()
+    node = ConcurrencyDemo()
+    executor = MultiThreadedExecutor(num_threads=4)
+    executor.add_node(node)
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node.destroy_node()
+        rclpy.shutdown()
+```
+
+#### C++ (`rclcpp`)
+
+```cpp
+#include <chrono>
+#include <memory>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+
+class ConcurrencyDemo : public rclcpp::Node {
+public:
+  ConcurrencyDemo() : Node("concurrency_demo") {
+    // 1. 状態保護用の相互排他グループ
+    state_group_ = this->create_callback_group(
+        rclcpp::CallbackGroupType::MutuallyExclusive);
+    // 2. 並行処理用の再入可能グループ
+    worker_group_ = this->create_callback_group(
+        rclcpp::CallbackGroupType::Reentrant);
+
+    rclcpp::SubscriptionOptions sub_options;
+    sub_options.callback_group = state_group_;
+
+    sub_ = this->create_subscription<std_msgs::msg::String>(
+        "/input", 10,
+        std::bind(&ConcurrencyDemo::sub_cb, this, std::placeholders::_1),
+        sub_options);
+
+    timer_ = this->create_wall_timer(
+        std::chrono::milliseconds(100),
+        std::bind(&ConcurrencyDemo::timer_cb, this),
+        worker_group_);
+  }
+
+private:
+  void sub_cb(const std_msgs::msg::String::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(), "受信: %s", msg->data.c_str());
+  }
+  void timer_cb() {}
+
+  rclcpp::CallbackGroup::SharedPtr state_group_;
+  rclcpp::CallbackGroup::SharedPtr worker_group_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char **argv) {
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<ConcurrencyDemo>();
+  rclcpp::executors::MultiThreadedExecutor executor(
+      rclcpp::ExecutorOptions(), 4);
+  executor.add_node(node);
+  executor.spin();
+  rclcpp::shutdown();
+  return 0;
+}
+```
+
+---
+
+## 8. パラメータと起動管理（Launch）
 
 ### 動的パラメータ
 
@@ -371,7 +558,7 @@ https://github.com/jinyongnan810/ros-practice/tree/main/7.lifecycle
 
 ---
 
-## 8. ワークスペースのセットアップとビルド手順
+## 9. ワークスペースのセットアップとビルド手順
 
 ROS 2 ワークスペースは標準的なディレクトリ構造に従います:
 
@@ -405,7 +592,7 @@ source install/setup.bash
 
 ---
 
-## 9. 必須 ROS 2 CLI チートシート
+## 10. 必須 ROS 2 CLI チートシート
 
 ### ノードの診断
 
