@@ -18,7 +18,7 @@ type Block =
       rows: string[][];
       alignments: TableAlignment[];
     }
-  | { type: "list"; ordered: boolean; items: ListItem[] }
+  | { type: "list"; ordered: boolean; start?: number; items: ListItem[] }
   | { type: "code"; lines: string[]; language: string }
   | { type: "math"; lines: string[] }
   | { type: "blockquote"; lines: string[] }
@@ -39,6 +39,7 @@ type ListItem = {
 
 type ListBlock = {
   ordered: boolean;
+  start?: number;
   items: ListItem[];
 };
 
@@ -245,26 +246,34 @@ function parseBlocks(markdown: string): Block[] {
 
     const paragraphLines: string[] = [];
     while (index < lines.length && lines[index].trim()) {
-      const current = lines[index].trim();
       if (
-        current === "---" ||
-        current.startsWith("```") ||
-        current === "$$" ||
-        current.startsWith(">") ||
-        /^#{1,6}\s+/.test(current) ||
-        /^https?:\/\/[^\s]+$/.test(current) ||
-        isListLine(lines[index]) ||
-        isTableStart(lines, index)
+        isBlockStarter(lines[index], lines, index) ||
+        isListLine(lines[index])
       ) {
         break;
       }
-      paragraphLines.push(current);
+      paragraphLines.push(lines[index].trim());
       index += 1;
     }
     blocks.push({ type: "paragraph", text: paragraphLines.join(" ") });
   }
 
   return blocks;
+}
+
+function isBlockStarter(line: string, lines: string[], index: number): boolean {
+  const trimmed = line.trim();
+  return (
+    trimmed === "---" ||
+    trimmed.startsWith("```") ||
+    trimmed === "$$" ||
+    trimmed.startsWith("$$") ||
+    trimmed.startsWith(">") ||
+    /^#{1,6}\s+/.test(trimmed) ||
+    /^https?:\/\/[^\s]+$/.test(trimmed) ||
+    Boolean(parseImageToken(trimmed)) ||
+    isTableStart(lines, index)
+  );
 }
 
 function getIndentWidth(indent: string) {
@@ -278,9 +287,13 @@ function getListLine(line: string) {
     return null;
   }
 
+  const isOrdered = /^\d+\.$/.test(match[2]);
+  const start = isOrdered ? parseInt(match[2], 10) : undefined;
+
   return {
     indent: getIndentWidth(match[1]),
-    ordered: /^\d+\.$/.test(match[2]),
+    ordered: isOrdered,
+    start,
     text: match[3].trim(),
   };
 }
@@ -293,6 +306,7 @@ function parseList(lines: string[], startIndex: number) {
   const firstLine = getListLine(lines[startIndex]);
   const root: ListBlock = {
     ordered: firstLine?.ordered ?? false,
+    start: firstLine?.start,
     items: [],
   };
   const stack: { indent: number; block: ListBlock; lastItem?: ListItem }[] = [
@@ -304,9 +318,60 @@ function parseList(lines: string[], startIndex: number) {
   let index = startIndex;
 
   while (index < lines.length) {
-    const listLine = getListLine(lines[index]);
+    const line = lines[index];
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      let nextIndex = index + 1;
+      while (nextIndex < lines.length && !lines[nextIndex].trim()) {
+        nextIndex += 1;
+      }
+      if (nextIndex < lines.length) {
+        const nextListLine = getListLine(lines[nextIndex]);
+        if (
+          nextListLine &&
+          nextListLine.indent === stack[0].indent &&
+          nextListLine.ordered === root.ordered
+        ) {
+          index = nextIndex;
+          continue;
+        }
+
+        const nextIndent = getIndentWidth(
+          lines[nextIndex].match(/^(\s*)/)?.[1] ?? "",
+        );
+        if (
+          !isBlockStarter(lines[nextIndex], lines, nextIndex) &&
+          nextIndent > stack[0].indent
+        ) {
+          index = nextIndex;
+          continue;
+        }
+      }
+      break;
+    }
+
+    const listLine = getListLine(line);
 
     if (!listLine) {
+      if (isBlockStarter(line, lines, index)) {
+        break;
+      }
+
+      const lineIndent = getIndentWidth(line.match(/^(\s*)/)?.[1] ?? "");
+      while (stack.length > 1 && lineIndent <= stack[stack.length - 1].indent) {
+        stack.pop();
+      }
+
+      const activeLevel = stack[stack.length - 1];
+      if (activeLevel.lastItem && lineIndent > activeLevel.indent) {
+        activeLevel.lastItem.text = activeLevel.lastItem.text
+          ? `${activeLevel.lastItem.text} ${trimmed}`
+          : trimmed;
+        index += 1;
+        continue;
+      }
+
       break;
     }
 
@@ -316,7 +381,7 @@ function parseList(lines: string[], startIndex: number) {
 
     while (
       stack.length > 1 &&
-      listLine.indent <= stack[stack.length - 1].indent
+      listLine.indent < stack[stack.length - 1].indent
     ) {
       stack.pop();
     }
@@ -326,6 +391,7 @@ function parseList(lines: string[], startIndex: number) {
     if (listLine.indent > currentLevel.indent && currentLevel.lastItem) {
       const childBlock: ListBlock = {
         ordered: listLine.ordered,
+        start: listLine.start,
         items: [],
       };
       currentLevel.lastItem.children.push(childBlock);
@@ -354,6 +420,7 @@ function parseList(lines: string[], startIndex: number) {
     block: {
       type: "list" as const,
       ordered: root.ordered,
+      start: root.start,
       items: root.items,
     },
     nextIndex: index,
@@ -963,6 +1030,9 @@ function renderList(
   return (
     <Tag
       key={key}
+      start={
+        list.ordered && list.start && list.start !== 1 ? list.start : undefined
+      }
       className={`${listStyleClass} space-y-2 pl-6 ${extraClassName}`}
     >
       {renderListItems(list.items, key)}
