@@ -46,6 +46,9 @@ ROS 2 breaks the system down into decoupled building blocks:
 - **Execution & Concurrency:**
   - **Executors:** Scheduling engines (SingleThreaded, MultiThreaded) that coordinate with the middleware and dispatch callbacks onto execution threads.
   - **Callback Groups:** Concurrency control policies (MutuallyExclusive, Reentrant) defining whether callbacks can execute in parallel.
+- **Composition & Components:**
+  - **Components (`rclcpp_components`):** Node classes compiled into shared libraries rather than standalone executables, dynamically loadable into shared host processes.
+  - **Component Containers:** Host processes running an Executor where multiple components execute in a single address space, enabling high-performance intra-process communication (IPC) and zero-copy message transfers.
 
 ---
 
@@ -200,6 +203,8 @@ sequenceDiagram
    ROS 2 actions do not enforce concurrency rules out of the box. Servers managing physical hardware should track `active_goal_handle` protected by a mutex/lock. When a new goal arrives while another is executing, abort the prior goal (`goal_handle.abort()`) and smoothly hand control over to the incoming goal.
 3. **Concurrency with MultiThreadedExecutor:**
    Because an action server's `execute_callback` runs a sustained control loop, a single-threaded executor would starve other callbacks (such as incoming odometry/pose subscriptions or cancellation requests). Action servers must use a `ReentrantCallbackGroup` and spin inside a `MultiThreadedExecutor`.
+4. **Component Composition for Action Pipelines:**
+   In real-world robotics stacks (such as Nav2 navigation or manipulation pipelines), action servers and clients frequently exchange high-rate feedback and odometry. Deploying them as composable components inside a shared `component_container` significantly reduces process overhead, memory footprints, and IPC latency.
 
 ### Example Implementations
 
@@ -433,7 +438,125 @@ def timer_callback(self):
 
 ---
 
-## 8. Parameters and Launch Orchestration
+### 8. Components & Composition: High-Performance Shared-Process Nodes
+
+By default, ROS 2 runs each node in its own OS process. While this provides fault isolation, it introduces DDS serialization overhead, network socket copies, and frequent thread context switches.
+
+**Components & Composition (`rclcpp_components`)** allow multiple nodes to execute inside a single shared **Component Container** process. When paired with **Intra-Process Communication (IPC)**, in-container nodes exchange messages via raw C++ pointers with **zero-copy overhead** (`std::unique_ptr`), bypassing DDS serialization entirely.
+
+```mermaid
+flowchart TD
+    subgraph MultiProcess["Multi-Process (Default)"]
+        P1["Node 1 (Process A)"] -->|"DDS Serialization & Socket Copy"| P2["Node 2 (Process B)"]
+    end
+
+    subgraph ContainerProcess["Component Container (In-Process)"]
+        subgraph Container["Single OS Process (component_container)"]
+            C1["Component 1"] -->|"Zero-Copy IPC (std::unique_ptr swap)"| C2["Component 2"]
+        end
+    end
+```
+
+### Component Container Types
+
+| Container Executable            | Concurrency Model                              | Best Use Case                                        |
+| :------------------------------ | :--------------------------------------------- | :--------------------------------------------------- |
+| `component_container` (Default) | SingleThreadedExecutor                         | Lightweight, non-blocking nodes                      |
+| `component_container_mt`        | MultiThreadedExecutor (pool = CPU cores)       | High-frequency callbacks, parallel workloads         |
+| `component_container_isolated`  | Dedicated SingleThreadedExecutor per component | Isolate heavy computations (e.g., planners, drivers) |
+
+### Writing a C++ Component (3 Steps)
+
+1. **Constructor with `NodeOptions`:**
+   Inherit from `rclcpp::Node` and accept `const rclcpp::NodeOptions & options`:
+
+   ```cpp
+   class TurtleActionServerNode : public rclcpp::Node {
+   public:
+     ACTION_CPP_PKG_PUBLIC
+     explicit TurtleActionServerNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
+     : Node("turtle_action_server", options) {}
+   };
+   ```
+
+   _(Class symbols are exported via `visibility_control.h` macros for cross-platform dynamic loading)._
+
+2. **Register with Macro (`.cpp`):**
+
+   ```cpp
+   #include "rclcpp_components/register_node_macro.hpp"
+   RCLCPP_COMPONENTS_REGISTER_NODE(action_cpp_pkg::TurtleActionServerNode)
+   ```
+
+3. **Dual-Mode Build (`CMakeLists.txt`):**
+   `rclcpp_components_register_node` builds **both** a shared library plugin and a standalone executable from the same source:
+
+   ```cmake
+   find_package(rclcpp_components REQUIRED)
+
+   add_library(turtle_action_server_component SHARED src/turtle_action_server.cpp)
+   ament_target_dependencies(turtle_action_server_component rclcpp rclcpp_components)
+
+   rclcpp_components_register_node(turtle_action_server_component
+     PLUGIN "action_cpp_pkg::TurtleActionServerNode"
+     EXECUTABLE turtle_action_server
+   )
+   ```
+
+### Launching Composed Nodes
+
+Enable zero-copy IPC by setting `use_intra_process_comms: true`:
+
+#### Python Launch (`.launch.py`)
+
+```python
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
+
+container = ComposableNodeContainer(
+    name="turtle_action_container",
+    namespace="",
+    package="rclcpp_components",
+    executable="component_container",
+    composable_node_descriptions=[
+        ComposableNode(
+            package="action_cpp_pkg",
+            plugin="action_cpp_pkg::TurtleActionServerNode",
+            name="turtle_action_server",
+            extra_arguments=[{"use_intra_process_comms": True}],
+        ),
+    ],
+)
+```
+
+#### XML Launch (`.launch.xml`)
+
+```xml
+<node_container pkg="rclcpp_components" exec="component_container" name="turtle_action_container" namespace="">
+  <composable_node pkg="action_cpp_pkg" plugin="action_cpp_pkg::TurtleActionServerNode" name="turtle_action_server">
+    <extra_arg name="use_intra_process_comms" value="true" />
+  </composable_node>
+</node_container>
+```
+
+### Standalone Nodes vs. Composable Components
+
+| Feature              | Standalone Nodes (`ros2 run`)      | Composable Components (`rclcpp_components`)      |
+| :------------------- | :--------------------------------- | :----------------------------------------------- |
+| **Process Boundary** | 1 process per node                 | Multiple nodes in 1 container process            |
+| **IPC Overhead**     | High (DDS serialization + sockets) | Near-zero (direct pointer pass in shared memory) |
+| **Zero-Copy**        | Requires shared-memory DDS setup   | Native with `std::unique_ptr`                    |
+| **Fault Isolation**  | High (crash isolated to 1 node)    | Shared (unhandled crash terminates container)    |
+| **Runtime Control**  | Static (restart required)          | Dynamic (`ros2 component load / unload` via CLI) |
+| **Build Artifact**   | Executable only                    | Dual-mode (shared library plugin + executable)   |
+
+### Example Implementations
+
+https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
+
+---
+
+## 9. Parameters and Launch Orchestration
 
 ### Dynamic Parameters
 
@@ -454,7 +577,7 @@ Real-world robots require launching dozens of nodes, remapping topic names, and 
 
 ---
 
-## 9. Workspace Setup & Build Workflow
+## 10. Workspace Setup & Build Workflow
 
 A ROS 2 workspace follows a standard directory structure:
 
@@ -488,7 +611,7 @@ In real-world projects, it's convenient to add `source install/setup.bash` to `.
 
 ---
 
-## 10. Essential ROS 2 CLI Cheat Sheet
+## 11. Essential ROS 2 CLI Cheat Sheet
 
 ### Node Introspection
 
@@ -524,6 +647,15 @@ ros2 action list -t                # List active actions with action types
 ros2 action info /move_to_goal     # Inspect action servers and clients
 ros2 interface show custom_interfaces/action/MoveToGoal # Inspect action definition (.action)
 ros2 action send_goal /move_to_goal custom_interfaces/action/MoveToGoal "{target_x: 8.0, target_y: 8.0, linear_velocity: 2.0}" --feedback # Send goal with live feedback stream
+```
+
+### Component Management
+
+```bash
+ros2 component types               # List all component plugins registered in the ament index
+ros2 component list                # List active component containers and loaded components
+ros2 component load /turtle_action_container action_cpp_pkg action_cpp_pkg::TurtleActionClientNode -p target_x:=3.0 # Dynamically load a component into a container
+ros2 component unload /turtle_action_container 1 # Unload component by ID from container
 ```
 
 ### Lifecycle Management

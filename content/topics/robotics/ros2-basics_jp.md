@@ -46,6 +46,9 @@ ROS 2 はシステムを疎結合な構成要素に分解します:
 - **実行と並行処理 (Execution & Concurrency):**
   - **Executor:** ミドルウェアと協調してコールバックを単一または複数スレッドにスケジューリング・ディスパッチする実行エンジン。
   - **Callback Group:** どのコールバックを並行（同時）実行可能かを定義する並行処理制御ポリシー（MutuallyExclusive, Reentrant）。
+- **コンポジションとコンポーネント (Composition & Components):**
+  - **コンポーネント (`rclcpp_components`):** 独立したOSプロセスではなく、動的にロード可能な共有ライブラリ（プラグイン）としてコンパイルされたノードクラス。
+  - **コンポーネントコンテナ (Component Containers):** ひとつのアドレス空間内に複数のコンポーネントをロードしてExecutorで稼働させるホストプロセス。プロセス内通信（Intra-Process Communication / IPC）とゼロコピーのポインタ受け渡しによる超低遅延・高スループットなデータ転送を実現。
 
 ---
 
@@ -200,6 +203,8 @@ sequenceDiagram
    単一のロボット／アクチュエータを制御する場合、`active_goal_handle` をミューテックス／ロックで保護して追跡します。実行中に新しいゴールを受信した際は、直前のゴールを中止 (`goal_handle.abort()`) して新しいゴールへ滑らかに操舵を引き継ぎます。
 3. **MultiThreadedExecutor による並行処理:**
    アクションサーバーの `execute_callback` で継続的な制御ループを回す場合、シングルスレッド実行ではセンサ受信コールバック（`/turtle1/pose` 等）やキャンセル要求がブロックされてしまいます。`ReentrantCallbackGroup` と `MultiThreadedExecutor` を利用して並行処理を保証します。
+4. **アクションノードのコンポーネント化（コンポジション）:**
+   Nav2 などの本格的な自律移動スタックでは、アクションサーバーとクライアント間で高頻度なフィードバックや座標変換が飛び交います。これらを独立プロセスではなく同一の `component_container` 内のコンポーネントとして配置することで、プロセス間通信のオーバーヘッドやメモリ消費、通信遅延を大幅に削減できます。
 
 ### 実装例
 
@@ -433,7 +438,125 @@ def timer_callback(self):
 
 ---
 
-## 8. パラメータと起動管理（Launch）
+## 8. コンポーネントとコンポジション: 高性能な同一プロセス実行（Components & Composition）
+
+ROS 2 はデフォルトで各ノードを独立した OS プロセスとして実行します。これにより強力な耐障害性（フォールトアイソレーション）が得られる一方、DDS シリアライズ、ソケットコピー、スレッドコンテキストスイッチのオーバーヘッドが発生します。
+
+**コンポーネントとコンポジション (`rclcpp_components`)** は、複数のノードを単一の **コンポーネントコンテナ (Component Container)** プロセスに同居させる仕組みです。**プロセス内通信 (Intra-Process Communication / IPC)** を有効にすることで、同一プロセス内のノード間で `std::unique_ptr` による **真のゼロコピー（Zero-Copy）通信** を実現し、DDS のシリアライズを完全にバイパスします。
+
+```mermaid
+flowchart TD
+    subgraph MultiProcess["マルチプロセス構成（デフォルト）"]
+        P1["ノード 1 (プロセス A)"] -->|"DDS シリアライズ & ソケットコピー"| P2["ノード 2 (プロセス B)"]
+    end
+
+    subgraph ContainerProcess["コンポーネントコンテナ構成（同一プロセス）"]
+        subgraph Container["単一の OS プロセス (component_container)"]
+            C1["コンポーネント 1"] -->|"ゼロコピー IPC (std::unique_ptr 譲渡)"| C2["コンポーネント 2"]
+        end
+    end
+```
+
+### コンポーネントコンテナの種類
+
+| コンテナ実行ファイル                | 並行処理モデル                                  | 主な用途                                             |
+| :---------------------------------- | :---------------------------------------------- | :--------------------------------------------------- |
+| `component_container`（デフォルト） | SingleThreadedExecutor                          | 軽量・非ブロッキングな標準ノード群                   |
+| `component_container_mt`            | MultiThreadedExecutor（CPUコア数スレッド）      | 高頻度コールバックや並列タスク                       |
+| `component_container_isolated`      | コンポーネントごとの専用 SingleThreadedExecutor | 重い処理（経路計画など）を他ノードから隔離しつつ同居 |
+
+### C++ コンポーネントの実装手順（3ステップ）
+
+1. **`NodeOptions` を受け取るコンストラクタ:**
+   `rclcpp::Node` を継承し、`const rclcpp::NodeOptions & options` を引数に取ります:
+
+   ```cpp
+   class TurtleActionServerNode : public rclcpp::Node {
+   public:
+     ACTION_CPP_PKG_PUBLIC
+     explicit TurtleActionServerNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
+     : Node("turtle_action_server", options) {}
+   };
+   ```
+
+   _（動的ロードのため、`visibility_control.h` のマクロでシンボルを公開します）_
+
+2. **マクロによるコンポーネント登録 (`.cpp`):**
+
+   ```cpp
+   #include "rclcpp_components/register_node_macro.hpp"
+   RCLCPP_COMPONENTS_REGISTER_NODE(action_cpp_pkg::TurtleActionServerNode)
+   ```
+
+3. **デュアルモードビルド (`CMakeLists.txt`):**
+   `rclcpp_components_register_node` を使うことで、同一ソースから **共有ライブラリコンポーネントと単体実行ファイルの両方を自動生成** できます:
+
+   ```cmake
+   find_package(rclcpp_components REQUIRED)
+
+   add_library(turtle_action_server_component SHARED src/turtle_action_server.cpp)
+   ament_target_dependencies(turtle_action_server_component rclcpp rclcpp_components)
+
+   rclcpp_components_register_node(turtle_action_server_component
+     PLUGIN "action_cpp_pkg::TurtleActionServerNode"
+     EXECUTABLE turtle_action_server
+   )
+   ```
+
+### Launch ファイルによるコンポジション
+
+`use_intra_process_comms: true` を設定してゼロコピー IPC を有効化します:
+
+#### Python Launch (`.launch.py`)
+
+```python
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
+
+container = ComposableNodeContainer(
+    name="turtle_action_container",
+    namespace="",
+    package="rclcpp_components",
+    executable="component_container",
+    composable_node_descriptions=[
+        ComposableNode(
+            package="action_cpp_pkg",
+            plugin="action_cpp_pkg::TurtleActionServerNode",
+            name="turtle_action_server",
+            extra_arguments=[{"use_intra_process_comms": True}],
+        ),
+    ],
+)
+```
+
+#### XML Launch (`.launch.xml`)
+
+```xml
+<node_container pkg="rclcpp_components" exec="component_container" name="turtle_action_container" namespace="">
+  <composable_node pkg="action_cpp_pkg" plugin="action_cpp_pkg::TurtleActionServerNode" name="turtle_action_server">
+    <extra_arg name="use_intra_process_comms" value="true" />
+  </composable_node>
+</node_container>
+```
+
+### 単体ノード vs コンポーザブルノード の比較
+
+| 項目                   | 単体プロセスノード (`ros2 run`)     | コンポーザブルノード (`rclcpp_components`)           |
+| :--------------------- | :---------------------------------- | :--------------------------------------------------- |
+| **プロセス境界**       | 1ノードにつき1つの OS プロセス      | 複数のノードが同一のコンテナプロセスを共有           |
+| **通信オーバーヘッド** | 高（DDS シリアライズ＋ソケット）    | ほぼゼロ（共有メモリ上のダイレクトポインタ渡し）     |
+| **ゼロコピー転送**     | 共有メモリ DDS の設定が必要         | `std::unique_ptr` でネイティブ対応                   |
+| **障害分離性**         | 高（1ノードがクラッシュしても独立） | 共有（未処理例外でコンテナ全体が停止する恐れ）       |
+| **動的着脱**           | 不可（再起動が必要）                | 可能（CLI やサービス経由で動的にロード／アンロード） |
+| **生成成果物**         | 実行ファイルのみ                    | デュアルモード（共有ライブラリ＋実行ファイル）       |
+
+### 実装例
+
+https://github.com/jinyongnan810/ros-practice/tree/main/6.actions
+
+---
+
+## 9. パラメータと起動管理（Launch）
 
 ### 動的パラメータ
 
@@ -454,7 +577,7 @@ def timer_callback(self):
 
 ---
 
-## 9. ワークスペースのセットアップとビルド手順
+## 10. ワークスペースのセットアップとビルド手順
 
 ROS 2 ワークスペースは標準的なディレクトリ構造に従います:
 
@@ -488,7 +611,7 @@ source install/setup.bash
 
 ---
 
-## 10. 必須 ROS 2 CLI チートシート
+## 11. 必須 ROS 2 CLI チートシート
 
 ### ノードの診断
 
@@ -524,6 +647,15 @@ ros2 action list -t                # アクション型付きで一覧表示
 ros2 action info /move_to_goal     # アクションのサーバーとクライアント詳細を確認
 ros2 interface show custom_interfaces/action/MoveToGoal # .action 定義を表示
 ros2 action send_goal /move_to_goal custom_interfaces/action/MoveToGoal "{target_x: 8.0, target_y: 8.0, linear_velocity: 2.0}" --feedback # フィードバック付きでゴールを送信
+```
+
+### コンポーネント管理（Component Management）
+
+```bash
+ros2 component types               # ament インデックスに登録されている全コンポーネントプラグインを一覧表示
+ros2 component list                # 稼働中のコンテナとロードされているコンポーネントを一覧表示
+ros2 component load /turtle_action_container action_cpp_pkg action_cpp_pkg::TurtleActionClientNode -p target_x:=3.0 # コンポーネントを動的にコンテナへロード
+ros2 component unload /turtle_action_container 1 # コンポーネントIDを指定してアンロード
 ```
 
 ### ライフサイクルノードの管理
