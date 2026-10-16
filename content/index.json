@@ -301,6 +301,13 @@
     "title_jp": "URDF と Gazebo"
   },
   {
+    "slug": "ros2-control",
+    "title": "ros2_control",
+    "file": "topics/robotics/ros2-control.md",
+    "tag": "Robotics",
+    "title_jp": "ros2_control"
+  },
+  {
     "slug": "time-series-forecasting",
     "title": "Time series forecasting",
     "file": "topics/artificial-intelligence/time-series-forecasting.md",
