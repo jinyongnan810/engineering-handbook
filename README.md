@@ -58,6 +58,10 @@ Each entry in `content/index.json` describes one topic:
 
 Markdown supports headings, code blocks, KaTeX math, and Mermaid diagrams.
 
+Relativity's English and Japanese SVG diagrams live in
+`public/images/relativity/`. Regenerate them with
+`node scripts/generate-relativity-diagrams.js` after editing the diagram source.
+
 Custom widgets can be embedded on their own line:
 
 ```markdown
