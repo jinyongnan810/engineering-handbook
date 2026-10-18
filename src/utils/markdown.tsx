@@ -2,12 +2,14 @@ import type { ReactNode } from "react";
 import katex from "katex";
 import CodeBlock from "../components/CodeBlock";
 import MermaidDiagram from "../components/MermaidDiagram";
+import InterstellarTravel from "../components/InterstellarTravel";
 import { ImageWithSkeleton } from "../components/ImageWithSkeleton";
 import LinkPreviewCard from "../components/LinkPreviewCard";
 import linkPreviewsData from "../data/linkPreviews.json";
 import type { LinkPreviewData } from "../data/types";
 
 type Block =
+  | { type: "interstellar-travel" }
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
   | { type: "image"; src: string; alt: string; title?: string }
@@ -145,6 +147,12 @@ function parseBlocks(markdown: string): Block[] {
       continue;
     }
 
+    if (trimmed === "@interstellar-travel") {
+      blocks.push({ type: "interstellar-travel" });
+      index += 1;
+      continue;
+    }
+
     if (trimmed === "---") {
       blocks.push({ type: "rule" });
       index += 1;
@@ -264,6 +272,7 @@ function parseBlocks(markdown: string): Block[] {
 function isBlockStarter(line: string, lines: string[], index: number): boolean {
   const trimmed = line.trim();
   return (
+    trimmed === "@interstellar-travel" ||
     trimmed === "---" ||
     trimmed.startsWith("```") ||
     trimmed === "$$" ||
@@ -1058,6 +1067,9 @@ export function renderMarkdown(markdown: string): ReactNode[] {
   const headingCounts = new Map<string, number>();
 
   return parseBlocks(markdown).map((block, index) => {
+    if (block.type === "interstellar-travel") {
+      return <InterstellarTravel key={`interstellar-travel-${index}`} />;
+    }
     if (block.type === "heading") {
       const id = getHeadingId(block.text, headingCounts);
 

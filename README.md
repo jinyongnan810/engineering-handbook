@@ -33,6 +33,7 @@ pnpm build      # production build
 pnpm preview    # preview the production build
 pnpm lint       # lint
 pnpm typecheck  # type-check
+pnpm test       # travel calculation checks
 pnpm format     # format with prettier
 make lint       # format + lint + typecheck
 ```
@@ -56,6 +57,17 @@ Each entry in `content/index.json` describes one topic:
 - `file` — path to the markdown file, relative to `content/`
 
 Markdown supports headings, code blocks, KaTeX math, and Mermaid diagrams.
+
+Custom widgets can be embedded on their own line:
+
+```markdown
+@interstellar-travel
+```
+
+The interstellar travel widget compares ship and destination elapsed times.
+Its acceleration input is the duration of each acceleration/braking phase in
+planet-frame years, using constant proper acceleration. Short routes use a lower
+peak speed and shorter phases. Both planets are assumed stationary in one frame.
 
 ## Add A Topic
 

@@ -322,6 +322,13 @@
     "title_jp": "物理の基礎（Basic Physics）"
   },
   {
+    "slug": "relativity",
+    "title": "Relativity",
+    "file": "topics/physics/relativity.md",
+    "tag": "Physics",
+    "title_jp": "相対性理論（Relativity）"
+  },
+  {
     "slug": "say-what-you-mean",
     "title": "say whay you mean",
     "file": "topics/others/say-what-you-mean.md",

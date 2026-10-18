@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "node scripts/fetch-link-previews.js && tsc -b && vite build",
     "lint": "eslint .",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "preview": "vite preview"
