@@ -28,8 +28,8 @@ Loopmural keeps a library of local videos with thumbnails, durations, pinned fav
 
 The app runs on **macOS 15 or later**. Its video processing, library, and preferences stay on the Mac, with no analytics or app-managed cloud synchronization.
 
-- **Mac App Store**: [Download Loopmural](https://apps.apple.com/jp/app/loopmural/id6821934534)
-- **Source Code**: [GitHub Repository](https://github.com/jinyongnan810/Loopmural)
+https://apps.apple.com/jp/app/loopmural/id6821934534
+https://github.com/jinyongnan810/Loopmural
 
 ### Shared Foundations with C2V
 

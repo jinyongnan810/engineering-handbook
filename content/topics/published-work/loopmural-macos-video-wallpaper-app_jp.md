@@ -28,8 +28,8 @@ Loopmural は、サムネイル、再生時間、ピン留め、表示名の変�
 
 対応 OS は **macOS 15 以降**です。動画処理、ライブラリ、設定は Mac 内で完結し、アナリティクスやアプリ独自のクラウド同期は行いません。
 
-- **Mac App Store**: [Loopmural をダウンロード](https://apps.apple.com/jp/app/loopmural/id6821934534)
-- **ソースコード**: [GitHub リポジトリ](https://github.com/jinyongnan810/Loopmural)
+https://apps.apple.com/jp/app/loopmural/id6821934534
+https://github.com/jinyongnan810/Loopmural
 
 ### C2V と共通する基盤
 

@@ -7,6 +7,15 @@
     "siteName": "Mac App Store",
     "favicon": "https://www.apple.com/favicon.ico"
   },
+  "https://apps.apple.com/jp/app/loopmural/id6821934534": {
+    "url": "https://apps.apple.com/jp/app/loopmural/id6821934534?mt=12",
+    "hostname": "apps.apple.com",
+    "title": "Loopmuralアプリ - App Store",
+    "description": "JIN YONGNANの「Loopmural」をApp Storeでダウンロードしてください。スクリーンショット、評価とレビュー、ユーザのヒント、「Loopmural」に似たゲームを見ることなどができます。",
+    "siteName": "App Store",
+    "image": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/79/ff/04/79ff0405-99c5-47fb-285c-a5d3122aee7e/Placeholder.mill/1200x630wa.jpg",
+    "favicon": "https://apps.apple.com/assets/favicon/favicon-32.png"
+  },
   "https://github.com/facebook/react": {
     "url": "https://github.com/react/react",
     "hostname": "github.com",
@@ -22,6 +31,15 @@
     "title": "GitHub - jinyongnan810/C2V: Lightweight, modern macOS menu bar clipboard manager built with SwiftUI and SwiftData.",
     "description": "Lightweight, modern macOS menu bar clipboard manager built with SwiftUI and SwiftData.",
     "image": "https://opengraph.githubassets.com/c2v/jinyongnan810/C2V",
+    "siteName": "GitHub",
+    "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+  },
+  "https://github.com/jinyongnan810/Loopmural": {
+    "url": "https://github.com/jinyongnan810/Loopmural",
+    "hostname": "github.com",
+    "title": "GitHub - jinyongnan810/Loopmural",
+    "description": "Contribute to jinyongnan810/Loopmural development by creating an account on GitHub.",
+    "image": "https://opengraph.githubassets.com/d64490b85f0555adc7c5509db9407da473a5ef6c205ea87ca79f9ee44fc5c479/jinyongnan810/Loopmural",
     "siteName": "GitHub",
     "favicon": "https://github.githubassets.com/favicons/favicon.svg"
   },
