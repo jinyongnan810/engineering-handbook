@@ -7,6 +7,13 @@
     "title_jp": "C2V: macOS ステータスバーアプリ"
   },
   {
+    "slug": "loopmural-macos-video-wallpaper-app",
+    "title": "Loopmural: macOS Video Wallpaper App",
+    "file": "topics/published-work/loopmural-macos-video-wallpaper-app.md",
+    "tag": "Published Work",
+    "title_jp": "Loopmural: macOS 動画壁紙アプリ"
+  },
+  {
     "slug": "iam",
     "title": "IAM",
     "file": "topics/aws/iam.md",
