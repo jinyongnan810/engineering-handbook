@@ -182,6 +182,18 @@ function PageTableOfContents({ markdown }: { markdown: string }) {
   );
 }
 
+function formatLastEdited(dateString: string, language: string): string {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return dateString;
+  }
+  return new Intl.DateTimeFormat(language === "jp" ? "ja-JP" : "en-US", {
+    year: "numeric",
+    month: language === "jp" ? "long" : "short",
+    day: "numeric",
+  }).format(date);
+}
+
 function TopicPage() {
   const { slug } = useParams();
   const { language, t } = useLanguage();
@@ -266,7 +278,34 @@ function TopicPage() {
           ) : page ? (
             <>
               <article className="min-w-0 max-w-3xl space-y-7">
-                {renderMarkdown(page.markdown)}
+                {renderMarkdown(page.markdown, {
+                  afterFirstH1: page.lastEdited ? (
+                    <div className="flex items-center gap-1.5 pt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400">
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="size-3.5 shrink-0 text-neutral-400 dark:text-neutral-500"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                      </svg>
+                      <span>
+                        {t("topic.last_updated")}{" "}
+                        <time
+                          dateTime={page.lastEdited}
+                          className="font-medium text-neutral-700 dark:text-neutral-300"
+                        >
+                          {formatLastEdited(page.lastEdited, language)}
+                        </time>
+                      </span>
+                    </div>
+                  ) : null,
+                })}
               </article>
               <PageTableOfContents
                 key={`${slug}-${language}`}

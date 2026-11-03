@@ -1063,10 +1063,18 @@ export function getMarkdownHeadings(markdown: string): MarkdownHeading[] {
     }));
 }
 
-export function renderMarkdown(markdown: string): ReactNode[] {
-  const headingCounts = new Map<string, number>();
+export type RenderMarkdownOptions = {
+  afterFirstH1?: ReactNode;
+};
 
-  return parseBlocks(markdown).map((block, index) => {
+export function renderMarkdown(
+  markdown: string,
+  options?: RenderMarkdownOptions,
+): ReactNode[] {
+  const headingCounts = new Map<string, number>();
+  let hasRenderedFirstH1 = false;
+
+  const elements: ReactNode[] = parseBlocks(markdown).map((block, index) => {
     if (block.type === "interstellar-travel") {
       return <InterstellarTravel key={`interstellar-travel-${index}`} />;
     }
@@ -1074,6 +1082,25 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       const id = getHeadingId(block.text, headingCounts);
 
       if (block.level === 1) {
+        const isFirstH1 = !hasRenderedFirstH1;
+        if (isFirstH1) {
+          hasRenderedFirstH1 = true;
+        }
+
+        if (isFirstH1 && options?.afterFirstH1) {
+          return (
+            <header key={`heading-${index}`} className="space-y-3">
+              <h1
+                id={id}
+                className="scroll-mt-24 text-5xl font-semibold tracking-tight text-balance text-neutral-950 dark:text-neutral-100 sm:text-6xl"
+              >
+                {renderInline(block.text)}
+              </h1>
+              {options.afterFirstH1}
+            </header>
+          );
+        }
+
         return (
           <h1
             key={`heading-${index}`}
@@ -1280,4 +1307,10 @@ export function renderMarkdown(markdown: string): ReactNode[] {
       />
     );
   });
+
+  if (!hasRenderedFirstH1 && options?.afterFirstH1) {
+    elements.unshift(<div key="after-first-h1">{options.afterFirstH1}</div>);
+  }
+
+  return elements;
 }

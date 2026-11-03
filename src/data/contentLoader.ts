@@ -1,6 +1,11 @@
 import pageIndex from "../../content/index.json";
+import pageDatesData from "./pageDates.json";
 import { getLocalizedTag, type Language } from "../i18n/translations";
-import type { HandbookPageContent, HandbookPageMeta } from "./types";
+import type {
+  HandbookPageContent,
+  HandbookPageMeta,
+  PageDatesData,
+} from "./types";
 
 const markdownModules = import.meta.glob("../../content/topics/**/*.md", {
   query: "?raw",
@@ -8,6 +13,7 @@ const markdownModules = import.meta.glob("../../content/topics/**/*.md", {
 }) as Record<string, () => Promise<string>>;
 
 const metas = pageIndex as HandbookPageMeta[];
+const pageDates = pageDatesData as PageDatesData;
 const pageContentCache = new Map<string, Promise<HandbookPageContent | null>>();
 
 function getContentPath(file: string) {
@@ -52,6 +58,19 @@ export function getPageTag(
   return getLocalizedTag(meta.tag, language);
 }
 
+export function getPageLastEdited(
+  slug: string,
+  language: Language = "en",
+): string | null {
+  const topicDates = pageDates[slug];
+  if (!topicDates) {
+    return null;
+  }
+  return language === "jp"
+    ? (topicDates.jp ?? topicDates.en ?? null)
+    : (topicDates.en ?? null);
+}
+
 export function getPageBySlug(
   slug: string,
   language: Language = "en",
@@ -88,10 +107,17 @@ export function getPageBySlug(
       );
     }
 
+    const topicDates = pageDates[slug];
+    const lastEdited =
+      language === "jp"
+        ? (topicDates?.jp ?? topicDates?.en ?? null)
+        : (topicDates?.en ?? null);
+
     return {
       ...meta,
       title: getPageTitle(meta, language),
       markdown,
+      lastEdited,
     };
   })();
 

@@ -13,7 +13,16 @@ export type HandbookPageMeta = {
 
 export type HandbookPageContent = HandbookPageMeta & {
   markdown: string;
+  lastEdited?: string | null;
 };
+
+export type PageDatesData = Record<
+  string,
+  {
+    en?: string | null;
+    jp?: string | null;
+  }
+>;
 
 export type LinkPreviewData = {
   url: string;

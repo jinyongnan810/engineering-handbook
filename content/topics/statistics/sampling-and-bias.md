@@ -1,4 +1,4 @@
-## Sampling and Bias
+# Sampling and Bias
 
 ### 1. Sample vs Population
 

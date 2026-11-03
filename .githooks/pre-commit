@@ -1,11 +1,18 @@
 #!/bin/sh
 set -eu
 
-PATH="$HOME/.nvm/versions/node/v22.20.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+PATH="$HOME/.local/share/mise/shims:$HOME/.nvm/versions/node/v22.20.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 export PATH
 
 hook_dir=${0%/*}
 cd "$hook_dir/.."
+
+# If any content file is staged, generate up-to-date page dates and stage the json
+if git diff --cached --name-only | grep -q '^content/'; then
+  echo "Content changes detected. Generating page last-edited dates..."
+  node scripts/generate-page-dates.js
+  git add src/data/pageDates.json
+fi
 
 before=$(mktemp)
 after=$(mktemp)
@@ -15,6 +22,11 @@ git diff --no-ext-diff --binary > "$before"
 
 echo "Running make lint before commit..."
 make lint
+
+# If pageDates.json was formatted during make lint, re-stage it
+if git diff --cached --name-only | grep -q '^content/'; then
+  git add src/data/pageDates.json
+fi
 
 git diff --no-ext-diff --binary > "$after"
 
