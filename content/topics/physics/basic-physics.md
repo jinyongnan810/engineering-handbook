@@ -376,7 +376,7 @@ $$
 >   - **Tire Pressure in Winter ($P \propto T$)**: As winter temperatures $T$ drop, internal tire pressure $P$ drops proportionally, triggering low-pressure warning lights. Driving warms the tires, recovering pressure.
 >   - **Hot Air Balloons ($V \propto T \implies \text{density } \rho \downarrow$)**: Heating air inside the balloon causes thermal expansion; excess molecules escape, making the internal air less dense than surrounding cold air to generate lift.
 >   - **Bags of Chips on Planes ($P \cdot V = \text{const}$)**: Sealed snack bags puff up at cruising altitude because cabin pressure $P$ is lower than sea-level pressure, allowing internal volume $V$ to expand. Similarly, scuba divers must exhale when ascending to prevent expanding air from injuring their lungs.
->   - **Pressure Cookers ($P \uparrow \implies T_{\text{boil}} \uparrow$)**: Trapping steam in a rigid pot ($V = \text{const}$) raises pressure $P$ to $\sim 2\text{ atm}$, raising water's boiling point to $\sim 120^\circ\text{C}$ and drastically reducing cooking time.
+>   - **Pressure Cookers** ($P \uparrow \implies T_{\text{boil}} \uparrow$): Trapping steam in a rigid pot ($V = \text{const}$) raises pressure $P$ to $\sim 2\text{ atm}$, raising water's boiling point to $\sim 120^\circ\text{C}$ and drastically reducing cooking time.
 
 - **Average Kinetic Energy of a Molecule**:
 

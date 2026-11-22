@@ -18,16 +18,17 @@ A tree is useful when data has a natural “belongs under” relationship.
 ## Terms
 
 A tree is made of **nodes**.
-| Term | Meaning |
+
+| Term    | Meaning                          |
 | ------- | -------------------------------- |
-| Root | Top node of the tree |
-| Parent | Node directly above another node |
-| Child | Node directly below another node |
-| Leaf | Node with no children |
-| Sibling | Nodes with the same parent |
-| Subtree | A smaller tree inside a tree |
-| Depth | Distance from root |
-| Height | Longest path down to a leaf |
+| Root    | Top node of the tree             |
+| Parent  | Node directly above another node |
+| Child   | Node directly below another node |
+| Leaf    | Node with no children            |
+| Sibling | Nodes with the same parent       |
+| Subtree | A smaller tree inside a tree     |
+| Depth   | Distance from root               |
+| Height  | Longest path down to a leaf      |
 
 ## Tree traversal
 

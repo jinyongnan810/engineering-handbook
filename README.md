@@ -10,7 +10,7 @@ readable, tag-filtered handbook. No CMS, backend, or browser-side editing.
 
 ## Prerequisites
 
-- Node.js 22 & pnpm (configured via `mise.toml` if using [mise](https://mise.jdx.dev/))
+- Node.js 26 & pnpm (configured via `mise.toml` if using [mise](https://mise.jdx.dev/))
 
 ## Getting Started
 

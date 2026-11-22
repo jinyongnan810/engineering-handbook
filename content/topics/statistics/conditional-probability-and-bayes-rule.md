@@ -38,10 +38,11 @@ Even a small false-positive rate can affect many of the 9,900 healthy people.
 | False negative | Alert says no, but reality is yes  |
 
 In disease testing:
-| Result | Reality |
-| ------------- | --------------------------------- |
+
+| Result        | Reality                            |
+| ------------- | ---------------------------------- |
 | Positive test | Test indicates presence of disease |
-| Negative test | Test indicates absence of disease |
+| Negative test | Test indicates absence of disease  |
 
 ## Bayes’ rule
 
@@ -82,9 +83,10 @@ Use 10,000 people to make it intuitive.
 ### Step 1: Start with base rate
 
 1% of 10,000 people have the disease:
-| Group | Count |
+
+| Group               | Count |
 | ------------------- | ----: |
-| Have disease | 100 |
+| Have disease        |   100 |
 | Do not have disease | 9,900 |
 
 ### Step 2: Apply true positive rate

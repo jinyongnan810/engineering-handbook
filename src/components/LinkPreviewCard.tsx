@@ -13,7 +13,7 @@ export const LinkPreviewCard: React.FC<LinkPreviewCardProps> = ({
   const [imageError, setImageError] = useState(false);
   const [faviconError, setFaviconError] = useState(false);
 
-  let hostname = "";
+  let hostname: string;
   try {
     hostname = new URL(url).hostname.replace(/^www\./, "");
   } catch {

@@ -215,7 +215,7 @@ Demonstrates the Box-Jenkins methodology on daily chocolate sales revenue:
 - **Differencing**: Applies first-order differencing ($d = 1$) to achieve stationarity.
 - **Model Formulations**:
   - **ARIMA$(p, d, q)$**: Combines Autoregressive ($p$), Integrated differencing ($d$), and Moving Average ($q$) terms.
-  - **SARIMA$(p, d, q)(P, D, Q)_s$**: Incorporates seasonal autoregressive and moving average terms with weekly seasonality ($s = 7$).
+  - **SARIMA** $(p, d, q)(P, D, Q)_s$: Incorporates seasonal autoregressive and moving average terms with weekly seasonality ($s = 7$).
   - **SARIMAX**: Extends SARIMA by supplying exogenous variables (`exog`), such as promotional indicators or holiday flags.
 - **Grid Search & Parameter Selection**: Iterates through candidate parameters to minimize **AIC** (Akaike Information Criterion) and **BIC** (Bayesian Information Criterion).
 - **Rolling Forecast Cross-Validation**: Validates the model against expanding historical windows to evaluate out-of-sample stability.

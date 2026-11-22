@@ -28,14 +28,15 @@ Edges: A-B, A-C, B-D, C-D
 ```
 
 A graph is useful whenever data is not just a simple list or tree, but a network of relationships.
-| Situation | Nodes | Edges |
+
+| Situation            | Nodes    | Edges                            |
 | -------------------- | -------- | -------------------------------- |
-| Social network | People | Friendships |
-| Map | Cities | Roads |
-| Web pages | Pages | Links |
-| Package dependencies | Packages | Depends-on relation |
-| Task scheduling | Tasks | Task A must happen before Task B |
-| File imports | Files | File A imports File B |
+| Social network       | People   | Friendships                      |
+| Map                  | Cities   | Roads                            |
+| Web pages            | Pages    | Links                            |
+| Package dependencies | Packages | Depends-on relation              |
+| Task scheduling      | Tasks    | Task A must happen before Task B |
+| File imports         | Files    | File A imports File B            |
 
 ## Directed vs undirected graphs
 
@@ -75,10 +76,11 @@ graph = {
 ## Traversing
 
 DFS and BFS are mainly used in graphs. (Explained in [Stacks and queues](/page/stacks-and-queues))
-| Algorithm | Data structure | Behavior |
+
+| Algorithm | Data structure    | Behavior      |
 | --------- | ----------------- | ------------- |
-| DFS | Stack / recursion | Go deep first |
-| BFS | Queue | Go wide first |
+| DFS       | Stack / recursion | Go deep first |
+| BFS       | Queue             | Go wide first |
 
 ### When DFS is useful
 

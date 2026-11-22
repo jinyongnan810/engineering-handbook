@@ -8,7 +8,7 @@ https://engineering-handbook-alpha.vercel.app
 
 ## 前提条件
 
-- Node.js 22 & pnpm ([mise](https://mise.jdx.dev/) を使用している場合は `mise.toml` で設定済み)
+- Node.js 26 & pnpm ([mise](https://mise.jdx.dev/) を使用している場合は `mise.toml` で設定済み)
 
 ## はじめ方
 

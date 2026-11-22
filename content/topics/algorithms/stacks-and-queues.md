@@ -16,10 +16,11 @@ Think of a **queue** like people waiting in line. The first person who entered t
 ## Stack
 
 A stack supports two main operations:
-| Operation | Meaning |
+
+| Operation | Meaning                             |
 | --------- | ----------------------------------- |
-| `push` | Add an item to the top |
-| `pop` | Remove the most recently added item |
+| `push`    | Add an item to the top              |
+| `pop`     | Remove the most recently added item |
 
 ```py
 def is_valid_parentheses(s: str) -> bool:
@@ -50,9 +51,10 @@ print(is_valid_parentheses("([)]"))  # False
 ## Queue
 
 A queue supports two main operations:
-| Operation | Meaning |
+
+| Operation | Meaning                       |
 | --------- | ----------------------------- |
-| `enqueue` | Add an item to the back |
+| `enqueue` | Add an item to the back       |
 | `dequeue` | Remove an item from the front |
 
 In python queue is often used with deque(for removing first item in array is not efficient)
