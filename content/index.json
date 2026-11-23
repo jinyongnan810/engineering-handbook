@@ -315,6 +315,13 @@
     "title_jp": "ros2_control"
   },
   {
+    "slug": "moveit2",
+    "title": "MoveIt 2",
+    "file": "topics/robotics/moveit2.md",
+    "tag": "Robotics",
+    "title_jp": "MoveIt 2"
+  },
+  {
     "slug": "time-series-forecasting",
     "title": "Time series forecasting",
     "file": "topics/artificial-intelligence/time-series-forecasting.md",
